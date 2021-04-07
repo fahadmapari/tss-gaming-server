@@ -1,5 +1,5 @@
-import dotenv from "dotenv";
-dotenv.config();
+import "dotenv/config.js";
+
 import express from "express";
 import cookieParser from "cookie-parser";
 
@@ -12,6 +12,7 @@ import { checkGuest } from "./middlewares/authMiddleware.js";
 //import routes
 import indexRoutes from "./routes/indexRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
+import coinsRoutes from "./routes/coinsRoutes.js";
 
 const app = express();
 
@@ -23,6 +24,18 @@ app.use(express.static("public"));
 
 //routes
 app.use("/api/auth", checkGuest, authRoutes);
+app.use("/api/coins", coinsRoutes);
+
+//express error handling
+app.use("*", (req, res) => {
+  res.status(404).json({
+    message: "Route does not exist",
+  });
+});
+
+app.use((err, req, res, next) => {
+  next(err);
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
