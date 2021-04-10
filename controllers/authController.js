@@ -1,4 +1,5 @@
 import User from "../models/userModel.js";
+import { AppError } from "../utils/AppError.js";
 import { generateToken } from "../utils/generateToken.js";
 
 export const registerUser = async (req, res) => {
@@ -7,6 +8,10 @@ export const registerUser = async (req, res) => {
     password: req.body.password,
     name: req.body.name,
   });
+
+  if (req.file.profilepicture) {
+    user.profilePic = req.file.profilepicture;
+  }
 
   try {
     const newUser = await user.save();

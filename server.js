@@ -20,7 +20,7 @@ const app = express();
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static("public"));
+app.use(express.static(__dirname + "public"));
 
 //routes
 app.use("/api/auth", checkGuest, authRoutes);
@@ -34,7 +34,7 @@ app.use("*", (req, res) => {
 });
 
 app.use((err, req, res, next) => {
-  next(err);
+  res.send(err);
 });
 
 const PORT = process.env.PORT || 3000;
