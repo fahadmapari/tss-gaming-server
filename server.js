@@ -20,9 +20,13 @@ const app = express();
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static(__dirname + "public"));
+app.use(express.static("public"));
 
 //routes
+app.get("/api/", (req, res) => {
+  res.json({ message: "API Running" });
+});
+
 app.use("/api/auth", checkGuest, authRoutes);
 app.use("/api/coins", coinsRoutes);
 
@@ -34,7 +38,9 @@ app.use("*", (req, res) => {
 });
 
 app.use((err, req, res, next) => {
-  res.send(err);
+  console.log(err);
+  const { message, status } = err;
+  res.status(status).send(message);
 });
 
 const PORT = process.env.PORT || 3000;

@@ -2,7 +2,7 @@ import User from "../models/userModel.js";
 import { AppError } from "../utils/AppError.js";
 import { generateToken } from "../utils/generateToken.js";
 
-export const registerUser = async (req, res) => {
+export const registerUser = async (req, res, next) => {
   const user = new User({
     email: req.body.email,
     password: req.body.password,
@@ -14,7 +14,21 @@ export const registerUser = async (req, res) => {
   }
 
   try {
+    if (req.body.referCode) {
+      try {
+        await User.findOneAndUpdate(
+          { referralId: req.body.referCode },
+          {
+            $inc: { coins: Number(process.env.referCode) },
+          }
+        );
+      } catch (err) {
+        return next(new AppError("Invalid Referral Code", 404));
+      }
+    }
+
     const newUser = await user.save();
+
     res
       .status(201)
       .cookie("access_token", generateToken(newUser._id), {
@@ -31,19 +45,15 @@ export const registerUser = async (req, res) => {
         },
       });
   } catch (err) {
-    res.status(503).json({
-      status: "Error",
-      message: err.message,
-    });
+    next(new AppError(err.message, 503));
   }
 };
 
-export const loginUser = async (req, res) => {
+export const loginUser = async (req, res, next) => {
   try {
     const foundUser = await User.findOne({ email: req.body.email });
 
-    if (!foundUser)
-      return res.json({ status: "Error", message: "User does not exist." });
+    if (!foundUser) return next(new AppError("User does not exist.", 404));
 
     const result = foundUser.checkPassword(
       req.body.password,
@@ -66,13 +76,9 @@ export const loginUser = async (req, res) => {
           },
         });
     } else {
-      return res.json({ status: "Error", message: "Incorrect password." });
+      return next(new AppError("Incorrect password.", 401));
     }
   } catch (err) {
-    console.log(err);
-    res.json({
-      status: "Error",
-      message: err.message,
-    });
+    next(new AppError(err.message, 503));
   }
 };

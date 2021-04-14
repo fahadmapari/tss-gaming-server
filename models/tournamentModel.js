@@ -6,7 +6,7 @@ const tournamentScehma = new mongoose.Schema({
     ref: "Game",
     required: true,
   },
-  name: {
+  title: {
     type: String,
     required: true,
   },
@@ -32,7 +32,7 @@ const tournamentScehma = new mongoose.Schema({
     enum: ["solo", "duo", "team"],
     required: true,
   },
-  thumnails: {
+  thumbnails: {
     type: [String],
     required: true,
   },

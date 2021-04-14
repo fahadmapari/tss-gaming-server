@@ -6,10 +6,10 @@ Auth routes
 
 post
 /api/auth/register
-{ name, email, password, profile pic}
+{ name: string, email: string, password: string, profilePic: file}
 
 post
 /api/auth/login
-{ email, password }
+{ email: string, password: string }
 
 after successful login/register server will respond with user data and access token which will be inside httpOnly cookie.

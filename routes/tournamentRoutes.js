@@ -1,9 +1,15 @@
 import express from "express";
-// import { buyCoins, verifyPayment } from "../controllers/coinsController.js";
+import { uploadGameThumbnails } from "../utils/fileUpload.js";
+import { createNewTournament } from "../controllers/tournamentController.js";
+
 const router = express.Router();
 
-router.get("/list", buyCoins);
-router.post("/join", buyCoins);
-router.post("/create", buyCoins);
+// router.get("/list", buyCoins);
+// router.post("/join", buyCoins);
+router.post(
+  "/create",
+  uploadGameThumbnails.array("thumbnails"),
+  createNewTournament
+);
 
 export default router;

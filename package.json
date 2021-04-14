@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon server.js",
-    "dev:expose": "nodemon server.js & npx localtunnel --port 3000"
+    "dev:expose": "nodemon server.js & lt --port 3000 --subdomain tgg-gaming-server"
   },
   "keywords": [],
   "author": "",

@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.post(
   "/register",
-  uploadProfilePicture.single("profilepicture"),
+  uploadProfilePicture.single("profilePic"),
   registerUser
 );
 router.post("/login", loginUser);
