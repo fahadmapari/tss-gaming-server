@@ -6,6 +6,7 @@ const router = express.Router();
 
 // router.get("/list", buyCoins);
 // router.post("/join", buyCoins);
+
 router.post(
   "/create",
   uploadGameThumbnails.array("thumbnails"),

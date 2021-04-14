@@ -5,7 +5,6 @@ export const createNewTournament = async (req, res, next) => {
   const {
     title,
     description,
-    status,
     entryFee,
     date,
     tournamentType,
@@ -18,7 +17,6 @@ export const createNewTournament = async (req, res, next) => {
     const tournament = new Tournament({
       title,
       description,
-      status,
       entryFee,
       date,
       tournamentType,
@@ -35,8 +33,15 @@ export const createNewTournament = async (req, res, next) => {
       });
     }
 
-    tournament.save();
+    await tournament.save();
+
+    res.status(201).json({
+      message: "New Tournament created",
+      data: tournament,
+    });
   } catch (err) {
     next(new AppError(err.message, 503));
   }
 };
+
+export const joinTournament = async (req, res, next) => {};

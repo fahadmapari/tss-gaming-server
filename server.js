@@ -13,6 +13,7 @@ import { checkGuest } from "./middlewares/authMiddleware.js";
 import indexRoutes from "./routes/indexRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import coinsRoutes from "./routes/coinsRoutes.js";
+import tournamentRoutes from "./routes/tournamentRoutes.js";
 
 const app = express();
 
@@ -29,6 +30,7 @@ app.get("/api/", (req, res) => {
 
 app.use("/api/auth", checkGuest, authRoutes);
 app.use("/api/coins", coinsRoutes);
+app.use("/api/tournament", tournamentRoutes);
 
 //express error handling
 app.use("*", (req, res) => {
