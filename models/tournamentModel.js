@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import mongoosePaginate from "mongoose-paginate-v2";
 
 const tournamentScehma = new mongoose.Schema(
   {
@@ -18,6 +19,10 @@ const tournamentScehma = new mongoose.Schema(
     entryFee: {
       type: Number,
       required: true,
+    },
+    prize: {
+      type: Number,
+      required: [true, "Prize is required."],
     },
     date: {
       type: Date,
@@ -57,6 +62,8 @@ const tournamentScehma = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+tournamentScehma.plugin(mongoosePaginate);
 
 const Tournament = mongoose.model("Tournament", tournamentScehma);
 export default Tournament;

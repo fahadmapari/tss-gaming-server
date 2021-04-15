@@ -10,7 +10,7 @@ export const registerUser = async (req, res, next) => {
   });
 
   if (req.file.profilepicture) {
-    user.profilePic = req.file.profilepicture;
+    user.profilePic = req.file.profilepicture.filename;
   }
 
   try {

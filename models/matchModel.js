@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import mongoosePaginate from "mongoose-paginate-v2";
 
 const matchScehma = new mongoose.Schema(
   {
@@ -15,6 +16,8 @@ const matchScehma = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+matchScehma.plugin(mongoosePaginate);
 
 const match = mongoose.model("Match", matchScehma);
 export default match;
