@@ -9,7 +9,7 @@ export const registerUser = async (req, res, next) => {
     name: req.body.name,
   });
 
-  if (req.file.profilepicture) {
+  if (req.file) {
     user.profilePic = req.file.profilepicture.filename;
   }
 
@@ -36,6 +36,9 @@ export const registerUser = async (req, res, next) => {
         httpOnly: true,
         secure: true,
       })
+      .set({
+        "api-key": token,
+      })
       .send({
         userInfo: {
           name: newUser.name,
@@ -43,7 +46,6 @@ export const registerUser = async (req, res, next) => {
           email: newUser.email,
           coins: newUser.coins,
           profilePic: newUser.profilePic,
-          token,
         },
       });
   } catch (err) {
@@ -70,6 +72,9 @@ export const loginUser = async (req, res, next) => {
           httpOnly: true,
           secure: true,
         })
+        .set({
+          "api-key": token,
+        })
         .json({
           userInfo: {
             name: foundUser.name,
@@ -77,7 +82,6 @@ export const loginUser = async (req, res, next) => {
             role: foundUser.role,
             coins: foundUser.coins,
             profilePic: foundUser.profilePic,
-            token,
           },
         });
     } else {

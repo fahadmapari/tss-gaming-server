@@ -8,15 +8,14 @@ export const getProfileDetails = async (req, res, next) => {
   try {
     if (!id) return next(new AppError("Profile not found.", 404));
 
-    const profile = await User.find({ _id: id });
+    const profile = await User.find({ _id: id })
+      .select("-password -coins")
+      .exec();
 
     if (!profile) return next(new AppError("Profile not found", 404));
 
-    delete profile.coins;
-    delete profile.password;
-
     res.status(200).json({
-      profile,
+      profile: profile[0],
     });
   } catch (error) {
     next(new AppError("Something went wrong.", 503));

@@ -2,6 +2,8 @@ import "dotenv/config.js";
 
 import express from "express";
 import cookieParser from "cookie-parser";
+import morgan from "morgan";
+import { runLocalTunnel } from "./utils/localTunnel.js";
 
 import { connectDB } from "./db.js";
 connectDB();
@@ -23,6 +25,7 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static("public"));
+if (process.env.ENV === "development") app.use(morgan("tiny"));
 
 //routes
 app.get("/api/", (req, res) => {
@@ -48,6 +51,9 @@ app.use((err, req, res, next) => {
 });
 
 const PORT = process.env.PORT || 3000;
+
 app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
 });
+
+runLocalTunnel(process.env.ENV, PORT);

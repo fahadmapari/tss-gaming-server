@@ -16,6 +16,13 @@ export const checkGuest = (req, res, next) => {
 
 export const validateToken = async (req, res, next) => {
   const token = req.cookies.access_token;
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    token = req.headers.authorization.split(" ")[1];
+  }
+
   if (token) {
     try {
       const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
