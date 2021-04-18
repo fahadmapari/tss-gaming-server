@@ -11,6 +11,7 @@ router.post(
   uploadProfilePicture.single("profilePic"),
   registerUser
 );
+
 router.post("/login", checkGuest, loginUser);
 
 export default router;

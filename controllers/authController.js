@@ -28,10 +28,10 @@ export const registerUser = async (req, res, next) => {
     }
 
     const newUser = await user.save();
-
+    const token = generateToken(newUser._id);
     res
       .status(201)
-      .cookie("access_token", generateToken(newUser._id), {
+      .cookie("access_token", token, {
         expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
         httpOnly: true,
         secure: true,
@@ -42,6 +42,8 @@ export const registerUser = async (req, res, next) => {
           role: newUser.role,
           email: newUser.email,
           coins: newUser.coins,
+          profilePic: newUser.profilePic,
+          token,
         },
       });
   } catch (err) {
@@ -61,8 +63,9 @@ export const loginUser = async (req, res, next) => {
     );
 
     if (result) {
+      const token = generateToken(foundUser._id);
       return res
-        .cookie("access_token", generateToken(foundUser._id), {
+        .cookie("access_token", token, {
           expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
           httpOnly: true,
           secure: true,
@@ -73,6 +76,8 @@ export const loginUser = async (req, res, next) => {
             email: foundUser.email,
             role: foundUser.role,
             coins: foundUser.coins,
+            profilePic: foundUser.profilePic,
+            token,
           },
         });
     } else {
