@@ -29,6 +29,7 @@ export const validateToken = async (req, res, next) => {
       let user = await User.findOne({ _id: decoded.userId });
 
       user = {
+        id: user._id,
         name: user.name,
         email: user.email,
         role: user.role,

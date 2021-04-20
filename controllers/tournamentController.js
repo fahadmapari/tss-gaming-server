@@ -1,5 +1,7 @@
 import Tournament from "../models/tournamentModel.js";
 import Match from "../models/matchModel.js";
+import User from "../models/userModel.js";
+import Leaderboard from "../models/LeaderboardModel.js";
 import { AppError } from "../utils/AppError.js";
 
 export const listAllTournaments = async (req, res, next) => {
@@ -54,6 +56,9 @@ export const createNewTournament = async (req, res, next) => {
     }
 
     await tournament.save();
+    const leaderboard = await Leaderboard.create({
+      tournament: tournament._id,
+    });
 
     res.status(201).json({
       message: "New Tournament created",
@@ -77,10 +82,22 @@ export const joinTournament = async (req, res, next) => {
       return next(new AppError("Not enough coins to join.", 403));
     }
 
-    const match = Match.create({
+    const leaderboard = await Leaderboard.findOne({ tournament: tournamentId });
+
+    const match = await Match.create({
       tournament: tournamentId,
+      leaderboard: leaderboard._id,
       player: userId,
     });
+
+    await User.findOneAndUpdate(
+      { _id: userId },
+      {
+        $inc: {
+          coins: -Math.abs(tournament.entryFee),
+        },
+      }
+    );
 
     res.status(200).send({
       message: "Joined Tournament",
@@ -88,5 +105,15 @@ export const joinTournament = async (req, res, next) => {
     });
   } catch (err) {
     next(new AppError("Something Went Wrong.", 503));
+  }
+};
+
+export const getLeaderboard = async (req, res, next) => {
+  const { id: tournamentId } = req.params;
+
+  try {
+    const 
+  } catch (error) {
+    next(new AppError("Something went wrong", 503));
   }
 };

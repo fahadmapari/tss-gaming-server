@@ -6,13 +6,6 @@ const leaderboardScehma = new mongoose.Schema({
     ref: "Tournament",
     required: true,
   },
-  list: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
-  ],
 });
 
 const Leaderboard = mongoose.model("Leaderboard", leaderboardScehma);
