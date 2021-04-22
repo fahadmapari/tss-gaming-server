@@ -5,13 +5,17 @@ import {
   joinTournament,
   listAllTournaments,
   getLeaderboard,
+  addToLeaderboard,
+  getLeaderboardToEdit,
 } from "../controllers/tournamentController.js";
 
 const router = express.Router();
 
 router.get("/list", listAllTournaments);
 router.get("/leaderboard/:id", getLeaderboard);
+router.get("/leaderboard/:id/edit", getLeaderboardToEdit);
 
+router.post("/leaderboard/:match/edit", addToLeaderboard);
 router.post("/join", joinTournament);
 router.post(
   "/create",

@@ -82,6 +82,15 @@ export const joinTournament = async (req, res, next) => {
       return next(new AppError("Not enough coins to join.", 403));
     }
 
+    const existingMatch = await Match.findOne({
+      player: userId,
+      tournament: tournamentId,
+    });
+
+    if (existingMatch) {
+      return next(new AppError("Already joined this tournament.", 403));
+    }
+
     const leaderboard = await Leaderboard.findOne({ tournament: tournamentId });
 
     const match = await Match.create({
@@ -112,7 +121,66 @@ export const getLeaderboard = async (req, res, next) => {
   const { id: tournamentId } = req.params;
 
   try {
-    const 
+    const leaderboard = await Leaderboard.findOne({ tournament: tournamentId })
+      .populate("list tournament")
+      .exec();
+
+    if (!leaderboard) {
+      next(new AppError("No leaderboard found for this tournament.", 404));
+      return;
+    }
+
+    res.status(200).json({
+      leaderboard,
+    });
+  } catch (error) {
+    next(new AppError("Something went wrong", 503));
+  }
+};
+
+export const getLeaderboardToEdit = async (req, res, next) => {
+  const { id: tournamentId } = req.params;
+
+  try {
+    const matches = await Match.find({ tournament: tournamentId })
+      .populate("player tournament")
+      .exec();
+
+    res.json({
+      data: matches,
+    });
+  } catch (error) {
+    next(new AppError("Something went wrong", 503));
+  }
+};
+
+export const addToLeaderboard = async (req, res, next) => {
+  const { match: matchId } = req.params;
+  const { prizeWon, kills } = req.body;
+
+  try {
+    const match = await Match.findOneAndUpdate(
+      {
+        _id: matchId,
+      },
+      {
+        prize: prizeWon,
+        kills: kills,
+      }
+    );
+
+    await Leaderboard.findOneAndUpdate(
+      { _id: matchId },
+      {
+        $push: {
+          list: match._id,
+        },
+      }
+    );
+
+    res.status(200).json({
+      data: match,
+    });
   } catch (error) {
     next(new AppError("Something went wrong", 503));
   }
