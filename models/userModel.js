@@ -9,9 +9,15 @@ const userScehma = new mongoose.Schema({
     unique: true,
     required: true,
   },
+  mobile: {
+    type: Number,
+    unique: true,
+    required: true,
+  },
   name: {
     type: String,
     required: true,
+    unique: true,
   },
   password: {
     type: String,
@@ -19,7 +25,6 @@ const userScehma = new mongoose.Schema({
   },
   profilePic: {
     type: String,
-    default: "/profile-pictures/default.png",
   },
   role: {
     type: String,

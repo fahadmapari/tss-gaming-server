@@ -19,7 +19,7 @@ export const listAllTournaments = async (req, res, next) => {
       tournaments,
     });
   } catch (error) {
-    new AppError("Something Went wrong", 503);
+    next(new AppError(error.message, 503));
   }
 };
 
@@ -113,7 +113,7 @@ export const joinTournament = async (req, res, next) => {
       data: match,
     });
   } catch (err) {
-    next(new AppError("Something Went Wrong.", 503));
+    next(new AppError(error.message, 503));
   }
 };
 
@@ -134,7 +134,7 @@ export const getLeaderboard = async (req, res, next) => {
       leaderboard,
     });
   } catch (error) {
-    next(new AppError("Something went wrong", 503));
+    next(new AppError(error.message, 503));
   }
 };
 
@@ -150,7 +150,7 @@ export const getLeaderboardToEdit = async (req, res, next) => {
       data: matches,
     });
   } catch (error) {
-    next(new AppError("Something went wrong", 503));
+    next(new AppError(error.message, 503));
   }
 };
 
@@ -182,6 +182,6 @@ export const addToLeaderboard = async (req, res, next) => {
       data: match,
     });
   } catch (error) {
-    next(new AppError("Something went wrong", 503));
+    next(new AppError(error.message, 503));
   }
 };

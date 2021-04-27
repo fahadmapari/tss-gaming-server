@@ -1,5 +1,6 @@
 import User from "../models/userModel.js";
 import jwt from "jsonwebtoken";
+import Session from "../models/sessionModel.js";
 
 export const checkGuest = (req, res, next) => {
   const token = req.cookies.access_token;
@@ -28,6 +29,14 @@ export const validateToken = async (req, res, next) => {
       const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
       let user = await User.findOne({ _id: decoded.userId });
 
+      if (!user) {
+        return res.status(403).json({
+          status: "Error",
+          error: err.message,
+          message: "Something went wrong while validating token. Invalid token",
+        });
+      }
+
       user = {
         id: user._id,
         name: user.name,
@@ -36,7 +45,18 @@ export const validateToken = async (req, res, next) => {
         coins: user.coins,
       };
 
+      const session = await Session.findOne({ token: token });
+
+      if (!session) {
+        return res.status(403).json({
+          status: "Error",
+          error: err.message,
+          message: "Something went wrong while validating token. Invalid token",
+        });
+      }
+
       req.user = user;
+      req.token = token;
 
       return next();
     } catch (err) {
@@ -70,6 +90,16 @@ export const validateAdminToken = async (req, res, next) => {
       };
 
       req.user = user;
+      req.token = token;
+
+      let session = await Session.findOne({ token: token });
+
+      if (!session) {
+        return res.status(401).json({
+          status: "Unauthorized",
+          message: "User not authorized to perform this task.",
+        });
+      }
 
       if (user.role !== "admin") {
         return res.status(401).json({

@@ -18,7 +18,7 @@ export const getProfileDetails = async (req, res, next) => {
       profile: profile[0],
     });
   } catch (error) {
-    next(new AppError("Something went wrong.", 503));
+    next(new AppError(error.message, 503));
   }
 };
 
@@ -28,7 +28,7 @@ export const getMyProfileDetails = async (req, res, next) => {
       profile: req.user,
     });
   } catch (error) {
-    next(new AppError("Something went wrong.", 503));
+    next(new AppError(error.message, 503));
   }
 };
 
@@ -54,6 +54,6 @@ export const getMyTournaments = async (req, res, next) => {
       profile: profile,
     });
   } catch (error) {
-    next(new AppError("Something went wrong.", 503));
+    next(new AppError(error.message, 503));
   }
 };
