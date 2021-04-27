@@ -13,4 +13,6 @@ router.get("/tournaments", getMyTournaments);
 
 router.get("/:id", getProfileDetails);
 
+router.post("/update");
+
 export default router;
