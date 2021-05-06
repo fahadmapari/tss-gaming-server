@@ -12,6 +12,18 @@ export const registerUser = async (req, res, next) => {
     profilePic = req.file.profilepicture.filename;
   }
 
+  if (!req.body.email || req.body.email === "")
+    next(new AppError("Email is required"));
+
+  if (!req.body.mobile || req.body.mobile === "")
+    next(new AppError("Mobile number is required"));
+
+  if (!req.body.password || req.body.password === "")
+    next(new AppError("password is required"));
+
+  if (!req.body.name || req.body.name === "")
+    next(new AppError("name is required"));
+
   const user = new User({
     email: req.body.email,
     mobile: req.body.mobile,
@@ -72,6 +84,12 @@ export const registerUser = async (req, res, next) => {
 
 export const loginUser = async (req, res, next) => {
   try {
+    if (!req.body.email || req.body.email === "")
+      next(new AppError("email is required"));
+
+    if (!req.body.password || req.body.password === "")
+      next(new AppError("password is required"));
+
     const foundUser = await User.findOne({ email: req.body.email });
 
     if (!foundUser) return next(new AppError("User does not exist.", 404));
