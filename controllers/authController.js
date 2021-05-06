@@ -2,6 +2,8 @@ import User from "../models/userModel.js";
 import Session from "../models/sessionModel.js";
 import { AppError } from "../utils/AppError.js";
 import { generateToken } from "../utils/generateToken.js";
+import { getGoogleAccountFromCode } from "../utils/googleAuth.js";
+import axios from "axios";
 
 export const registerUser = async (req, res, next) => {
   let profilePic = "/profile-pictures/default.png";
@@ -52,7 +54,7 @@ export const registerUser = async (req, res, next) => {
       .set({
         "api-key": token,
       })
-      .send({
+      .json({
         userInfo: {
           name: newUser.name,
           mobile: newUser.mobile,
@@ -113,6 +115,56 @@ export const loginUser = async (req, res, next) => {
       return next(new AppError("Incorrect password.", 401));
     }
   } catch (err) {
+    next(new AppError(error.message, 503));
+  }
+};
+
+//google login/signup
+
+export const googleLogin = async (req, res, next) => {
+  try {
+    const data = await getGoogleAccountFromCode(req.query.code);
+    const googleProfile = await axios.get(
+      `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${data.data.tokens.access_token}`
+    );
+    const { email, name, picture } = googleProfile.data;
+
+    const existingUser = await User.findOne({ email: email });
+
+    if (existingUser) {
+      const token = generateToken(newUser._id);
+      let date = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+
+      await Session.create({
+        user: existingUser._id,
+        token,
+        expireAt: date,
+      });
+
+      res
+        .status(201)
+        .cookie("access_token", token, {
+          expires: date,
+          httpOnly: true,
+          secure: true,
+        })
+        .redirect("/");
+    }
+
+    if (!existingUser) {
+      await User.create({
+        name: name,
+        email: email,
+        emailVerified: true,
+        password: "",
+        profilePic: picture,
+      });
+    }
+
+    console.log("got request from google");
+    console.log(google);
+    res.send("ok");
+  } catch (error) {
     next(new AppError(error.message, 503));
   }
 };

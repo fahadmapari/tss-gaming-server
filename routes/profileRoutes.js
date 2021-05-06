@@ -3,16 +3,17 @@ import {
   getMyProfileDetails,
   getProfileDetails,
   getMyTournaments,
+  updateUserProfile,
 } from "../controllers/profileController.js";
-import { checkGuest } from "../middlewares/authMiddleware.js";
+import { checkGuest, validateToken } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
-router.get("/", getMyProfileDetails);
-router.get("/tournaments", getMyTournaments);
+router.get("/", validateToken, getMyProfileDetails);
+router.get("/tournaments", validateToken, getMyTournaments);
 
 router.get("/:id", getProfileDetails);
 
-router.post("/update");
+router.post("/update", validateToken, updateUserProfile);
 
 export default router;

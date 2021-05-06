@@ -16,7 +16,7 @@ export const checkGuest = (req, res, next) => {
 };
 
 export const validateToken = async (req, res, next) => {
-  const token = req.cookies.access_token;
+  let token = req.cookies.access_token;
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith("Bearer")
