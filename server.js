@@ -2,6 +2,7 @@ import "dotenv/config.js";
 
 import express from "express";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 // import morgan from "morgan";
 // import { runLocalTunnel } from "./utils/localTunnel.js";
 
@@ -22,10 +23,11 @@ const app = express();
 
 //express config
 app.use(cookieParser());
+app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static("public"));
-if (process.env.ENV === "development") app.use(morgan("tiny"));
+// if (process.env.ENV === "development") app.use(morgan("tiny"));
 
 //routes
 app.get("/api/", (req, res) => {
@@ -47,7 +49,7 @@ app.use("*", (req, res) => {
 app.use((err, req, res, next) => {
   console.log(err);
   const { message, status } = err;
-  res.status(status).send(message);
+  res.status(status).send({ message, status, error: err });
 });
 
 const PORT = process.env.PORT || 3000;
