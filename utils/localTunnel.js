@@ -4,7 +4,7 @@ export const runLocalTunnel = async (env, port) => {
   if (env === "development") {
     const tunnel = await localTunnel({
       port: port,
-      subdomain: "ts-gaming-server",
+      subdomain: "tss-gaming-server",
     });
 
     console.log("Tunnel started: " + tunnel.url);
