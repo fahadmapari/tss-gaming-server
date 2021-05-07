@@ -46,7 +46,7 @@ export const getMyTournaments = async (req, res, next) => {
         limit: limit ? limit : 10,
         populate: "tournament",
       }
-    ).exec();
+    );
 
     if (!profile) return next(new AppError("Profile not found", 404));
 
