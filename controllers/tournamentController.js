@@ -3,7 +3,6 @@ import Match from "../models/matchModel.js";
 import User from "../models/userModel.js";
 import Leaderboard from "../models/LeaderboardModel.js";
 import { AppError } from "../utils/AppError.js";
-import { static } from "express";
 
 export const listAllTournaments = async (req, res, next) => {
   const { page, limit, status } = req.query;
