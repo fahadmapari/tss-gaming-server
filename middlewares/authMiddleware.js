@@ -44,7 +44,7 @@ export const validateToken = async (req, res, next) => {
 
       const user = session.user;
 
-      user = {
+      currentUser = {
         id: user._id,
         name: user.name,
         email: user.email,
@@ -62,7 +62,7 @@ export const validateToken = async (req, res, next) => {
         });
       }
 
-      req.user = user;
+      req.user = currentUser;
       req.token = token;
 
       return next();
@@ -110,7 +110,7 @@ export const validateNewUserToken = async (req, res, next) => {
 
       const user = session.user;
 
-      user = {
+      currentUser = {
         id: user._id,
         name: user.name,
         email: user.email,
@@ -121,7 +121,7 @@ export const validateNewUserToken = async (req, res, next) => {
         coins: user.coins,
       };
 
-      req.user = user;
+      req.user = currentUser;
       req.token = token;
 
       return next();
@@ -167,7 +167,7 @@ export const validateAdminToken = async (req, res, next) => {
 
       const user = session.user;
 
-      user = {
+      currentUser = {
         id: user._id,
         name: user.name,
         email: user.email,
@@ -178,7 +178,7 @@ export const validateAdminToken = async (req, res, next) => {
         coins: user.coins,
       };
 
-      req.user = user;
+      req.user = currentUser;
       req.token = token;
 
       if (user.role !== "admin") {
