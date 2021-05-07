@@ -1,28 +1,106 @@
 import User from "../models/userModel.js";
 import Session from "../models/sessionModel.js";
+import twilio from "twilio";
 import { AppError } from "../utils/AppError.js";
 import { generateToken } from "../utils/generateToken.js";
-import { getGoogleAccountFromCode } from "../utils/googleAuth.js";
+import {
+  getGoogleAccountFromCode,
+  googleConfig,
+  defaultScope,
+  createConnection,
+  getConnectionUrl,
+  urlGoogle,
+} from "../utils/googleAuth.js";
 import axios from "axios";
+const client = twilio(process.env.TWLO_SID, process.env.TWLO_TOKEN);
+
+export const generateOtp = async (req, res, next) => {
+  try {
+    const { id, mobile } = req.user;
+    client.verify
+      .services(process.env.TWLO_SERVICE_ID)
+      .verifications.create({ to: `+91${mobile.trim()}`, channel: "sms" })
+      .then((verification) => {
+        res.status(200).json({
+          message: "OTP SENT",
+          data: {
+            to: verification.to,
+            channel: verification.channel,
+            status: verification.status,
+            lookup: verification.lookup,
+            dates: {
+              created: verification.date_created,
+              update: verification.date.updated,
+            },
+          },
+        });
+      })
+      .catch((err) => {
+        next(new AppError(err.message, 503));
+      });
+  } catch (err) {
+    next(new AppError(err.message, 503));
+  }
+};
+
+export const verifyOtp = async (req, res, next) => {
+  try {
+    const { id, mobile } = req.user;
+    const { otp } = req.body;
+
+    if (otp && otp !== "") {
+      return next(new AppError("OTP required", 401));
+    }
+
+    client.verify
+      .services(process.env.TWLO_SERVICE_ID)
+      .verificationChecks.create({ to: `+91${mobile.trim()}`, code: otp })
+      .then(async (verification) => {
+        if (verification.status === "approved") {
+          await User.findOneAndUpdate(
+            { _id: id },
+            {
+              mobileVerified: true,
+            }
+          );
+        }
+
+        res.status(200).json({
+          to: verification.to,
+          channel: verification.channel,
+          status: verification.status,
+          dates: {
+            created: verification.date_created,
+            update: verification.date.updated,
+          },
+        });
+      })
+      .catch((err) => {
+        next(new AppError(err.message, 503));
+      });
+  } catch (err) {
+    next(new AppError(err.message, 503));
+  }
+};
 
 export const registerUser = async (req, res, next) => {
   let profilePic = "/profile-pictures/default.png";
 
   if (req.file) {
-    profilePic = req.file.profilepicture.filename;
+    profilePic = req.file.profilePic.filename;
   }
 
   if (!req.body.email || req.body.email === "")
-    next(new AppError("Email is required", 400));
+    return next(new AppError("Email is required", 400));
 
   if (!req.body.mobile || req.body.mobile === "")
-    next(new AppError("Mobile number is required", 400));
+    return next(new AppError("Mobile number is required", 400));
 
   if (!req.body.password || req.body.password === "")
-    next(new AppError("password is required", 400));
+    return next(new AppError("password is required", 400));
 
   if (!req.body.name || req.body.name === "")
-    next(new AppError("name is required", 400));
+    return next(new AppError("name is required", 400));
 
   const user = new User({
     email: req.body.email,
@@ -85,10 +163,10 @@ export const registerUser = async (req, res, next) => {
 export const loginUser = async (req, res, next) => {
   try {
     if (!req.body.email || req.body.email === "")
-      next(new AppError("email is required", 400));
+      return next(new AppError("email is required", 400));
 
     if (!req.body.password || req.body.password === "")
-      next(new AppError("password is required", 400));
+      return next(new AppError("password is required", 400));
 
     const foundUser = await User.findOne({ email: req.body.email });
 
@@ -139,6 +217,17 @@ export const loginUser = async (req, res, next) => {
 
 //google login/signup
 
+export const generateGoogleURL = async (req, res, next) => {
+  try {
+    const url = urlGoogle();
+
+    res.status(200).json({
+      url: url,
+    });
+  } catch (err) {
+    next(new AppError(err.message, 503));
+  }
+};
 export const googleLogin = async (req, res, next) => {
   try {
     const data = await getGoogleAccountFromCode(req.query.code);
@@ -147,7 +236,9 @@ export const googleLogin = async (req, res, next) => {
     );
     const { email, name, picture } = googleProfile.data;
 
-    const existingUser = await User.findOne({ email: email });
+    const existingUser = await User.findOne({ email: email }).select(
+      "-password"
+    );
 
     if (existingUser) {
       const token = generateToken(newUser._id);
@@ -166,22 +257,55 @@ export const googleLogin = async (req, res, next) => {
           httpOnly: true,
           secure: true,
         })
-        .redirect("/");
+        .set({
+          "api-key": token,
+        })
+        .json({
+          user: existingUser,
+        });
     }
 
     if (!existingUser) {
-      await User.create({
+      const token = generateToken(newUser._id);
+      let date = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+
+      const user = await User.create({
         name: name,
         email: email,
         emailVerified: true,
         password: "",
         profilePic: picture,
       });
-    }
 
-    console.log("got request from google");
-    console.log(google);
-    res.send("ok");
+      await Session.create({
+        user: user._id,
+        token,
+        expireAt: date,
+      });
+
+      res
+        .status(200)
+        .cookie("access_token", token, {
+          expires: date,
+          httpOnly: true,
+          secure: true,
+        })
+        .set({
+          "api-key": token,
+        })
+        .json({
+          user: {
+            _id: user._id,
+            name: name,
+            email: email,
+            emailVerified: true,
+            mobile: user.mobile,
+
+            password: "",
+            profilePic: picture,
+          },
+        });
+    }
   } catch (error) {
     next(new AppError(error.message, 503));
   }

@@ -51,7 +51,7 @@ export const getMyTournaments = async (req, res, next) => {
     if (!profile) return next(new AppError("Profile not found", 404));
 
     res.status(200).json({
-      profile: profile,
+      tournaments: profile,
     });
   } catch (error) {
     next(new AppError(error.message, 503));

@@ -7,9 +7,10 @@ import {
   respondToWithdrawalRequests,
   getAllWithdrawalRequests,
 } from "../controllers/coinsController.js";
+import { validateToken } from "../middlewares/authMiddleware.js";
 const router = express.Router();
 
-router.get("/buy", buyCoins);
+router.get("/buy", validateToken, buyCoins);
 router.get("/withdraw/pending", getPendingWithdrawalRequests);
 router.get("/withdraw", getAllWithdrawalRequests);
 
