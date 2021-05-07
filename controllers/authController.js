@@ -48,7 +48,7 @@ export const verifyOtp = async (req, res, next) => {
     const { id, mobile } = req.user;
     const { otp } = req.body;
 
-    if (otp && otp !== "") {
+    if (!otp || otp !== "") {
       return next(new AppError("OTP required", 401));
     }
 
