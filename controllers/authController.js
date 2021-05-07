@@ -13,16 +13,16 @@ export const registerUser = async (req, res, next) => {
   }
 
   if (!req.body.email || req.body.email === "")
-    next(new AppError("Email is required"));
+    next(new AppError("Email is required", 400));
 
   if (!req.body.mobile || req.body.mobile === "")
-    next(new AppError("Mobile number is required"));
+    next(new AppError("Mobile number is required", 400));
 
   if (!req.body.password || req.body.password === "")
-    next(new AppError("password is required"));
+    next(new AppError("password is required", 400));
 
   if (!req.body.name || req.body.name === "")
-    next(new AppError("name is required"));
+    next(new AppError("name is required", 400));
 
   const user = new User({
     email: req.body.email,
@@ -85,10 +85,10 @@ export const registerUser = async (req, res, next) => {
 export const loginUser = async (req, res, next) => {
   try {
     if (!req.body.email || req.body.email === "")
-      next(new AppError("email is required"));
+      next(new AppError("email is required", 400));
 
     if (!req.body.password || req.body.password === "")
-      next(new AppError("password is required"));
+      next(new AppError("password is required", 400));
 
     const foundUser = await User.findOne({ email: req.body.email });
 
