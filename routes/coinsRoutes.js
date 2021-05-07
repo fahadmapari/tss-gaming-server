@@ -7,15 +7,27 @@ import {
   respondToWithdrawalRequests,
   getAllWithdrawalRequests,
 } from "../controllers/coinsController.js";
-import { validateToken } from "../middlewares/authMiddleware.js";
+import {
+  validateAdminToken,
+  validateToken,
+} from "../middlewares/authMiddleware.js";
 const router = express.Router();
 
 router.get("/buy", validateToken, buyCoins);
-router.get("/withdraw/pending", getPendingWithdrawalRequests);
-router.get("/withdraw", getAllWithdrawalRequests);
+router.get(
+  "/withdraw/pending",
+  validateAdminToken,
+  getPendingWithdrawalRequests
+);
+router.get("/withdraw", validateAdminToken, getAllWithdrawalRequests);
 
 router.post("/verify", verifyPayment);
-router.post("/withdraw/request", withdrawRequestByUser);
-router.post("/withdraw/respond/:id", respondToWithdrawalRequests);
+
+router.post("/withdraw/request", validateToken, withdrawRequestByUser);
+router.post(
+  "/withdraw/respond/:id",
+  validateAdminToken,
+  respondToWithdrawalRequests
+);
 
 export default router;

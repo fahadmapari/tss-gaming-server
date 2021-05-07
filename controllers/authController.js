@@ -245,6 +245,7 @@ export const generateGoogleURL = async (req, res, next) => {
     next(new AppError(err.message, 503));
   }
 };
+
 export const googleLogin = async (req, res, next) => {
   try {
     const data = await getGoogleAccountFromCode(req.query.code);

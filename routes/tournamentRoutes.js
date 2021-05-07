@@ -8,15 +8,21 @@ import {
   addToLeaderboard,
   getLeaderboardToEdit,
 } from "../controllers/tournamentController.js";
+import {
+  validateAdminToken,
+  validateToken,
+} from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
 router.get("/list", listAllTournaments);
 router.get("/leaderboard/:id", getLeaderboard);
-router.get("/leaderboard/:id/edit", getLeaderboardToEdit);
+router.get("/leaderboard/:id/edit", validateAdminToken, getLeaderboardToEdit);
 
-router.post("/leaderboard/:match/edit", addToLeaderboard);
-router.post("/join", joinTournament);
+router.post("/leaderboard/:match/edit", validateAdminToken, addToLeaderboard);
+
+router.post("/join", validateToken, joinTournament);
+
 router.post(
   "/create",
   uploadGameThumbnails.array("thumbnails"),

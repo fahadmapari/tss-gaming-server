@@ -7,6 +7,7 @@ import {
   generateOtp,
   verifyOtp,
   generateGoogleURL,
+  logoutUser,
 } from "../controllers/authController.js";
 import {
   checkGuest,
@@ -19,6 +20,7 @@ const router = express.Router();
 router.get("/google", googleLogin);
 router.get("/google/url", generateGoogleURL);
 router.get("/otp", validateNewUserToken, generateOtp);
+router.get("/logout", validateToken, logoutUser);
 
 router.post(
   "/register",
