@@ -3,9 +3,10 @@ import Match from "../models/matchModel.js";
 import User from "../models/userModel.js";
 import Leaderboard from "../models/LeaderboardModel.js";
 import { AppError } from "../utils/AppError.js";
+import { static } from "express";
 
 export const listAllTournaments = async (req, res, next) => {
-  const { page, limit } = req.query;
+  const { page, limit, status } = req.query;
 
   try {
     const opts = {
@@ -13,7 +14,13 @@ export const listAllTournaments = async (req, res, next) => {
       limit: limit ? limit : 10,
     };
 
-    const tournaments = await Tournament.paginate({}, opts);
+    const query = {};
+
+    if (status && status !== "") {
+      query.status = status;
+    }
+
+    const tournaments = await Tournament.paginate(query, opts);
 
     res.status(200).send({
       tournaments,

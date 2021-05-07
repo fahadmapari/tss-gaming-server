@@ -311,17 +311,7 @@ export const googleLogin = async (req, res, next) => {
         .set({
           "api-key": token,
         })
-        .json({
-          user: {
-            _id: user._id,
-            name: name,
-            email: email,
-            mobile: user.mobile,
-            emailVerified: user.emailVerified,
-            mobileVerified: user.emailVerified,
-            profilePic: picture,
-          },
-        });
+        .redirect("/");
     }
   } catch (error) {
     next(new AppError(error.message, 503));

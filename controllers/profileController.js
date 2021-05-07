@@ -35,18 +35,23 @@ export const getMyProfileDetails = async (req, res, next) => {
 
 export const getMyTournaments = async (req, res, next) => {
   const { id } = req.user;
-  const { page, limit } = req.query;
+  const { page, limit, status } = req.query;
   try {
     if (!id) return next(new AppError("Profile not found.", 404));
 
-    const profile = await Match.paginate(
-      { player: id },
-      {
-        page: page ? page : 1,
-        limit: limit ? limit : 10,
-        populate: "tournament",
-      }
-    );
+    const query = {
+      player: id,
+    };
+
+    if (status && status !== "") {
+      query.status = status;
+    }
+
+    const profile = await Match.paginate(query, {
+      page: page ? page : 1,
+      limit: limit ? limit : 10,
+      populate: "tournament",
+    });
 
     if (!profile) return next(new AppError("Profile not found", 404));
 

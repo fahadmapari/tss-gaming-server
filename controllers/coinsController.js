@@ -41,11 +41,7 @@ export const verifyPayment = async (req, res) => {
   const digest = shasum.digest("hex");
 
   if (digest === req.headers["x-razorpay-signature"]) {
-    if (
-      req.body.payload.payment.entity.status === "captured" ||
-      req.body.payload.payment.entity.status === "failed" ||
-      req.body.payload.payment.entity.status === "authorized"
-    ) {
+    if (req.body.payload.payment.entity.status === "captured") {
       const updatedOrder = await Order.findOneAndUpdate(
         { order_id: req.body.payload.payment.entity.order_id },
         { orderDetails: req.body }
@@ -57,14 +53,13 @@ export const verifyPayment = async (req, res) => {
           $inc: { coins: Number(updatedOrderpayload.payment.amount) / 100 },
         }
       );
+    } else {
+      await Order.findOneAndUpdate(
+        { order_id: req.body.payload.payment.entity.order_id },
+        { orderDetails: req.body }
+      );
     }
-  } else {
-    await Order.findOneAndUpdate(
-      { order_id: req.body.payload.payment.entity.order_id },
-      { orderDetails: req.body }
-    );
   }
-
   res.status(200).json({ status: "OK" });
 };
 
