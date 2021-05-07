@@ -63,20 +63,30 @@ export const verifyOtp = async (req, res, next) => {
               mobileVerified: true,
             }
           );
-        }
 
-        res.status(200).json({
-          to: verification.to,
-          channel: verification.channel,
-          status: verification.status,
-          dates: {
-            created: verification.date_created,
-            update: verification.date_updated,
-          },
-        });
+          res.status(200).json({
+            to: verification.to,
+            channel: verification.channel,
+            status: verification.status,
+            dates: {
+              created: verification.date_created,
+              update: verification.date_updated,
+            },
+          });
+        } else {
+          res.status(200).json({
+            to: verification.to,
+            channel: verification.channel,
+            status: verification.status,
+            dates: {
+              created: verification.date_created,
+              update: verification.date_updated,
+            },
+          });
+        }
       })
       .catch((err) => {
-        next(new AppError(err.message, 503));
+        next(new AppError("INVALID OTP", 503));
       });
   } catch (err) {
     next(new AppError(err.message, 503));
