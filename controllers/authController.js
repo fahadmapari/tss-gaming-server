@@ -259,7 +259,7 @@ export const googleLogin = async (req, res, next) => {
     );
 
     if (existingUser) {
-      const token = generateToken(newUser._id);
+      const token = generateToken(existingUser._id);
       let date = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
 
       await Session.create({
@@ -284,9 +284,6 @@ export const googleLogin = async (req, res, next) => {
     }
 
     if (!existingUser) {
-      const token = generateToken(newUser._id);
-      let date = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-
       const user = await User.create({
         name: name,
         email: email,
@@ -294,6 +291,9 @@ export const googleLogin = async (req, res, next) => {
         password: "",
         profilePic: picture,
       });
+
+      const token = generateToken(user._id);
+      let date = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
 
       await Session.create({
         user: user._id,
