@@ -161,8 +161,10 @@ export const registerUser = async (req, res, next) => {
         userInfo: {
           name: newUser.name,
           mobile: newUser.mobile,
+          mobileVerified: newUser.newUser,
           role: newUser.role,
           email: newUser.email,
+          emailVerified: newUser.emailVerified,
           coins: newUser.coins,
           profilePic: newUser.profilePic,
           referralId: newUser.referralId,
@@ -213,7 +215,9 @@ export const loginUser = async (req, res, next) => {
           userInfo: {
             name: foundUser.name,
             mobile: foundUser.mobile,
+            mobileVerified: foundUser.mobileVerified,
             email: foundUser.email,
+            emailVerified: foundUser.emailVerified,
             role: foundUser.role,
             coins: foundUser.coins,
             profilePic: foundUser.profilePic,
@@ -311,10 +315,9 @@ export const googleLogin = async (req, res, next) => {
             _id: user._id,
             name: name,
             email: email,
-            emailVerified: true,
             mobile: user.mobile,
-
-            password: "",
+            emailVerified: user.emailVerified,
+            mobileVerified: user.emailVerified,
             profilePic: picture,
           },
         });
