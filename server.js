@@ -34,7 +34,7 @@ app.get("/api/", (req, res) => {
   res.json({ message: "API Running" });
 });
 
-app.use("/api/auth", checkGuest, authRoutes);
+app.use("/api/auth", authRoutes);
 app.use("/api/coins", coinsRoutes);
 app.use("/api/tournament", tournamentRoutes);
 app.use("/api/profile", profileRoutes);
