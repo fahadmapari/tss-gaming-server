@@ -44,7 +44,7 @@ export const validateToken = async (req, res, next) => {
 
       const user = session.user;
 
-      currentUser = {
+      let currentUser = {
         id: user._id,
         name: user.name,
         email: user.email,
@@ -110,7 +110,7 @@ export const validateNewUserToken = async (req, res, next) => {
 
       const user = session.user;
 
-      currentUser = {
+      let currentUser = {
         id: user._id,
         name: user.name,
         email: user.email,
@@ -167,7 +167,7 @@ export const validateAdminToken = async (req, res, next) => {
 
       const user = session.user;
 
-      currentUser = {
+      let currentUser = {
         id: user._id,
         name: user.name,
         email: user.email,
