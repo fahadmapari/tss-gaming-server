@@ -30,7 +30,7 @@ export const generateOtp = async (req, res, next) => {
             lookup: verification.lookup,
             dates: {
               created: verification.date_created,
-              update: verification.date.updated,
+              update: verification.date_updated,
             },
           },
         });
@@ -54,7 +54,7 @@ export const verifyOtp = async (req, res, next) => {
 
     client.verify
       .services(process.env.TWLO_SERVICE_ID)
-      .verificationChecks.create({ to: `+91${mobile.trim()}`, code: otp })
+      .verificationChecks.create({ to: `+91${mobile}`, code: otp })
       .then(async (verification) => {
         if (verification.status === "approved") {
           await User.findOneAndUpdate(
@@ -71,7 +71,7 @@ export const verifyOtp = async (req, res, next) => {
           status: verification.status,
           dates: {
             created: verification.date_created,
-            update: verification.date.updated,
+            update: verification.date_updated,
           },
         });
       })
