@@ -19,7 +19,7 @@ export const generateOtp = async (req, res, next) => {
     const { id, mobile } = req.user;
     client.verify
       .services(process.env.TWLO_SERVICE_ID)
-      .verifications.create({ to: `+91${mobile.trim()}`, channel: "sms" })
+      .verifications.create({ to: `+91${mobile}`, channel: "sms" })
       .then((verification) => {
         res.status(200).json({
           message: "OTP SENT",
