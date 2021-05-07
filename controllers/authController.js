@@ -96,6 +96,9 @@ export const registerUser = async (req, res, next) => {
   if (!req.body.mobile || req.body.mobile === "")
     return next(new AppError("Mobile number is required", 400));
 
+  if (req.body.mobile.length < 10)
+    return next(new AppError("Invalid mobile number", 400));
+
   if (!req.body.password || req.body.password === "")
     return next(new AppError("password is required", 400));
 
