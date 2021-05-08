@@ -44,14 +44,14 @@ export const getMyTournaments = async (req, res, next) => {
     };
 
     if (status && status !== "") {
-      query.status = status;
+      query["tournament.status"] = status;
     }
 
     const profile = await Match.paginate(query, {
       page: page ? page : 1,
       limit: limit ? limit : 10,
       populate: "tournament",
-      sort: {"createdAt": -1}
+      sort: { createdAt: -1 },
     });
 
     if (!profile) return next(new AppError("Profile not found", 404));
