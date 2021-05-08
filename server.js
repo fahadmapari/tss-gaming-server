@@ -23,11 +23,12 @@ const app = express();
 
 //express config
 app.use(cookieParser());
-app.use(cors({
-  exposedHeaders: 'api-key',
-  origin: true,
-  credentials: true
-}));
+app.use(
+  cors({
+    exposedHeaders: ["api-key", "Authorization"],
+    credentials: true,
+  })
+);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static("public"));

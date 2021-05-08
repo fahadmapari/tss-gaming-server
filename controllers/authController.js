@@ -152,7 +152,7 @@ export const registerUser = async (req, res, next) => {
       .cookie("access_token", token, {
         expires: date,
         httpOnly: true,
-        secure: true,
+        domain: "",
       })
       .set({
         "api-key": token,
@@ -206,7 +206,7 @@ export const loginUser = async (req, res, next) => {
         .cookie("access_token", token, {
           expires: date,
           httpOnly: true,
-          secure: true,
+          domain: "",
         })
         .set({
           "api-key": token,
@@ -273,7 +273,7 @@ export const googleLogin = async (req, res, next) => {
         .cookie("access_token", token, {
           expires: date,
           httpOnly: true,
-          secure: true,
+          domain: "",
         })
         .set({
           "api-key": token,
@@ -306,7 +306,7 @@ export const googleLogin = async (req, res, next) => {
         .cookie("access_token", token, {
           expires: date,
           httpOnly: true,
-          secure: true,
+          domain: "",
         })
         .set({
           "api-key": token,
