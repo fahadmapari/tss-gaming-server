@@ -152,7 +152,6 @@ export const registerUser = async (req, res, next) => {
       .cookie("access_token", token, {
         expires: date,
         httpOnly: true,
-        domain: "http://127.0.0.1:5500",
       })
       .set({
         "api-key": token,
@@ -169,6 +168,7 @@ export const registerUser = async (req, res, next) => {
           profilePic: newUser.profilePic,
           referralId: newUser.referralId,
         },
+        token,
       });
   } catch (err) {
     next(new AppError(err.message, 503));
@@ -206,7 +206,6 @@ export const loginUser = async (req, res, next) => {
         .cookie("access_token", token, {
           expires: date,
           httpOnly: true,
-          domain: "http://127.0.0.1:5500",
         })
         .set({
           "api-key": token,
@@ -223,6 +222,7 @@ export const loginUser = async (req, res, next) => {
             profilePic: foundUser.profilePic,
             referralId: foundUser.referralId,
           },
+          token,
         });
     } else {
       return next(new AppError("Incorrect password.", 401));
@@ -273,7 +273,6 @@ export const googleLogin = async (req, res, next) => {
         .cookie("access_token", token, {
           expires: date,
           httpOnly: true,
-          domain: "http://127.0.0.1:5500",
         })
         .set({
           "api-key": token,
@@ -306,7 +305,6 @@ export const googleLogin = async (req, res, next) => {
         .cookie("access_token", token, {
           expires: date,
           httpOnly: true,
-          domain: "http://127.0.0.1:5500",
         })
         .set({
           "api-key": token,
