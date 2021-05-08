@@ -206,9 +206,9 @@ export const loginUser = async (req, res, next) => {
         .cookie("access_token", token, {
           expires: date,
           httpOnly: true,
-          secure: true,
+          secure: false,
           sameSite: "None",
-          domian: ".localhost",
+          domian: "127.0.0.1",
           path: "/",
         })
         .set({
