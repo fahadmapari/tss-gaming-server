@@ -207,7 +207,7 @@ export const loginUser = async (req, res, next) => {
           expires: date,
           httpOnly: true,
           secure: false,
-          sameSite: false,
+          sameSite: "None",
           path: "/",
         })
         .set({
