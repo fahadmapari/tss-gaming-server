@@ -25,13 +25,14 @@ const app = express();
 app.use(cookieParser());
 app.use(
   cors({
-    // origin: "http://127.0.0.1:5500",
+    origin: true,
     exposedHeaders: ["api-key", "Authorization"],
     credentials: true,
   })
 );
 
 app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", req.get("origin"));
   res.header("Access-Control-Allow-Credentials", true);
   next();
 });
