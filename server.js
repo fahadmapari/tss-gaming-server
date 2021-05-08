@@ -25,7 +25,7 @@ const app = express();
 app.use(cookieParser());
 app.use(cors({
   exposedHeaders: 'api-key',
-  Access-Control-Allow-Origin: true,
+  origin: true,
   credentials: true
 }));
 app.use(express.urlencoded({ extended: true }));
