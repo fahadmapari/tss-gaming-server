@@ -3,15 +3,27 @@ import jwt from "jsonwebtoken";
 import Session from "../models/sessionModel.js";
 
 export const checkGuest = (req, res, next) => {
-  const token = req.cookies.access_token;
+  let token = req.cookies.access_token;
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    token = req.headers.authorization.split(" ")[1];
+  }
 
   if (!token) {
     next();
   } else {
-    return res.status(403).json({
-      status: "Error",
-      message: "Already logged in.",
-    });
+
+    try{
+      const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
+       return res.status(403).json({
+          status: "Error",
+          message: "Already logged in.",
+      });
+    }catch(err){
+      next();
+    }
   }
 };
 
