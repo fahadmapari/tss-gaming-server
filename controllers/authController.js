@@ -206,7 +206,7 @@ export const loginUser = async (req, res, next) => {
         .cookie("access_token", token, {
           expires: date,
           httpOnly: true,
-          secure: false,
+          secure: true,
           sameSite: "None",
           domian: ".localhost",
           path: "/",
