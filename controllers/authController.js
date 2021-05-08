@@ -208,6 +208,7 @@ export const loginUser = async (req, res, next) => {
           httpOnly: true,
           secure: false,
           sameSite: "None",
+          domian: ".localhost",
           path: "/",
         })
         .set({
