@@ -23,7 +23,9 @@ const app = express();
 
 //express config
 app.use(cookieParser());
-app.use(cors());
+app.use(cors({
+  exposedHeaders: 'api-key',
+}));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static("public"));

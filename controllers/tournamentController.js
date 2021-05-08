@@ -151,7 +151,8 @@ export const getLeaderboardToEdit = async (req, res, next) => {
 
   try {
     const matches = await Match.find({ tournament: tournamentId })
-      .populate("player tournament")
+      .populate("player", "-password")
+      .populate("tournament")
       .exec();
 
     res.json({
