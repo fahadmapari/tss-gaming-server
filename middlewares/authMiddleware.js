@@ -55,7 +55,7 @@ export const validateToken = async (req, res, next) => {
         coins: user.coins,
       };
 
-      if (!user.emailVerified && user.mobileVerified) {
+      if (!user.emailVerified && !user.mobileVerified) {
         return res.status(401).json({
           status: "Error",
           message: "email or mobile not verified",

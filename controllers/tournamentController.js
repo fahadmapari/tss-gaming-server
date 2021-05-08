@@ -39,6 +39,7 @@ export const createNewTournament = async (req, res, next) => {
     kills,
     streak,
     damage,
+    prize
   } = req.body;
 
   try {
@@ -48,6 +49,7 @@ export const createNewTournament = async (req, res, next) => {
       entryFee,
       date,
       tournamentType,
+      prize,
       prizeDistribution: {
         kills,
         streak,
