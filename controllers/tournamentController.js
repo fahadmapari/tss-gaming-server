@@ -11,6 +11,7 @@ export const listAllTournaments = async (req, res, next) => {
     const opts = {
       page: page ? page : 1,
       limit: limit ? limit : 10,
+      sort: {"createdAt": -1}
     };
 
     const query = {};

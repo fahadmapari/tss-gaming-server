@@ -51,6 +51,7 @@ export const getMyTournaments = async (req, res, next) => {
       page: page ? page : 1,
       limit: limit ? limit : 10,
       populate: "tournament",
+      sort: {"createdAt": -1}
     });
 
     if (!profile) return next(new AppError("Profile not found", 404));
