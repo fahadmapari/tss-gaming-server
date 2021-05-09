@@ -31,11 +31,6 @@ app.use(
   })
 );
 
-// app.use((req, res, next) => {
-//   res.header("Access-Control-Allow-Origin", req.get("origin"));
-//   res.header("Access-Control-Allow-Credentials", true);
-//   next();
-// });
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static("public"));

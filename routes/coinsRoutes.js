@@ -13,7 +13,7 @@ import {
 } from "../middlewares/authMiddleware.js";
 const router = express.Router();
 
-router.get("/buy", validateToken, buyCoins);
+router.post("/buy", validateToken, buyCoins);
 router.get(
   "/withdraw/pending",
   validateAdminToken,
