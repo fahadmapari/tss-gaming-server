@@ -11,7 +11,7 @@ const instance = new Razorpay({
   key_secret: process.env.razor_secret,
 });
 
-export const buyCoins = async (req, res) => {
+export const buyCoins = async (req, res, next) => {
   const { coins } = req.body;
   try {
     const orderResponse = await instance.orders.create({
@@ -35,7 +35,7 @@ export const buyCoins = async (req, res) => {
   }
 };
 
-export const verifyPayment = async (req, res) => {
+export const verifyPayment = async (req, res, next) => {
   const shasum = crypto.createHmac("sha256", process.env.razor_secret);
   shasum.update(JSON.stringify(req.body));
   const digest = shasum.digest("hex");
