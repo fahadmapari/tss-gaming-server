@@ -3,6 +3,7 @@ import Session from "../models/sessionModel.js";
 import twilio from "twilio";
 import { AppError } from "../utils/AppError.js";
 import { generateToken } from "../utils/generateToken.js";
+import { validateEmail } from "../utils/validations.js";
 import {
   getGoogleAccountFromCode,
   googleConfig,
@@ -105,6 +106,9 @@ export const registerUser = async (req, res, next) => {
 
   if (!req.body.mobile || req.body.mobile === "")
     return next(new AppError("Mobile number is required", 400));
+
+  if (!validateEmail(req.body.email))
+    return next(new AppError("Invalid email", 400));
 
   if (req.body.mobile.length < 10)
     return next(new AppError("Invalid mobile number", 400));

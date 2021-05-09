@@ -93,6 +93,17 @@ http cookie or Bearer token required
 
 ---
 
+Route to get user's transactions
+
+GET
+`/profile/transactions`
+
+response will consist of { user, order_id, orderDetails}
+
+http cookie or Bearer token required
+
+---
+
 Route to get specific user details
 
 GET
@@ -198,4 +209,20 @@ successful response will return created tournament back
 
 ---
 
-Route to
+Route to get pending withdrawal requests for admin
+
+GET
+`coins/withdraw/pending`
+
+response will consist of { user, amount, status }
+
+---
+
+Route to get all withdrawal requests for admin
+
+GET
+`coins/withdraw`
+
+response will consist of { user, amount, status }
+
+---
