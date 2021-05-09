@@ -21,7 +21,7 @@ router.get(
 );
 router.get("/withdraw", validateAdminToken, getAllWithdrawalRequests);
 
-router.get("/verify", verifyPayment);
+router.get("/verifypay", verifyPayment);
 
 router.post("/withdraw/request", validateToken, withdrawRequestByUser);
 router.post(
