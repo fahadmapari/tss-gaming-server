@@ -73,9 +73,7 @@ export const getMyTournaments = async (req, res, next) => {
 export const getMyTransactions = async (req, res, next) => {
   try {
     const { id } = req.user;
-    const transactions = Order.find({ user: id })
-      .populate("user", "-password")
-      .exec();
+    const transactions = Order.find({ user: id });
 
     res.status(200).json({
       transactions,
