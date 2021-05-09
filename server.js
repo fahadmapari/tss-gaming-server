@@ -4,7 +4,7 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 // import morgan from "morgan";
-// import { runLocalTunnel } from "./utils/localTunnel.js";
+import { runLocalTunnel } from "./utils/localTunnel.js";
 
 import { connectDB } from "./db.js";
 connectDB();
@@ -25,7 +25,7 @@ const app = express();
 app.use(cookieParser());
 app.use(
   cors({
-    origin: true,
+    origin: "http://127.0.0.1:5500",
     exposedHeaders: ["api-key", "Authorization"],
     credentials: true,
   })
@@ -65,4 +65,4 @@ app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
 });
 
-// runLocalTunnel(process.env.ENV, PORT);
+runLocalTunnel(process.env.ENV, PORT);
