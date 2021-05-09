@@ -52,8 +52,8 @@ const tournamentScehma = new mongoose.Schema(
     },
     credentials: {
       type: {
-        roomid: String,
-        password: String,
+        roomId: String,
+        roomPassword: String,
       },
     },
     stream: {

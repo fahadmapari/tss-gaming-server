@@ -11,6 +11,10 @@ const withdrawalScehma = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    upiID: {
+      type: String,
+      required: true,
+    },
     status: {
       type: String,
       enum: ["pending", "accepted", "declined"],

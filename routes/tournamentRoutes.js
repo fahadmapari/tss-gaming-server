@@ -7,6 +7,7 @@ import {
   getLeaderboard,
   addToLeaderboard,
   getLeaderboardToEdit,
+  getJoinedUsers,
 } from "../controllers/tournamentController.js";
 import {
   validateAdminToken,
@@ -16,6 +17,7 @@ import {
 const router = express.Router();
 
 router.get("/list", listAllTournaments);
+router.get("/:id/users", getJoinedUsers);
 router.get("/leaderboard/:id", getLeaderboard);
 router.get("/leaderboard/:id/edit", validateAdminToken, getLeaderboardToEdit);
 

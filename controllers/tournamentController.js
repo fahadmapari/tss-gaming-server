@@ -11,7 +11,8 @@ export const listAllTournaments = async (req, res, next) => {
     const opts = {
       page: page ? page : 1,
       limit: limit ? limit : 10,
-      sort: {"createdAt": -1}
+      sort: { createdAt: -1 },
+      select: "-credentials",
     };
 
     const query = {};
@@ -40,7 +41,7 @@ export const createNewTournament = async (req, res, next) => {
     kills,
     streak,
     damage,
-    prize
+    prize,
   } = req.body;
 
   try {
@@ -81,6 +82,7 @@ export const createNewTournament = async (req, res, next) => {
 export const joinTournament = async (req, res, next) => {
   const { id: userId, coins: userCoins } = req.user;
   const { tournamentId } = req.body;
+  let { teamMembers } = req.body;
 
   try {
     const tournament = await Tournament.findOne({ _id: tournamentId });
@@ -102,9 +104,24 @@ export const joinTournament = async (req, res, next) => {
 
     const leaderboard = await Leaderboard.findOne({ tournament: tournamentId });
 
+    if (
+      tournament.tournamentType === "solo" ||
+      !teamMembers ||
+      teamMembers === ""
+    ) {
+      teamMembers = [];
+    }
+
+    if (teamMembers) {
+      if (!Array.isArray(teamMembers)) {
+        return next(new AppError("Team members should be an array.", 401));
+      }
+    }
+
     const match = await Match.create({
       tournament: tournamentId,
       leaderboard: leaderboard._id,
+      teamMembers,
       player: userId,
     });
 
@@ -120,6 +137,26 @@ export const joinTournament = async (req, res, next) => {
     res.status(200).send({
       message: "Joined Tournament",
       data: match,
+    });
+  } catch (err) {
+    next(new AppError(error.message, 503));
+  }
+};
+
+export const getJoinedUsers = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    if (!id || id === "")
+      return next(new AppError("Invalid tournament id", 401));
+
+    const users = Match.find({ tournament: id })
+      .select("player")
+      .populate("player", "-password")
+      .exec();
+
+    res.json({
+      users,
     });
   } catch (err) {
     next(new AppError(error.message, 503));
@@ -176,7 +213,7 @@ export const addToLeaderboard = async (req, res, next) => {
       {
         prize: prizeWon,
         kills: kills,
-        streak: streak
+        streak: streak,
       }
     );
 

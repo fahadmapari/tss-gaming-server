@@ -13,6 +13,9 @@ const matchScehma = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    team: {
+      type: [String],
+    },
     leaderboard: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Leaderboard",
@@ -23,6 +26,14 @@ const matchScehma = new mongoose.Schema(
       default: 0,
     },
     kills: {
+      type: Number,
+      default: 0,
+    },
+    streak: {
+      type: Number,
+      default: 0,
+    },
+    damage: {
       type: Number,
       default: 0,
     },

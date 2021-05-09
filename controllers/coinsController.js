@@ -65,10 +65,10 @@ export const verifyPayment = async (req, res, next) => {
 
 export const withdrawRequestByUser = async (req, res, next) => {
   const { id: userId } = req.user;
-  const { withdrawAmount } = req.body;
+  const { withdrawAmount, upiID } = req.body;
 
   try {
-    if (withdrawAmount <= 0) {
+    if (withdrawAmount <= 0 || !withdrawAmount || withdrawAmount === "") {
       return next(new AppError("Withdrawal amount can not be empty.", 401));
     }
 
@@ -78,6 +78,7 @@ export const withdrawRequestByUser = async (req, res, next) => {
 
     const withdrawalData = await Withdrawal.create({
       user: userId,
+      upiID,
       amount: withdrawAmount,
     });
 
@@ -91,7 +92,7 @@ export const withdrawRequestByUser = async (req, res, next) => {
     );
 
     res.status(201).json({
-      data: withdrawalData,
+      withdrawalData,
     });
   } catch (error) {
     next(new AppError(error.message, 503));
@@ -100,7 +101,9 @@ export const withdrawRequestByUser = async (req, res, next) => {
 
 export const getPendingWithdrawalRequests = async (req, res, next) => {
   try {
-    const withdrawals = await Withdrawal.find({ status: "pending" });
+    const withdrawals = await Withdrawal.find({ status: "pending" })
+      .populate("user", "-password")
+      .exec();
 
     res.status(200).json({
       withdrawals,
@@ -112,7 +115,9 @@ export const getPendingWithdrawalRequests = async (req, res, next) => {
 
 export const getAllWithdrawalRequests = async (req, res, next) => {
   try {
-    const withdrawals = await Withdrawal.find({});
+    const withdrawals = await Withdrawal.find({})
+      .populate("user", "-password")
+      .exec();
 
     res.status(200).json({
       withdrawals,

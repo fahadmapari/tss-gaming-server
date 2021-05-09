@@ -136,12 +136,25 @@ No auth required
 
 ---
 
+Route to get joined users for a tournament
+
+GET
+`tournament/:id/users`
+
+- replace :id with tournament's "\_id" in url
+
+- all tournaments have a unique id with property name "\_id"
+
+It will return all the users who joined the tournament.
+
+---
+
 Route for user to join a tournament
 
 POST
 `/tournament/join`
 
-data to send `{ tournamentId: string }`
+data to send `{ tournamentId: string, teamMembers: [string, string, string]//array }`
 
 - all tournaments have a unique id with property name "\_id" you have pass that as tournamentId in this id
 
@@ -182,7 +195,7 @@ Route to withdraw coins
 POST
 `/coins/withdraw/request`
 
-data to send `{ withdrawAmount: string|number }`
+data to send `{ withdrawAmount: string|number, upiID: string }`
 
 - "withdrawAmount" is the amount of coins users wants to withdraw.
 
@@ -196,14 +209,15 @@ Successful response will give withdrawal details back
 
 - Admin routes will require an admin account.
 
-## Admin tournament routes
+## Admin routes
 
 Admin route to create tournament
 
 POST
 `/tournament/create`
 data to send
-`{ title: string, thumbnails: [ files ] // array of files, description: string, entryFee: number, date: Date (date and time both), tournamentType: string ("solo", "duo", "team"), kills: number, streak: number, damage: number, prize: number, roomId: string, roomPassword: string }`
+
+`{ title: string, thumbnails: [ files ] // array of files, description: string, entryFee: number, date: Date (date and time both), tournamentType: string ("solo", "duo", "team"), kills: number, streak: number, damage: number, prize: number, roomId: string, roomPassword: string, stream: string }`
 
 successful response will return created tournament back
 
@@ -214,7 +228,7 @@ Route to get pending withdrawal requests for admin
 GET
 `coins/withdraw/pending`
 
-response will consist of { user, amount, status }
+response will consist of { user, amount, upiID ,status }
 
 ---
 
@@ -223,6 +237,20 @@ Route to get all withdrawal requests for admin
 GET
 `coins/withdraw`
 
-response will consist of { user, amount, status }
+response will consist of { user, amount, upiID ,status }
 
 ---
+
+Route to respond to withdrawal requests
+
+POST
+`coins/withdraw/respond/:id`
+data to send`{ action: string ("accept || "decline")}`
+
+- replace :id with withdrawal request's "\_id" in url
+
+- all withdrawal requests have a unique id with property name "\_id"
+
+- action can either be `accept` or `decline`
+
+after admins send the payment to users the admin can click on accept or if admin don't to send and decline the request admin can click decline and the coins will return to users account.
