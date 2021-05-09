@@ -1,18 +1,11 @@
 import express from "express";
-import {
-  getMyProfileDetails,
-  getProfileDetails,
-  getMyTournaments,
-  updateUserProfile,
-  getMyTransactions,
-} from "../controllers/profileController.js";
+import {} from "../controllers/profileController.js";
 import { checkGuest, validateToken } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
 router.get("/", validateToken, getMyProfileDetails);
 router.get("/tournaments", validateToken, getMyTournaments);
-router.get("/transactions", validateToken, getMyTransactions);
 
 router.get("/:id", getProfileDetails);
 

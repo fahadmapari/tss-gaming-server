@@ -186,3 +186,29 @@ Successful response will give withdrawal details back
 - Admin routes will require an admin account.
 
 ## Admin tournament routes
+
+Admin route to create tournament
+
+POST
+/tournament/create
+data to send
+{
+title: string,
+thumbnails: [ files ] // array of files,
+description: string,
+entryFee: number,
+date: Date (date and time both),
+tournamentType: string ("solo", "duo", "team"),
+kills: number,
+streak: number,
+damage: number,
+prize: number,
+roomId: string,
+roomPassword: string
+}
+
+successful response will return created tournament back
+
+---
+
+Route to

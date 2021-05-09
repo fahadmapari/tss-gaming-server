@@ -1,5 +1,6 @@
 import User from "../models/userModel.js";
 import Tournament from "../models/tournamentModel.js";
+import Order from "../models/orderModel.js";
 import Match from "../models/matchModel.js";
 import { AppError } from "../utils/AppError.js";
 import { hashPassword } from "../utils/hashPassword.js";
@@ -65,6 +66,21 @@ export const getMyTournaments = async (req, res, next) => {
       tournaments: profile,
     });
   } catch (error) {
+    next(new AppError(error.message, 503));
+  }
+};
+
+export const getMyTransactions = async (req, res, next) => {
+  try {
+    const { id } = req.user;
+    const transactions = Order.find({ user: id })
+      .populate("user", "-password")
+      .exec();
+
+    res.status(200).json({
+      transactions,
+    });
+  } catch (err) {
     next(new AppError(error.message, 503));
   }
 };
