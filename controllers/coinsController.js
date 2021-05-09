@@ -22,7 +22,7 @@ export const buyCoins = async (req, res, next) => {
     });
 
     await Order.create({
-      user: req.user._id,
+      user: req.user.id,
       order_id: orderResponse.order_id,
       orderDetails: orderResponse,
     });
