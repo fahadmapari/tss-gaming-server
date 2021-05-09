@@ -3,12 +3,12 @@
 ## Auth routes
 
 POST
-/api/auth/register
-{ name: string, email: string, password: string, mobile: number , profilePic: file (optional), referCode: string (optional)}
+`/api/auth/register`
+`{ name: string, email: string, password: string, mobile: number , profilePic: file (optional), referCode: string (optional)}`
 
 POST
-/api/auth/login
-{ email: string, password: string }
+`/api/auth/login`
+`{ email: string, password: string }`
 
 after successful login/register server will respond with user data and access token which will be inside httpOnly cookie and also access token is headers with header name of api-key.
 
@@ -17,7 +17,7 @@ after successful login/register server will respond with user data and access to
 Route to generate OTP for mobile number
 
 GET
-/auth/otp
+`/auth/otp`
 
 - this route will generate otp and send it to registered mobile number
 
@@ -30,8 +30,8 @@ http cookie or Bearer token required
 Route to verify OTP code
 
 POST
-/auth/otp
-data to send { otp: string }
+`/auth/otp`
+data to send `{ otp: string }`
 
 - this route will verify otp and send result in response
 
@@ -49,7 +49,7 @@ http cookie or Bearer token required
 Route to get details of logged in user
 
 GET
-/profile
+`/profile`
 
 it will return all the details of logged in user
 
@@ -60,15 +60,15 @@ http cookie or Bearer token required
 Route to get all the tournaments user have joined
 
 GET
-/profile/tournaments
+`/profile/tournaments`
 
 - it can be paginated too like this
 
-/tournament/list?page=2&limit=10 (optional)
+`/tournament/list?page=2&limit=10 (optional)`
 
 - you can also get specific tournaments from it. upcoming, completed, ongoing
 
-- like this /tournament/list?status=upcoming (optional)
+- like this `/tournament/list?status=upcoming (optional)`
 
 note: for now don't use status and limit together
 
@@ -79,11 +79,11 @@ http cookie or Bearer token required
 Route to update user profile
 
 POST
-/profile/update
+`/profile/update`
 
 Data to send / data that can be edited:
 
-{ name, mobile, email, currentPassword, newPassword }
+`{ name, mobile, email, currentPassword, newPassword }`
 
 - newPassword only when password change is needed
 
@@ -96,7 +96,7 @@ http cookie or Bearer token required
 Route to get specific user details
 
 GET
-/profile/:id
+`/profile/:id`
 
 - replace :id with user's id in url
 
@@ -109,15 +109,15 @@ No auth required
 Route to get all tournaments [ "upcoming", "ongoing", "completed"]
 
 GET
-/tournament/list
+`/tournament/list`
 
 - It will give all the tournaments and it can be paginated too like this
 
-/tournament/list?page=2&limit=10
+`/tournament/list?page=2&limit=10`
 
 - you can also get specific tournaments from it. upcoming, completed, ongoing like this
 
-/tournament/list?status=upcoming
+`/tournament/list?status=upcoming`
 
 all query parameters are optional
 
@@ -128,9 +128,9 @@ No auth required
 Route for user to join a tournament
 
 POST
-/tournament/join
+`/tournament/join`
 
-data to send { tournamentId: string }
+data to send `{ tournamentId: string }`
 
 - all tournaments have a unique id with property name "\_id" you have pass that as tournamentId in this id
 
@@ -143,7 +143,7 @@ http cookie or Bearer token required
 Route to view leaderboard of a tournament
 
 GET
-/leaderboard/:id
+`/leaderboard/:id`
 
 - replace :id with tournament's "\_id" in url
 
@@ -156,9 +156,9 @@ When all winners are declared then this route will return list of winners with p
 Route to buy coins
 
 POST
-/coins/buy
+`/coins/buy`
 
-data to send { coins: string|number }
+data to send `{ coins: string|number }`
 
 - "coins" is the amount of coins users wants to purchase.
 
@@ -169,9 +169,9 @@ In response you will get order details which you will have to pass in razorpay s
 Route to withdraw coins
 
 POST
-/coins/withdraw/request
+`/coins/withdraw/request`
 
-data to send { withdrawAmount: string|number }
+data to send `{ withdrawAmount: string|number }`
 
 - "withdrawAmount" is the amount of coins users wants to withdraw.
 
@@ -190,22 +190,9 @@ Successful response will give withdrawal details back
 Admin route to create tournament
 
 POST
-/tournament/create
+`/tournament/create`
 data to send
-{
-title: string,
-thumbnails: [ files ] // array of files,
-description: string,
-entryFee: number,
-date: Date (date and time both),
-tournamentType: string ("solo", "duo", "team"),
-kills: number,
-streak: number,
-damage: number,
-prize: number,
-roomId: string,
-roomPassword: string
-}
+`{ title: string, thumbnails: [ files ] // array of files, description: string, entryFee: number, date: Date (date and time both), tournamentType: string ("solo", "duo", "team"), kills: number, streak: number, damage: number, prize: number, roomId: string, roomPassword: string }`
 
 successful response will return created tournament back
 
