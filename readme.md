@@ -17,9 +17,11 @@ after successful login/register server will respond with user data and access to
 Route to generate OTP for mobile number
 
 GET
-`/auth/otp`
+`/auth/otp/:method`
 
-- this route will generate otp and send it to registered mobile number
+- replace :method in url to either `mobile` or `email`
+
+- this route will generate otp and send it to registered mobile number / email
 
 User have to be registered / logged in to hit this route
 
@@ -30,8 +32,10 @@ http cookie or Bearer token required
 Route to verify OTP code
 
 POST
-`/auth/otp`
+`/auth/otp/:method`
 data to send `{ otp: string }`
+
+- replace :method in url to either `mobile` or `email`
 
 - this route will verify otp and send result in response
 
