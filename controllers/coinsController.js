@@ -52,7 +52,7 @@ export const verifyPayment = async (req, res, next) => {
         await User.findOneAndUpdate(
           { _id: updatedOrder.user },
           {
-            $inc: { coins: Number(updatedOrderpayload.payment.amount) / 100 },
+            $inc: { coins: Number(updatedOrder.amount) / 100 },
           }
         );
       } catch (err) {
