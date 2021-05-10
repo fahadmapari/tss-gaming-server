@@ -20,12 +20,15 @@ sgMail.setApiKey(process.env.SEND_GRID_KEY);
 
 export const generateOtp = async (req, res, next) => {
   try {
-    const { id, mobile, email } = req.user;
+    const { id, mobile, email, mobileVerified, emailVerified } = req.user;
     const { method } = req.params;
 
     if (method !== "mobile" && method !== "email")
       return next(new AppError("Invalid verification method", 401));
     if (method === "mobile") {
+      if (mobileVerified)
+        return next(new AppError("Mobile already verified", 403));
+
       client.verify
         .services(process.env.TWLO_SERVICE_ID)
         .verifications.create({ to: `+91${mobile}`, channel: "sms" })
@@ -50,6 +53,9 @@ export const generateOtp = async (req, res, next) => {
     }
 
     if (method === "email") {
+      if (emailVerified)
+        return next(new AppError("Email already verified", 403));
+
       client.verify
         .services(process.env.TWLO_SERVICE_ID)
         .verifications.create({ to: `${email}`, channel: "email" })
