@@ -12,10 +12,7 @@ import {
   getConnectionUrl,
   urlGoogle,
 } from "../utils/googleAuth.js";
-import {
-  facebookLoginUrl,
-  getFacebookAccessTokenFromCode,
-} from "../utils/facebookAuth.js";
+import { facebookLoginUrl } from "../utils/facebookAuth.js";
 import axios from "axios";
 
 const client = twilio(process.env.TWLO_SID, process.env.TWLO_TOKEN);
@@ -429,9 +426,20 @@ export const generateFacebookUrl = async (req, res, next) => {
 
 export const facebookLogin = async (req, res, next) => {
   try {
-    const access_token = await getFacebookAccessTokenFromCode(req.query.code);
+    const code = req.query.code;
 
     const { data } = await axios({
+      url: "https://graph.facebook.com/v4.0/oauth/access_token",
+      method: "get",
+      params: {
+        client_id: process.env.FACEBOOK_ID,
+        client_secret: process.env.FACEBOOK_SECRET,
+        redirect_uri: "https://tss-gaming.herokuapp.com/api/auth/facebook/",
+        code,
+      },
+    });
+
+    const { data: profile } = await axios({
       url: "https://graph.facebook.com/me",
       method: "get",
       params: {
@@ -443,12 +451,12 @@ export const facebookLogin = async (req, res, next) => {
           "name",
           "picture",
         ].join(","),
-        access_token: access_token,
+        access_token: data.access_token,
       },
     });
 
     res.json({
-      profile: data,
+      profile: profile,
     });
   } catch (err) {
     next(new AppError(err.message, 503));
