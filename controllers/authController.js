@@ -20,28 +20,58 @@ sgMail.setApiKey(process.env.SEND_GRID_KEY);
 
 export const generateOtp = async (req, res, next) => {
   try {
-    const { id, mobile } = req.user;
-    client.verify
-      .services(process.env.TWLO_SERVICE_ID)
-      .verifications.create({ to: `+91${mobile}`, channel: "sms" })
-      .then((verification) => {
-        res.status(200).json({
-          message: "OTP SENT",
-          data: {
-            to: verification.to,
-            channel: verification.channel,
-            status: verification.status,
-            lookup: verification.lookup,
-            dates: {
-              created: verification.date_created,
-              update: verification.date_updated,
+    const { id, mobile, email } = req.user;
+    const { method } = req.params;
+
+    if (method !== "mobile" && method !== "email")
+      return next(new AppError("Invalid verification method", 401));
+    if (method === "mobile") {
+      client.verify
+        .services(process.env.TWLO_SERVICE_ID)
+        .verifications.create({ to: `+91${mobile}`, channel: "sms" })
+        .then((verification) => {
+          res.status(200).json({
+            message: "OTP SENT TO MOBILE",
+            data: {
+              to: verification.to,
+              channel: verification.channel,
+              status: verification.status,
+              lookup: verification.lookup,
+              dates: {
+                created: verification.date_created,
+                update: verification.date_updated,
+              },
             },
-          },
+          });
+        })
+        .catch((err) => {
+          next(new AppError(err.message, 503));
         });
-      })
-      .catch((err) => {
-        next(new AppError(err.message, 503));
-      });
+    }
+
+    if (method === "email") {
+      client.verify
+        .services(process.env.TWLO_SERVICE_ID)
+        .verifications.create({ to: `${email}`, channel: "email" })
+        .then((verification) => {
+          res.status(200).json({
+            message: "OTP SENT TO EMAIL",
+            data: {
+              to: verification.to,
+              channel: verification.channel,
+              status: verification.status,
+              lookup: verification.lookup,
+              dates: {
+                created: verification.date_created,
+                update: verification.date_updated,
+              },
+            },
+          });
+        })
+        .catch((err) => {
+          next(new AppError(err.message, 503));
+        });
+    }
   } catch (err) {
     next(new AppError(err.message, 503));
   }
