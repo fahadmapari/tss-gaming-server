@@ -40,6 +40,7 @@ export const verifyPayment = async (req, res, next) => {
   shasum.update(JSON.stringify(req.body));
   const digest = shasum.digest("hex");
 
+  console.log(req.body);
   if (digest === req.headers["x-razorpay-signature"]) {
     if (req.body.payload.payment.entity.status === "captured") {
       try {
