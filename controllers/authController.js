@@ -461,6 +461,7 @@ export const facebookLogin = async (req, res, next) => {
       profile: profile,
     });
   } catch (err) {
+    console.log(err);
     next(new AppError(err.message, 503));
   }
 };

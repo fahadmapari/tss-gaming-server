@@ -205,7 +205,7 @@ export const getLeaderboardToEdit = async (req, res, next) => {
 
 export const addToLeaderboard = async (req, res, next) => {
   const { match: matchId } = req.params;
-  const { prizeWon, kills, streak } = req.body;
+  const { prizeWon, kills, streak } = req.body.userStats;
 
   try {
     const match = await Match.findOneAndUpdate(
