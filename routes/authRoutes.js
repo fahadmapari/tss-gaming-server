@@ -8,6 +8,8 @@ import {
   verifyOtp,
   generateGoogleURL,
   logoutUser,
+  generateFacebookUrl,
+  facebookLogin,
 } from "../controllers/authController.js";
 import {
   checkGuest,
@@ -20,8 +22,8 @@ const router = express.Router();
 router.get("/google", googleLogin);
 router.get("/google/url", generateGoogleURL);
 
-router.get("/facebook");
-router.get("/facebook/url");
+router.get("/facebook", generateFacebookUrl);
+router.get("/facebook/url", facebookLogin);
 
 router.get("/otp/:method", validateNewUserToken, generateOtp);
 router.get("/logout", validateToken, logoutUser);
