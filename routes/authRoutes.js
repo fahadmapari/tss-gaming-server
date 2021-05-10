@@ -19,7 +19,7 @@ const router = express.Router();
 
 router.get("/google", googleLogin);
 router.get("/google/url", generateGoogleURL);
-router.get("/otp", validateNewUserToken, generateOtp);
+router.get("/otp/:method", validateNewUserToken, generateOtp);
 router.get("/logout", validateToken, logoutUser);
 
 router.post(
@@ -29,6 +29,6 @@ router.post(
   registerUser
 );
 router.post("/login", checkGuest, loginUser);
-router.post("/otp", validateNewUserToken, verifyOtp);
+router.post("/otp/:method", validateNewUserToken, verifyOtp);
 
 export default router;
