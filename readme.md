@@ -12,6 +12,17 @@ POST
 
 after successful login/register server will respond with user data and access token which will be inside httpOnly cookie and also access token is headers with header name of api-key.
 
+---
+
+`Google auth`
+
+Route to get google auth url
+
+GET
+`auth/google/url`
+
+it will generate and return google auth url which you can put in button/a tag
+
 ## OTP verfification routes
 
 Route to generate OTP for mobile number
@@ -258,3 +269,22 @@ data to send`{ action: string ("accept || "decline")}`
 - action can either be `accept` or `decline`
 
 after admins send the payment to users the admin can click on accept or if admin don't to send and decline the request admin can click decline and the coins will return to users account.
+
+---
+
+Route to add declare winners / add stats of match of all users who joined the tournament.
+
+GET
+`/leaderboard/:id/edit`
+
+- replace :id with tournament's "\_id" in url
+
+- all tournaments have a unique id with property name "\_id"
+
+the result will consist of
+
+`{ tournament, player, team, leaderboard, prize, kills, streak, damage, created_at, updated_at}`
+
+---
+
+Route

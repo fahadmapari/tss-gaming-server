@@ -12,11 +12,13 @@ import {
   getConnectionUrl,
   urlGoogle,
 } from "../utils/googleAuth.js";
+import {
+  facebookLoginUrl,
+  getFacebookAccessTokenFromCode,
+} from "../utils/facebookAuth.js";
 import axios from "axios";
-import sgMail from "@sendgrid/mail";
 
 const client = twilio(process.env.TWLO_SID, process.env.TWLO_TOKEN);
-sgMail.setApiKey(process.env.SEND_GRID_KEY);
 
 export const generateOtp = async (req, res, next) => {
   try {
@@ -413,6 +415,47 @@ export const googleLogin = async (req, res, next) => {
   }
 };
 
+// facebook auth
+
+export const generateFacebookUrl = async (req, res, next) => {
+  try {
+    res.json({
+      url: facebookLoginUrl,
+    });
+  } catch (err) {
+    next(new AppError(err.message, 503));
+  }
+};
+
+export const facebookLogin = async (req, res, next) => {
+  try {
+    const { access_token } = await getFacebookAccessTokenFromCode(
+      req.query.code
+    );
+
+    const { profile } = await axios({
+      url: "https://graph.facebook.com/me",
+      method: "get",
+      params: {
+        fields: [
+          "id",
+          "email",
+          "first_name",
+          "last_name",
+          "name",
+          "picture",
+        ].join(","),
+        access_token: access_token,
+      },
+    });
+
+    res.json({
+      profile,
+    });
+  } catch (err) {
+    next(new AppError(err.message, 503));
+  }
+};
 //log out
 export const logoutUser = async (req, res, next) => {
   try {

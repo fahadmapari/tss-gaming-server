@@ -19,6 +19,10 @@ const router = express.Router();
 
 router.get("/google", googleLogin);
 router.get("/google/url", generateGoogleURL);
+
+router.get("/facebook");
+router.get("/facebook/url");
+
 router.get("/otp/:method", validateNewUserToken, generateOtp);
 router.get("/logout", validateToken, logoutUser);
 
