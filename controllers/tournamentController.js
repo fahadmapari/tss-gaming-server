@@ -139,7 +139,7 @@ export const joinTournament = async (req, res, next) => {
       data: match,
     });
   } catch (err) {
-    next(new AppError(error.message, 503));
+    next(new AppError(err.message, 503));
   }
 };
 
@@ -150,16 +150,18 @@ export const getJoinedUsers = async (req, res, next) => {
     if (!id || id === "")
       return next(new AppError("Invalid tournament id", 401));
 
-    const users = Match.find({ tournament: id })
+    const users = await Match.find({ tournament: id })
       .select("player")
       .populate("player", "-password")
       .exec();
+
+    console.log(users);
 
     res.json({
       users,
     });
   } catch (err) {
-    next(new AppError(error.message, 503));
+    next(new AppError(err.message, 503));
   }
 };
 
