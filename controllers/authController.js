@@ -205,7 +205,7 @@ export const registerUser = async (req, res, next) => {
     return next(new AppError("name is required", 400));
 
   const user = new User({
-    email: req.body.email,
+    email: req.body.email.toLowerCase(),
     mobile: req.body.mobile,
     password: req.body.password,
     name: req.body.name,
@@ -272,7 +272,12 @@ export const loginUser = async (req, res, next) => {
     if (!req.body.password || req.body.password === "")
       return next(new AppError("password is required", 400));
 
-    const foundUser = await User.findOne({ email: req.body.email });
+    if (!validateEmail(req.body.email))
+      return next(new AppError("Invalid email", 400));
+
+    const foundUser = await User.findOne({
+      email: req.body.email.toLowerCase(),
+    });
 
     if (!foundUser) return next(new AppError("User does not exist.", 404));
 
