@@ -431,7 +431,7 @@ export const facebookLogin = async (req, res, next) => {
   try {
     const access_token = await getFacebookAccessTokenFromCode(req.query.code);
 
-    const { profile } = await axios({
+    const { data } = await axios({
       url: "https://graph.facebook.com/me",
       method: "get",
       params: {
@@ -448,7 +448,7 @@ export const facebookLogin = async (req, res, next) => {
     });
 
     res.json({
-      profile,
+      profile: data,
     });
   } catch (err) {
     next(new AppError(err.message, 503));
