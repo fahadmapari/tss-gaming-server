@@ -3,7 +3,7 @@ import axios from "axios";
 
 const stringifiedParams = queryString.stringify({
   client_id: process.env.FACEBOOK_ID,
-  redirect_uri: "https://tss-gaming.herokuapp.com/api/authenticate/facebook/",
+  redirect_uri: "https://tss-gaming.herokuapp.com/api/auth/facebook/",
   scope: ["email", "public_profile"].join(","), // comma seperated string
   response_type: "code",
   auth_type: "rerequest",
