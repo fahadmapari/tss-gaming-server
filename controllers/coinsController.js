@@ -72,7 +72,7 @@ export const withdrawRequestByUser = async (req, res, next) => {
       return next(new AppError("Withdrawal amount can not be empty.", 401));
     }
 
-    if (Number(req.user.coins) - Number(withdrawAmount)) {
+    if (Number(req.user.coins) - Number(withdrawAmount) < 0) {
       return next(new AppError("Not enough coins.", 401));
     }
 
