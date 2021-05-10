@@ -21,9 +21,9 @@ export const buyCoins = async (req, res, next) => {
       payment_capture: true,
     });
 
-    await Order.create({
+    const order = await Order.create({
       user: req.user.id,
-      order_id: orderResponse.order_id,
+      order_id: orderResponse.id,
       orderDetails: orderResponse,
     });
 
@@ -46,7 +46,7 @@ export const verifyPayment = async (req, res, next) => {
       try {
         const updatedOrder = await Order.findOneAndUpdate(
           { order_id: req.body.payload.payment.entity.order_id },
-          { orderDetails: req.body }
+          { orderDetails: req.body.payload.payment.entity }
         );
 
         await User.findOneAndUpdate(
