@@ -140,7 +140,7 @@ export const respondToWithdrawalRequests = async (req, res, next) => {
   const { action } = req.body;
   let updatedRequest;
   try {
-    if (action !== "accept" || action !== "decline")
+    if (action !== "accept" && action !== "decline")
       return next(new AppError("Invalid action", 400));
 
     if (action === "accept") {
