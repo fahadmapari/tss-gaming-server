@@ -73,13 +73,13 @@ export const getMyTournaments = async (req, res, next) => {
 export const getMyTransactions = async (req, res, next) => {
   try {
     const { id } = req.user;
-    const transactions = Order.find({ user: id });
+    const transactions = await Order.find({ user: id });
 
     res.status(200).json({
       transactions,
     });
   } catch (err) {
-    next(new AppError(error.message, 503));
+    next(new AppError(err.message, 503));
   }
 };
 

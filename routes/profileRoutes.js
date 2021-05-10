@@ -11,8 +11,8 @@ import { checkGuest, validateToken } from "../middlewares/authMiddleware.js";
 const router = express.Router();
 
 router.get("/", validateToken, getMyProfileDetails);
-router.get("/tournaments", validateToken, getMyTournaments);
 router.get("/transactions", validateToken, getMyTransactions);
+router.get("/tournaments", validateToken, getMyTournaments);
 
 router.get("/:id", getProfileDetails);
 
