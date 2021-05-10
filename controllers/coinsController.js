@@ -42,22 +42,30 @@ export const verifyPayment = async (req, res, next) => {
 
   if (digest === req.headers["x-razorpay-signature"]) {
     if (req.body.payload.payment.entity.status === "captured") {
-      const updatedOrder = await Order.findOneAndUpdate(
-        { order_id: req.body.payload.payment.entity.order_id },
-        { orderDetails: req.body }
-      );
+      try {
+        const updatedOrder = await Order.findOneAndUpdate(
+          { order_id: req.body.payload.payment.entity.order_id },
+          { orderDetails: req.body }
+        );
 
-      await User.findOneAndUpdate(
-        { _id: updatedOrder.user },
-        {
-          $inc: { coins: Number(updatedOrderpayload.payment.amount) / 100 },
-        }
-      );
+        await User.findOneAndUpdate(
+          { _id: updatedOrder.user },
+          {
+            $inc: { coins: Number(updatedOrderpayload.payment.amount) / 100 },
+          }
+        );
+      } catch (err) {
+        console.log(err);
+      }
     } else {
-      await Order.findOneAndUpdate(
-        { order_id: req.body.payload.payment.entity.order_id },
-        { orderDetails: req.body }
-      );
+      try {
+        await Order.findOneAndUpdate(
+          { order_id: req.body.payload.payment.entity.order_id },
+          { orderDetails: req.body }
+        );
+      } catch (err) {
+        console.log(err);
+      }
     }
   }
   res.status(200).json({ status: "OK" });

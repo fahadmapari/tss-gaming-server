@@ -13,7 +13,10 @@ import {
   urlGoogle,
 } from "../utils/googleAuth.js";
 import axios from "axios";
+import sgMail from "@sendgrid/mail";
+
 const client = twilio(process.env.TWLO_SID, process.env.TWLO_TOKEN);
+sgMail.setApiKey(process.env.SEND_GRID_KEY);
 
 export const generateOtp = async (req, res, next) => {
   try {
