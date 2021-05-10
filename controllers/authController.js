@@ -429,9 +429,7 @@ export const generateFacebookUrl = async (req, res, next) => {
 
 export const facebookLogin = async (req, res, next) => {
   try {
-    const { access_token } = await getFacebookAccessTokenFromCode(
-      req.query.code
-    );
+    const access_token = await getFacebookAccessTokenFromCode(req.query.code);
 
     const { profile } = await axios({
       url: "https://graph.facebook.com/me",
