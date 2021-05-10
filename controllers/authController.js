@@ -439,6 +439,8 @@ export const facebookLogin = async (req, res, next) => {
       },
     });
 
+    console.log(data);
+
     const { data: profile } = await axios({
       url: "https://graph.facebook.com/me",
       method: "get",
