@@ -240,6 +240,8 @@ export const registerUser = async (req, res, next) => {
       .cookie("access_token", token, {
         expires: date,
         httpOnly: true,
+        secure: false,
+        sameSite: "None",
       })
       .set({
         "api-key": token,
@@ -301,7 +303,6 @@ export const loginUser = async (req, res, next) => {
           httpOnly: true,
           secure: false,
           sameSite: "None",
-          path: "/",
         })
         .set({
           "api-key": token,
