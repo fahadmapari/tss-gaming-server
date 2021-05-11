@@ -120,9 +120,7 @@ export const getPendingWithdrawalRequests = async (req, res, next) => {
         limit: limit ? limit : 10,
         sort: { createdAt: -1 },
       }
-    )
-      .populate("user", "-password")
-      .exec();
+    );
 
     res.status(200).json({
       withdrawals,
@@ -144,9 +142,7 @@ export const getAllWithdrawalRequests = async (req, res, next) => {
         limit: limit ? limit : 10,
         sort: { createdAt: -1 },
       }
-    )
-      .populate("user", "-password")
-      .exec();
+    );
 
     res.status(200).json({
       withdrawals,
