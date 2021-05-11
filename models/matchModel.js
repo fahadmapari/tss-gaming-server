@@ -10,6 +10,10 @@ const matchScehma = new mongoose.Schema(
       required: true,
       autopopulate: true,
     },
+    tournamentStatus: {
+      type: String,
+      required: true,
+    },
     player: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

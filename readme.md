@@ -19,7 +19,7 @@ after successful login/register server will respond with user data and access to
 Route to get google auth url
 
 GET
-`auth/google/url`
+`/auth/google/url`
 
 it will generate and return google auth url which you can put in a button/a tag
 
@@ -30,7 +30,7 @@ it will generate and return google auth url which you can put in a button/a tag
 Route to get google auth url
 
 GET
-`auth/facebook/url`
+`/auth/facebook/url`
 
 it will generate and return facebook auth url which you can put in a button/a tag
 
@@ -41,7 +41,7 @@ it will generate and return facebook auth url which you can put in a button/a ta
 Route to get google auth url
 
 GET
-`auth/discord/url`
+`/auth/discord/url`
 
 it will generate and return discord auth url which you can put in a button/a tag
 
@@ -109,7 +109,7 @@ GET
 
 - like this `/profile/tournaments?status=upcoming (optional)`
 
-note: for now don't use status and limit together
+- like this `/profile/tournaments?page=1&limit=10&status=upcoming (optional)`
 
 http cookie or Bearer token required
 
@@ -197,7 +197,7 @@ No auth required
 Route to get joined users for a tournament
 
 GET
-`tournament/:id/users`
+`/tournament/:id/users`
 
 - replace :id with tournament's "\_id" in url
 
@@ -284,7 +284,7 @@ successful response will return created tournament back
 Route to get pending withdrawal requests for admin
 
 GET
-`.coins/withdraw/pending`
+`/coins/withdraw/pending`
 
 - it can be paginated too like this
 
@@ -310,7 +310,7 @@ response will consist of { user, amount, upiID ,status }
 Route to respond to withdrawal requests
 
 POST
-`coins/withdraw/respond/:id`
+`/coins/withdraw/respond/:id`
 data to send`{ action: string ("accept || "decline")}`
 
 - replace :id with withdrawal request's "\_id" in url
@@ -326,7 +326,7 @@ after admins send the payment to users the admin can click on accept or if admin
 Route to get all players to declare winners / add stats of match of all users who joined the tournament.
 
 GET
-`tournament/leaderboard/:id/edit`
+`/tournament/leaderboard/:id/edit`
 
 - replace :id with tournament's "\_id" in url
 
@@ -341,7 +341,7 @@ the result will consist of
 Route declare winners / add stats of match of all users who joined the tournament.
 
 POST
-`tournament/leaderboard/:match/edit`
+`/tournament/leaderboard/:match/edit`
 
 data to send
 `{ prizeWon, kills, streak, damage }`

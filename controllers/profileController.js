@@ -43,36 +43,20 @@ export const getMyTournaments = async (req, res, next) => {
 
     const query = {
       player: id,
-      // "tournament.status": "completed",
     };
 
-    // if (status && status !== "") query["tournament.status"] = status;
-
-    // const data = await Match.aggregate([
-    //   { $match: { player: { $eq: id } } },
-    // ])
-
-    console.log(data);
+    if (status && status !== "") query.tournamentStatus = status;
 
     let profile = await Match.paginate(query, {
       page: page ? page : 1,
       limit: limit ? limit : 10,
-      // populate: {
-      //   path: "tournament",
-      //   match: { status: { $eq: status } },
-      // },
+      populate: {
+        path: "tournament",
+      },
       sort: { createdAt: -1 },
     });
 
     if (!profile) return next(new AppError("Profile not found", 404));
-
-    // if (status && status !== "") {
-    //   profile.docs = profile.docs.filter((p) => {
-    //     if (p.tournament.status === status) {
-    //       return p;
-    //     }
-    //   });
-    // }
 
     res.status(200).json({
       tournaments: profile,

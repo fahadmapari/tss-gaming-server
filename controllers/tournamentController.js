@@ -2,6 +2,7 @@ import Tournament from "../models/tournamentModel.js";
 import Match from "../models/matchModel.js";
 import User from "../models/userModel.js";
 import Leaderboard from "../models/LeaderboardModel.js";
+import { updateTournamentStatus } from "../cron-jobs/updateTournaments.js";
 import { AppError } from "../utils/AppError.js";
 
 export const listAllTournaments = async (req, res, next) => {
@@ -73,14 +74,16 @@ export const createNewTournament = async (req, res, next) => {
       });
     }
 
-    await tournament.save();
+    const savedTournament = await tournament.save();
     const leaderboard = await Leaderboard.create({
       tournament: tournament._id,
     });
 
+    await updateTournamentStatus(savedTournament._id, savedTournament.date);
+
     res.status(201).json({
       message: "New Tournament created",
-      data: tournament,
+      data: savedTournament,
     });
   } catch (err) {
     next(new AppError(err.message, 503));
@@ -96,6 +99,9 @@ export const joinTournament = async (req, res, next) => {
     const tournament = await Tournament.findOne({ _id: tournamentId });
 
     if (!tournament) return next(new AppError("Invalid Tournament ID", 404));
+
+    if (tournament.status !== "upcoming")
+      return next(new AppError("Tournament already started.", 404));
 
     if (Number(userCoins) - Number(tournament.entryFee) < 0) {
       return next(new AppError("Not enough coins to join.", 403));
@@ -128,6 +134,7 @@ export const joinTournament = async (req, res, next) => {
 
     const match = await Match.create({
       tournament: tournamentId,
+      tournamentStatus: tournament.status,
       leaderboard: leaderboard._id,
       teamMembers,
       player: userId,
@@ -237,6 +244,8 @@ export const addToLeaderboard = async (req, res, next) => {
         },
       }
     );
+
+    await Tournament.findOneAndUpdate({ _id: match.tournament });
 
     res.status(200).json({
       data: match,
