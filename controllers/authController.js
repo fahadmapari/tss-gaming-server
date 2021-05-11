@@ -456,9 +456,68 @@ export const facebookLogin = async (req, res, next) => {
       },
     });
 
-    res.json({
-      profile: profile,
-    });
+    const { email, name, picture } = profile;
+
+    if (!email || email === "")
+      return res.send({
+        message: "Email is required. No email linked to this facebook account.",
+      });
+
+    const existingUser = await User.findOne({ email: email }).select(
+      "-password"
+    );
+
+    if (existingUser) {
+      const token = generateToken(existingUser._id);
+      let date = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+
+      await Session.create({
+        user: existingUser._id,
+        token,
+        expireAt: date,
+      });
+
+      res
+        .status(201)
+        .cookie("access_token", token, {
+          expires: date,
+          httpOnly: true,
+        })
+        .set({
+          "api-key": token,
+        })
+        .redirect("/");
+    }
+
+    if (!existingUser) {
+      const user = await User.create({
+        name: name,
+        email: email,
+        emailVerified: true,
+        password: "",
+        profilePic: picture.url,
+      });
+
+      const token = generateToken(user._id);
+      let date = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+
+      await Session.create({
+        user: user._id,
+        token,
+        expireAt: date,
+      });
+
+      res
+        .status(200)
+        .cookie("access_token", token, {
+          expires: date,
+          httpOnly: true,
+        })
+        .set({
+          "api-key": token,
+        })
+        .redirect("/");
+    }
   } catch (err) {
     console.log(err);
     next(new AppError(err.message, 503));
