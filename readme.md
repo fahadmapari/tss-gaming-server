@@ -285,10 +285,10 @@ after admins send the payment to users the admin can click on accept or if admin
 
 ---
 
-Route to add declare winners / add stats of match of all users who joined the tournament.
+Route to get all players to declare winners / add stats of match of all users who joined the tournament.
 
 GET
-`/leaderboard/:id/edit`
+`tournament/leaderboard/:id/edit`
 
 - replace :id with tournament's "\_id" in url
 
@@ -300,4 +300,12 @@ the result will consist of
 
 ---
 
-Route
+Route declare winners / add stats of match of all users who joined the tournament.
+
+POST
+`tournament/leaderboard/:match/edit`
+
+data to send
+`{ prizeWon, kills, streak, damage }`
+
+- every object received from GET `tournament/leaderboard/:id/edit` will have a unique "\_id" put that in url instead of ":match"

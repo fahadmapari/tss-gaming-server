@@ -42,6 +42,9 @@ export const createNewTournament = async (req, res, next) => {
     streak,
     damage,
     prize,
+    roomId,
+    roomPassword,
+    stream,
   } = req.body;
 
   try {
@@ -49,7 +52,7 @@ export const createNewTournament = async (req, res, next) => {
       title,
       description,
       entryFee,
-      date,
+      date: new Date(date),
       tournamentType,
       prize,
       prizeDistribution: {
@@ -57,6 +60,11 @@ export const createNewTournament = async (req, res, next) => {
         streak,
         damage,
       },
+      credentials: {
+        roomId,
+        roomPassword,
+      },
+      stream,
     });
 
     if (req.files.length) {
@@ -205,7 +213,7 @@ export const getLeaderboardToEdit = async (req, res, next) => {
 
 export const addToLeaderboard = async (req, res, next) => {
   const { match: matchId } = req.params;
-  const { prizeWon, kills, streak } = req.body.userStats;
+  const { prizeWon, kills, streak, damage } = req.body.userStats;
 
   try {
     const match = await Match.findOneAndUpdate(
@@ -216,6 +224,7 @@ export const addToLeaderboard = async (req, res, next) => {
         prize: prizeWon,
         kills: kills,
         streak: streak,
+        damage: damage,
       }
     );
 
