@@ -143,7 +143,10 @@ export const updateUserProfile = async (req, res, next) => {
         { _id: req.user.id },
         {
           ...updateDetails,
-        }
+          mobileVerified: mobile ? false : req.user.mobileVerified,
+          emailVerified: email ? false : req.user.emailVerified,
+        },
+        { runValidators: true, context: "query" }
       );
 
       res.json({
