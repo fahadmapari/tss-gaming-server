@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import { hashPassword } from "../utils/hashPassword.js";
 import shortid from "shortid";
 import bcrypt from "bcrypt";
+import uniqueValidator from "mongoose-unique-validator";
 
 const userScehma = new mongoose.Schema({
   email: {
@@ -22,7 +23,7 @@ const userScehma = new mongoose.Schema({
   },
   name: {
     type: String,
-    required: true,
+    required: [true, "name is required."],
   },
   password: {
     type: String,
@@ -44,6 +45,8 @@ const userScehma = new mongoose.Schema({
     default: shortid.generate,
   },
 });
+
+userScehma.plugin(uniqueValidator, { message: `{PATH} already in use.` });
 
 userScehma.pre("save", async function (next) {
   if (this.password === "" || !this.password) return next();

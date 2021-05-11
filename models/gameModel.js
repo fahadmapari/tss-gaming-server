@@ -1,15 +1,17 @@
-import mongoose from "mongoose";
+// not using this anymore after seeing UI design
 
-const gameScehma = new mongoose.Schema({
-  title: {
-    type: String,
-    required: true,
-  },
-  cover: {
-    type: String,
-    required: true,
-  },
-});
+// import mongoose from "mongoose";
 
-const Game = mongoose.model("Game", gameScehma);
-export default Game;
+// const gameScehma = new mongoose.Schema({
+//   title: {
+//     type: String,
+//     required: true,
+//   },
+//   cover: {
+//     type: String,
+//     required: true,
+//   },
+// });
+
+// const Game = mongoose.model("Game", gameScehma);
+// export default Game;

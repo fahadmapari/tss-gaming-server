@@ -13,9 +13,18 @@ import {
   urlGoogle,
 } from "../utils/googleAuth.js";
 import { facebookLoginUrl } from "../utils/facebookAuth.js";
+import OAuthClient from "disco-oauth";
 import axios from "axios";
 
 const client = twilio(process.env.TWLO_SID, process.env.TWLO_TOKEN);
+const discordClient = new OAuthClient(
+  process.env.DISCORD_ID,
+  process.env.DISCORD_SECRET
+);
+
+discordClient
+  .setScopes(["identify", "email"])
+  .setRedirect("https://tss-gaming.herokuapp.com/api/auth/discord");
 
 export const generateOtp = async (req, res, next) => {
   try {
@@ -523,6 +532,90 @@ export const facebookLogin = async (req, res, next) => {
     next(new AppError(err.message, 503));
   }
 };
+
+// discord auth
+
+export const generateDiscordUrl = async (req, res, next) => {
+  try {
+    res.json({
+      url: process.env.DISCORD_OAUTH_URL,
+    });
+  } catch (err) {
+    next(new AppError(err.message, 503));
+  }
+};
+
+export const discordLogin = async (req, res, next) => {
+  try {
+    const code = req.query.code;
+
+    const access_token = await discordClient.getAccess(code);
+
+    const user = await discordClient.getUser(access_token);
+    console.log(user);
+    res.json({ user });
+
+    const existingUser = await User.findOne({ email: user.emailId }).select(
+      "-password"
+    );
+
+    if (existingUser) {
+      const token = generateToken(existingUser._id);
+      let date = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+
+      await Session.create({
+        user: existingUser._id,
+        token,
+        expireAt: date,
+      });
+
+      res
+        .status(201)
+        .cookie("access_token", token, {
+          expires: date,
+          httpOnly: true,
+        })
+        .set({
+          "api-key": token,
+        })
+        .redirect("/");
+    }
+
+    if (!existingUser) {
+      const user = await User.create({
+        name: user.username,
+        email: user.emailId,
+        emailVerified: true,
+        password: "",
+        profilePic: user.avatarUrl,
+      });
+
+      const token = generateToken(user._id);
+      let date = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+
+      await Session.create({
+        user: user._id,
+        token,
+        expireAt: date,
+      });
+
+      res
+        .status(200)
+        .cookie("access_token", token, {
+          expires: date,
+          httpOnly: true,
+        })
+        .set({
+          "api-key": token,
+        })
+        .redirect("/");
+    }
+  } catch (err) {
+    console.log(err);
+    next(new AppError(err.message, 503));
+  }
+};
+
 //log out
 export const logoutUser = async (req, res, next) => {
   try {

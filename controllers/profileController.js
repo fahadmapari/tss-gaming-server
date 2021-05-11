@@ -4,6 +4,7 @@ import Order from "../models/orderModel.js";
 import Match from "../models/matchModel.js";
 import { AppError } from "../utils/AppError.js";
 import { hashPassword } from "../utils/hashPassword.js";
+import Withdrawal from "../models/withdrawModel.js";
 
 export const getProfileDetails = async (req, res, next) => {
   const { id } = req.params;
@@ -73,10 +74,41 @@ export const getMyTournaments = async (req, res, next) => {
 export const getMyTransactions = async (req, res, next) => {
   try {
     const { id } = req.user;
-    const transactions = await Order.find({ user: id });
+    const { page, limit } = req.query;
+
+    const transactions = await Order.paginate(
+      { user: id },
+      {
+        page: page ? page : 1,
+        limit: limit ? limit : 10,
+        sort: { createdAt: -1 },
+      }
+    );
 
     res.status(200).json({
       transactions,
+    });
+  } catch (err) {
+    next(new AppError(err.message, 503));
+  }
+};
+
+export const getMyWithdrawals = async (req, res, next) => {
+  try {
+    const { id } = req.user;
+    const { page, limit } = req.query;
+
+    const withdrawals = await Withdrawal.paginate(
+      { user: id },
+      {
+        page: page ? page : 1,
+        limit: limit ? limit : 10,
+        sort: { createdAt: -1 },
+      }
+    );
+
+    res.status(200).json({
+      withdrawals,
     });
   } catch (err) {
     next(new AppError(err.message, 503));

@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import mongoosePaginate from "mongoose-paginate-v2";
 
 const withdrawalScehma = new mongoose.Schema(
   {
@@ -9,11 +10,11 @@ const withdrawalScehma = new mongoose.Schema(
     },
     amount: {
       type: Number,
-      required: true,
+      required: [true, "withdraw amount is required."],
     },
     upiID: {
       type: String,
-      required: true,
+      required: [true, "upi id is required to withdraw."],
     },
     status: {
       type: String,
@@ -23,6 +24,8 @@ const withdrawalScehma = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+withdrawalScehma.plugin(mongoosePaginate);
 
 const Withdrawal = mongoose.model("Withdrawal", withdrawalScehma);
 export default Withdrawal;

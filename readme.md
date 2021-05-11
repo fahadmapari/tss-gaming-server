@@ -21,7 +21,7 @@ Route to get google auth url
 GET
 `auth/google/url`
 
-it will generate and return google auth url which you can put in button/a tag
+it will generate and return google auth url which you can put in a button/a tag
 
 ---
 
@@ -32,7 +32,18 @@ Route to get google auth url
 GET
 `auth/facebook/url`
 
-it will generate and return facebook auth url which you can put in button/a tag
+it will generate and return facebook auth url which you can put in a button/a tag
+
+---
+
+`Discord auth`
+
+Route to get google auth url
+
+GET
+`auth/discord/url`
+
+it will generate and return discord auth url which you can put in a button/a tag
 
 ---
 
@@ -92,11 +103,11 @@ GET
 
 - it can be paginated too like this
 
-`/tournament/list?page=2&limit=10 (optional)`
+`/profile/tournaments?page=2&limit=10 (optional)`
 
 - you can also get specific tournaments from it. upcoming, completed, ongoing
 
-- like this `/tournament/list?status=upcoming (optional)`
+- like this `/profile/tournaments?status=upcoming (optional)`
 
 note: for now don't use status and limit together
 
@@ -126,7 +137,26 @@ Route to get user's transactions
 GET
 `/profile/transactions`
 
+- it can be paginated too like this
+
+`/profile/transactions?page=2&limit=10 (optional)`
+
 response will consist of { user, order_id, orderDetails}
+
+http cookie or Bearer token required
+
+---
+
+Route to get user's withdrawals
+
+GET
+`/profile/withdrawals`
+
+- it can be paginated too like this
+
+`/profile/withdrawals?page=2&limit=10 (optional)`
+
+response will consist of {user, amount, upiID, status}
 
 http cookie or Bearer token required
 
@@ -254,7 +284,11 @@ successful response will return created tournament back
 Route to get pending withdrawal requests for admin
 
 GET
-`coins/withdraw/pending`
+`.coins/withdraw/pending`
+
+- it can be paginated too like this
+
+`/coins/withdraw/pending?page=2&limit=10 (optional)`
 
 response will consist of { user, amount, upiID ,status }
 
@@ -263,7 +297,11 @@ response will consist of { user, amount, upiID ,status }
 Route to get all withdrawal requests for admin
 
 GET
-`coins/withdraw`
+`/coins/withdraw`
+
+- it can be paginated too like this
+
+`/coins/withdraw?page=2&limit=10 (optional)`
 
 response will consist of { user, amount, upiID ,status }
 

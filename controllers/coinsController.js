@@ -110,7 +110,17 @@ export const withdrawRequestByUser = async (req, res, next) => {
 
 export const getPendingWithdrawalRequests = async (req, res, next) => {
   try {
-    const withdrawals = await Withdrawal.find({ status: "pending" })
+    const { page, limit } = req.query;
+
+    const withdrawals = await Withdrawal.paginate(
+      { status: "pending" },
+      {
+        populate: { path: "user", select: "-password" },
+        page: page ? page : 1,
+        limit: limit ? limit : 10,
+        sort: { createdAt: -1 },
+      }
+    )
       .populate("user", "-password")
       .exec();
 
@@ -124,7 +134,17 @@ export const getPendingWithdrawalRequests = async (req, res, next) => {
 
 export const getAllWithdrawalRequests = async (req, res, next) => {
   try {
-    const withdrawals = await Withdrawal.find({})
+    const { page, limit } = req.query;
+
+    const withdrawals = await Withdrawal.paginate(
+      {},
+      {
+        populate: { path: "user", select: "-password" },
+        page: page ? page : 1,
+        limit: limit ? limit : 10,
+        sort: { createdAt: -1 },
+      }
+    )
       .populate("user", "-password")
       .exec();
 

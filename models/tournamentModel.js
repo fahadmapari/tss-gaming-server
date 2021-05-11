@@ -5,11 +5,11 @@ const tournamentScehma = new mongoose.Schema(
   {
     title: {
       type: String,
-      required: true,
+      required: [true, "title is required."],
     },
     description: {
       type: String,
-      required: true,
+      required: [true, "description is required."],
     },
     status: {
       type: String,
@@ -18,7 +18,7 @@ const tournamentScehma = new mongoose.Schema(
     },
     entryFee: {
       type: Number,
-      required: true,
+      required: [true, "entry fee is required"],
     },
     prize: {
       type: Number,
@@ -26,16 +26,16 @@ const tournamentScehma = new mongoose.Schema(
     },
     date: {
       type: Date,
-      required: true,
+      required: [true, "date is required."],
     },
     tournamentType: {
       type: String,
       enum: ["solo", "duo", "team"],
-      required: true,
+      required: [true, "tournament type is required."],
     },
     thumbnails: {
       type: [String],
-      required: true,
+      required: [true, "thumbnails are required"],
     },
     prizeDistribution: {
       type: {
@@ -52,8 +52,14 @@ const tournamentScehma = new mongoose.Schema(
     },
     credentials: {
       type: {
-        roomId: String,
-        roomPassword: String,
+        roomId: {
+          type: String,
+          required: [true, "room id required."],
+        },
+        roomPassword: {
+          type: String,
+          required: [true, "room password is required."],
+        },
       },
     },
     stream: {

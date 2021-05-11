@@ -178,7 +178,8 @@ export const getLeaderboard = async (req, res, next) => {
 
   try {
     const leaderboard = await Leaderboard.findOne({ tournament: tournamentId })
-      .populate("list tournament")
+      .populate({ path: "list", options: { sort: { prize: -1 } } })
+      .populate("tournament", "-credentials")
       .exec();
 
     if (!leaderboard) {
