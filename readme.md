@@ -23,6 +23,19 @@ GET
 
 it will generate and return google auth url which you can put in button/a tag
 
+---
+
+`Facebook auth`
+
+Route to get google auth url
+
+GET
+`auth/facebook/url`
+
+it will generate and return facebook auth url which you can put in button/a tag
+
+---
+
 ## OTP verfification routes
 
 Route to generate OTP for mobile number

@@ -373,9 +373,7 @@ export const googleLogin = async (req, res, next) => {
         .set({
           "api-key": token,
         })
-        .json({
-          user: existingUser,
-        });
+        .redirect("/");
     }
 
     if (!existingUser) {
