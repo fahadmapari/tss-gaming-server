@@ -397,3 +397,15 @@ data to send
 `{ prizeWon, kills, streak, damage }`
 
 - every object received from GET `tournament/leaderboard/:id/edit` will have a unique "\_id" put that in url instead of ":match"
+
+---
+
+Route to change tournament status to complete
+.i.e when clicking declare winners
+
+GET
+`/tournament/:id/finish`
+
+- replace :id with tournament's "\_id" in url
+
+- all tournaments have a unique id with property name "\_id"

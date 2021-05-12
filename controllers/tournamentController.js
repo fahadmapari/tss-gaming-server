@@ -259,3 +259,30 @@ export const addToLeaderboard = async (req, res, next) => {
     next(new AppError(error.message, 503));
   }
 };
+
+export const finishTournament = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const tournament = await Tournament.findOneAndUpdate(
+      { _id: id },
+      {
+        status: "completed",
+      }
+    );
+
+    await Match.updateMany(
+      { tournament: id },
+      {
+        tournamentStatus: "completed",
+      }
+    );
+
+    res.json({
+      message: "Tournament finished",
+      tournament,
+    });
+  } catch (err) {
+    next(new AppError(err.message, 503));
+  }
+};
