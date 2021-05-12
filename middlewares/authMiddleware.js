@@ -1,6 +1,7 @@
 import User from "../models/userModel.js";
 import jwt from "jsonwebtoken";
 import Session from "../models/sessionModel.js";
+import Blocklist from "../models/blocklistModel.js";
 
 export const checkGuest = (req, res, next) => {
   let token = req.cookies.access_token;
@@ -14,14 +15,13 @@ export const checkGuest = (req, res, next) => {
   if (!token) {
     next();
   } else {
-
-    try{
+    try {
       const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
-       return res.status(403).json({
-          status: "Error",
-          message: "Already logged in.",
+      return res.status(403).json({
+        status: "Error",
+        message: "Already logged in.",
       });
-    }catch(err){
+    } catch (err) {
       next();
     }
   }
@@ -55,6 +55,14 @@ export const validateToken = async (req, res, next) => {
       }
 
       const user = session.user;
+
+      const isUserBlocked = await Blocklist.findOne({ user: user._id });
+
+      if (isUserBlocked)
+        res.json({
+          status: "Error",
+          message: "User has been blocked.",
+        });
 
       let currentUser = {
         id: user._id,
@@ -121,6 +129,14 @@ export const validateNewUserToken = async (req, res, next) => {
       }
 
       const user = session.user;
+
+      const isUserBlocked = await Blocklist.findOne({ user: user._id });
+
+      if (isUserBlocked)
+        res.json({
+          status: "Error",
+          message: "User has been blocked.",
+        });
 
       let currentUser = {
         id: user._id,

@@ -43,7 +43,9 @@ export const getAllRegisteredUsers = async (req, res, next) => {
     const { page, limit } = req.query;
 
     const users = await User.paginate(
-      {},
+      {
+        role: "user",
+      },
       {
         page: page ? page : 1,
         limit: limit ? limit : 10,
