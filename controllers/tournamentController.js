@@ -68,9 +68,14 @@ export const createNewTournament = async (req, res, next) => {
       stream,
     });
 
+    if (!req.files)
+      return next(new AppError("Please upload atleast one thumbnail"));
+
     if (req.files.length) {
       req.files.forEach((file) => {
-        tournament.thumbnails.push("thumbnails/" + file.filename);
+        tournament.thumbnails.push(
+          process.env.DOMAIN_NAME + "/thumbnails/" + file.filename
+        );
       });
     }
 

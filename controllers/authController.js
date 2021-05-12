@@ -191,7 +191,8 @@ export const registerUser = async (req, res, next) => {
   let profilePic = "/profile-pictures/default.png";
 
   if (req.file) {
-    profilePic = req.file.filename;
+    profilePic =
+      process.env.DOMAIN_NAME + "/profile-pictures/" + req.file.filename;
   }
 
   if (!req.body.email || req.body.email === "")
