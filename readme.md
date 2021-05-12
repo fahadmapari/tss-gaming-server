@@ -122,7 +122,7 @@ POST
 
 Data to send / data that can be edited:
 
-`{ name, mobile, email, currentPassword, newPassword }`
+`{ name, mobile, email, currentPassword, newPassword, profilePic: file }`
 
 - newPassword only when password change is needed
 

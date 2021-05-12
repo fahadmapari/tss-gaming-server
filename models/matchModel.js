@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import mongoosePaginate from "mongoose-paginate-v2";
-import autoFill from "mongoose-autopopulate";
 
 const matchScehma = new mongoose.Schema(
   {
@@ -48,7 +47,6 @@ const matchScehma = new mongoose.Schema(
 );
 
 matchScehma.plugin(mongoosePaginate);
-matchScehma.plugin(autoFill);
 
 const match = mongoose.model("Match", matchScehma);
 export default match;

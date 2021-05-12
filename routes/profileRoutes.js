@@ -8,6 +8,7 @@ import {
   getMyWithdrawals,
 } from "../controllers/profileController.js";
 import { checkGuest, validateToken } from "../middlewares/authMiddleware.js";
+import { uploadProfilePicture } from "../utils/fileUpload.js";
 
 const router = express.Router();
 
@@ -17,6 +18,11 @@ router.get("/withdrawals", validateToken, getMyWithdrawals);
 router.get("/tournaments", validateToken, getMyTournaments);
 
 router.get("/:id", getProfileDetails);
-router.post("/update", validateToken, updateUserProfile);
+router.post(
+  "/update",
+  validateToken,
+  uploadProfilePicture.single("profilePic"),
+  updateUserProfile
+);
 
 export default router;

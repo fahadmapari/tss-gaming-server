@@ -5,6 +5,11 @@ import Match from "../models/matchModel.js";
 import { AppError } from "../utils/AppError.js";
 import { hashPassword } from "../utils/hashPassword.js";
 import Withdrawal from "../models/withdrawModel.js";
+import fs from "fs";
+import path, { dirname } from "path";
+import { fileURLToPath } from "url";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export const getProfileDetails = async (req, res, next) => {
   const { id } = req.params;
@@ -125,6 +130,9 @@ export const updateUserProfile = async (req, res, next) => {
       const updatedPassword = await hashPassword(newPassword);
       updateDetails.password = updatedPassword;
     }
+    if (req.file)
+      updateDetails.profilePic =
+        process.env.DOMAIN_NAME + "/profile-pictures/" + req.file.filename;
 
     const foundUser = await User.findOne({ _id: req.user.id });
 
@@ -143,6 +151,20 @@ export const updateUserProfile = async (req, res, next) => {
         },
         { runValidators: true, context: "query" }
       );
+
+      try {
+        const oldProfilePicLocation = foundUser.profilePic.split("/");
+        fs.unlinkSync(
+          path.resolve(
+            __dirname,
+            `../public/profile-pictures/${
+              oldProfilePicLocation[oldProfilePicLocation.length - 1]
+            }`
+          )
+        );
+      } catch (err) {
+        console.log(err);
+      }
 
       res.json({
         message: "User profile updated",
