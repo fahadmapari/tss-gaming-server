@@ -3,6 +3,7 @@ import { hashPassword } from "../utils/hashPassword.js";
 import shortid from "shortid";
 import bcrypt from "bcrypt";
 import uniqueValidator from "mongoose-unique-validator";
+import mongoosePaginate from "mongoose-paginate-v2";
 
 const userScehma = new mongoose.Schema({
   email: {
@@ -47,6 +48,7 @@ const userScehma = new mongoose.Schema({
 });
 
 userScehma.plugin(uniqueValidator, { message: `{PATH} already in use.` });
+userScehma.plugin(mongoosePaginate);
 
 userScehma.pre("save", async function (next) {
   if (this.password === "" || !this.password) return next();

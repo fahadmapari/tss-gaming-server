@@ -47,6 +47,16 @@ it will generate and return discord auth url which you can put in a button/a tag
 
 ---
 
+## Referral route
+
+Route to for user to enter referral code after signing up through google, facebook, discord.
+
+POST
+`/refer`
+
+data to send
+`{ referCode: string }`
+
 ## OTP verfification routes
 
 Route to generate OTP for mobile number
@@ -269,13 +279,53 @@ Successful response will give withdrawal details back
 
 ## Admin routes
 
+Route to get all users registered users on website.
+
+GET
+`/users`
+
+- it can be paginated too like this
+
+`/user?page=1&limit=10 (optional)`
+
+---
+
+Route to block users from the tss-gaming
+
+GET
+`/users/:id/block`
+
+- replace ':id' in url with user's '\_id' every user have unique a unique id with property name '\_id'
+
+---
+
+Route to get all blocked users
+
+GET
+`/users/blocked`
+
+- it can be paginated too like this
+
+`/users/blocked?page=1&limit=10 (optional)`
+
+---
+
+Route to unblock an user from tss-gaming
+
+GET
+`/users/:id/unblock`
+
+- replace ':id' in url with user's '\_id' every user have unique a unique id with property name '\_id'
+
+---
+
 Admin route to create tournament
 
 POST
 `/tournament/create`
 data to send
 
-`{ title: string, thumbnails: [ files ] // array of files, description: string, entryFee: number, date: Date (date and time both), tournamentType: string ("solo", "duo", "team"), kills: number, streak: number, damage: number, prize: number, roomId: string, roomPassword: string, stream: string }`
+`{ title: string, thumbnails: [ files ], description: string, entryFee: number, date: Date (date and time both), tournamentType: string ("solo", "duo", "team"), kills: number, streak: number, damage: number, prize: number, roomId: string, roomPassword: string, stream: string }`
 
 successful response will return created tournament back
 

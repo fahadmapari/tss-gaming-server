@@ -44,10 +44,7 @@ app.use(express.static("public"));
 // if (process.env.ENV === "development") app.use(morgan("tiny"));
 
 //routes
-app.get("/api/", (req, res) => {
-  res.json({ message: "API Running" });
-});
-
+app.use("/api", indexRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/coins", coinsRoutes);
 app.use("/api/tournament", tournamentRoutes);
