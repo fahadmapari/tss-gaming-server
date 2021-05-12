@@ -1,6 +1,7 @@
 import express from "express";
 import {
   blockUser,
+  getAllBlockedUsers,
   getAllRegisteredUsers,
   rewardUserForReferral,
   unBlockUser,
