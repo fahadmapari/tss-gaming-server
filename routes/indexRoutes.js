@@ -21,7 +21,9 @@ router.post("/refer", validateNewUserToken, rewardUserForReferral);
 router.get("/users", validateAdminToken, getAllRegisteredUsers);
 
 router.get("/users/:id/block", validateAdminToken, blockUser);
+
 router.get("/users/blocked", validateAdminToken, getAllBlockedUsers);
+
 router.get("/users/:id/unblock", validateAdminToken, unBlockUser);
 
 export default router;

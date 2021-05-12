@@ -17,8 +17,11 @@ import {
 const router = express.Router();
 
 router.get("/list", listAllTournaments);
+
 router.get("/:id/users", getJoinedUsers);
+
 router.get("/leaderboard/:id", getLeaderboard);
+
 router.get("/leaderboard/:id/edit", validateAdminToken, getLeaderboardToEdit);
 
 router.post("/leaderboard/:match/edit", validateAdminToken, addToLeaderboard);
