@@ -6,6 +6,7 @@ import {
   updateUserProfile,
   getMyTransactions,
   getMyWithdrawals,
+  getMyReferrals,
 } from "../controllers/profileController.js";
 import { checkGuest, validateToken } from "../middlewares/authMiddleware.js";
 import { uploadProfilePicture } from "../utils/fileUpload.js";
@@ -17,6 +18,8 @@ router.get("/", validateToken, getMyProfileDetails);
 router.get("/transactions", validateToken, getMyTransactions);
 
 router.get("/withdrawals", validateToken, getMyWithdrawals);
+
+router.get("/referrals", validateToken, getMyReferrals);
 
 router.get("/tournaments", validateToken, getMyTournaments);
 

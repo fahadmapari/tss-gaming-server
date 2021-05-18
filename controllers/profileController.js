@@ -8,6 +8,7 @@ import Withdrawal from "../models/withdrawModel.js";
 import fs from "fs";
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
+import Referral from "../models/referralModel.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -113,6 +114,25 @@ export const getMyWithdrawals = async (req, res, next) => {
   } catch (err) {
     next(new AppError(err.message, 503));
   }
+};
+
+export const getMyReferrals = async (req, res, next) => {
+  const { id } = req.user;
+  const { page, limit } = req.query;
+
+  const referrals = await Referral.paginate(
+    { referredBy: id },
+    {
+      page: page ? page : 1,
+      limit: limit ? limit : 10,
+      sort: { createdAt: -1 },
+      populate: { path: "referredUser", select: "-password -coins" },
+    }
+  );
+
+  res.json({
+    referrals,
+  });
 };
 
 export const updateUserProfile = async (req, res, next) => {

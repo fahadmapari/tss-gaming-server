@@ -16,6 +16,11 @@ const tournamentScehma = new mongoose.Schema(
       enum: ["upcoming", "ongoing", "completed"],
       default: "upcoming",
     },
+    game: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Game",
+      required: [true, "game is required."],
+    },
     entryFee: {
       type: Number,
       required: [true, "entry fee is required"],
@@ -30,12 +35,19 @@ const tournamentScehma = new mongoose.Schema(
     },
     tournamentType: {
       type: String,
-      enum: ["solo", "duo", "team"],
+      enum: ["solo", "duo", "squad"],
       required: [true, "tournament type is required."],
     },
     thumbnails: {
       type: [String],
       required: [true, "thumbnails are required"],
+    },
+    slots: {
+      type: Number,
+      required: [true, "number of slots is required."],
+    },
+    slotsAvailable: {
+      type: Number,
     },
     prizeDistribution: {
       type: {

@@ -46,6 +46,7 @@ export const createNewTournament = async (req, res, next) => {
     roomId,
     roomPassword,
     stream,
+    slots,
   } = req.body;
 
   try {
@@ -66,6 +67,8 @@ export const createNewTournament = async (req, res, next) => {
         roomPassword,
       },
       stream,
+      slots,
+      slotsAvailable: slots,
     });
 
     if (!req.files)
@@ -123,17 +126,56 @@ export const joinTournament = async (req, res, next) => {
 
     const leaderboard = await Leaderboard.findOne({ tournament: tournamentId });
 
-    if (
-      tournament.tournamentType === "solo" ||
-      !teamMembers ||
-      teamMembers === ""
-    ) {
+    if (teamMembers) {
+      if (!Array.isArray(teamMembers)) {
+        return next(new AppError("Team members should be an array.", 400));
+      }
+    }
+
+    if (tournament.tournamentType === "solo") {
       teamMembers = [];
     }
 
-    if (teamMembers) {
-      if (!Array.isArray(teamMembers)) {
-        return next(new AppError("Team members should be an array.", 401));
+    if (tournament.tournamentType === "duo") {
+      if (teamMembers.length < 1 || teamMembers.length > 1) {
+        return next(new AppError("Need 1 team member to play duo.", 400));
+      }
+
+      const joinTeamMembers = await User.find({
+        name: {
+          $in: [...teamMembers],
+        },
+      });
+
+      if (joinTeamMembers.length < 1)
+        return next(new AppError(`${teamMembers} is not registered.`, 400));
+    }
+
+    if (tournament.tournamentType === "squad") {
+      if (teamMembers.length < 3 || teamMembers.length > 3) {
+        return next(new AppError("Need 3 team members to play squad.", 400));
+      }
+
+      let joinTeamMembers = await User.find({
+        name: {
+          $in: [...teamMembers],
+        },
+      });
+
+      joinTeamMembers = joinTeamMembers.map((user) => {
+        return user.name;
+      });
+
+      if (joinTeamMembers.length < 3) {
+        const unregisteredUsers = teamMembers.filter((name) => {
+          if (!joinTeamMembers.includes(name)) {
+            return name;
+          }
+        });
+
+        return next(
+          new AppError(`${unregisteredUsers} is/are not registered.`, 400)
+        );
       }
     }
 
@@ -151,6 +193,13 @@ export const joinTournament = async (req, res, next) => {
         $inc: {
           coins: -Math.abs(tournament.entryFee),
         },
+      }
+    );
+
+    await Tournament.findOneAndUpdate(
+      { _id: tournament._id },
+      {
+        slotsAvailable: tournament.slotsAvailable - 1,
       }
     );
 

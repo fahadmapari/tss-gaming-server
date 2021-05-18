@@ -19,7 +19,7 @@ const router = express.Router();
 
 router.get("/list", listAllTournaments);
 
-router.get("/:id/finish", finishTournament);
+router.get("/:id/finish", validateAdminToken, finishTournament);
 
 router.get("/:id/users", getJoinedUsers);
 

@@ -15,6 +15,7 @@ import {
 import { facebookLoginUrl } from "../utils/facebookAuth.js";
 import OAuthClient from "disco-oauth";
 import axios from "axios";
+import Referral from "../models/referralModel.js";
 
 const client = twilio(process.env.TWLO_SID, process.env.TWLO_TOKEN);
 const discordClient = new OAuthClient(
@@ -189,7 +190,7 @@ export const verifyOtp = async (req, res, next) => {
 
 export const registerUser = async (req, res, next) => {
   let profilePic = "/profile-pictures/default.png";
-
+  let referredBy;
   if (req.file) {
     profilePic =
       process.env.DOMAIN_NAME + "/profile-pictures/" + req.file.filename;
@@ -224,7 +225,7 @@ export const registerUser = async (req, res, next) => {
   try {
     if (req.body.referCode) {
       try {
-        await User.findOneAndUpdate(
+        referredBy = await User.findOneAndUpdate(
           { referralId: req.body.referCode },
           {
             $inc: { coins: Number(process.env.referCode) },
@@ -236,6 +237,12 @@ export const registerUser = async (req, res, next) => {
     }
 
     const newUser = await user.save();
+
+    await Referral.create({
+      referredBy: referredBy._id,
+      referredUser: newUser._id,
+    });
+
     const token = generateToken(newUser._id);
     let date = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
 

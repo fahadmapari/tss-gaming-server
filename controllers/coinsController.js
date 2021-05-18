@@ -77,6 +77,11 @@ export const withdrawRequestByUser = async (req, res, next) => {
   const { withdrawAmount, upiID } = req.body;
 
   try {
+    if (withdrawAmount < 1000)
+      return next(
+        new AppError("Withdrawal amount can not be less than 1000.", 401)
+      );
+
     if (withdrawAmount <= 0 || !withdrawAmount || withdrawAmount === "") {
       return next(new AppError("Withdrawal amount can not be empty.", 401));
     }

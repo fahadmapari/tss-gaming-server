@@ -9,6 +9,7 @@ const userScehma = new mongoose.Schema({
   email: {
     type: String,
     unique: true,
+    index: true,
   },
   emailVerified: {
     type: Boolean,
@@ -17,6 +18,7 @@ const userScehma = new mongoose.Schema({
   mobile: {
     type: Number,
     unique: true,
+    index: true,
   },
   mobileVerified: {
     type: Boolean,
@@ -25,6 +27,8 @@ const userScehma = new mongoose.Schema({
   name: {
     type: String,
     required: [true, "name is required."],
+    index: true,
+    unique: true,
   },
   password: {
     type: String,
@@ -34,7 +38,7 @@ const userScehma = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ["user", "admin"],
+    enum: ["user", "admin", "sub-admin"],
     default: "user",
   },
   coins: {

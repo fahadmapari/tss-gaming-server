@@ -26,6 +26,11 @@ const matchScehma = new mongoose.Schema(
       ref: "Leaderboard",
       required: true,
     },
+    position: {
+      type: Number,
+      enum: [0, 1, 2, 3],
+      default: 0,
+    },
     prize: {
       type: Number,
       default: 0,

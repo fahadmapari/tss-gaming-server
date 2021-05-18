@@ -172,6 +172,19 @@ http cookie or Bearer token required
 
 ---
 
+Route to get user's referrals
+
+GET
+`/profile/referrals`
+
+- it can be paginated too like this
+
+`/profile/referrals?page=1&limit=10 (optional)`
+
+http cookie or Bearer token required
+
+---
+
 Route to get specific user details
 
 GET
@@ -265,6 +278,8 @@ POST
 
 data to send `{ withdrawAmount: string|number, upiID: string }`
 
+- minimum withdrawal amount is 1000
+
 - "withdrawAmount" is the amount of coins users wants to withdraw.
 
 User's coin will be deducted immediately and will placed for approval of admin.
@@ -287,6 +302,21 @@ GET
 - it can be paginated too like this
 
 `/user?page=1&limit=10 (optional)`
+
+---
+
+Route to search users by their name/gamername
+
+POST
+`/users/search`
+
+data to send `{searchTerm: string}`
+
+- "searchTerm" will be user's name/gamername.
+
+- results can be paginated too like this
+
+`/users/search?page=1&limit=10 (optional)`
 
 ---
 
@@ -325,7 +355,7 @@ POST
 `/tournament/create`
 data to send
 
-`{ title: string, thumbnails: [ files ], description: string, entryFee: number, date: Date (date and time both), tournamentType: string ("solo", "duo", "team"), kills: number, streak: number, damage: number, prize: number, roomId: string, roomPassword: string, stream: string }`
+`{ title: string, thumbnails: [ files ], description: string, entryFee: number, date: Date (date and time both), tournamentType: string ("solo", "duo", "team"), kills: number, streak: number, damage: number, prize: number, roomId: string, roomPassword: string, stream: string, slots: number }`
 
 successful response will return created tournament back
 
