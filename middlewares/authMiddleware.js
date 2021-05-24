@@ -209,7 +209,7 @@ export const validateAdminToken = async (req, res, next) => {
       req.user = currentUser;
       req.token = token;
 
-      if (user.role !== "admin") {
+      if (user.role !== "admin" || user.role !== "sub-admin") {
         return res.status(401).json({
           status: "Unauthorized",
           message: "User not authorized to perform this task.",

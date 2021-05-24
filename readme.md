@@ -235,7 +235,7 @@ Route for user to join a tournament
 POST
 `/tournament/join`
 
-data to send `{ tournamentId: string, teamMembers: [string, string, string]//array }`
+data to send `{ tournamentId: string, teamMembers: [string, string, string]//array, teamName: string }`
 
 - all tournaments have a unique id with property name "\_id" you have pass that as tournamentId in this id
 
@@ -303,6 +303,15 @@ GET
 
 `/user?page=1&limit=10 (optional)`
 
+- specific type of user can also be searched by adding `role` query parameter to url.
+
+`/user?page=1&limit=10&role=sub-admin (optional)`
+
+roles
+`admin`
+`sub-admin`
+`user`
+
 ---
 
 Route to search users by their name/gamername
@@ -327,6 +336,8 @@ GET
 
 - replace ':id' in url with user's '\_id' every user have unique a unique id with property name '\_id'
 
+- admin and sub-admin can block users. sub-admin can not block admin or other sub-admins.
+
 ---
 
 Route to get all blocked users
@@ -337,6 +348,15 @@ GET
 - it can be paginated too like this
 
 `/users/blocked?page=1&limit=10 (optional)`
+
+- specific type of user can also be searched by adding `role` query parameter to url.
+
+`/users/blocked?page=1&limit=10&role=sub-admin (optional)`
+
+roles
+`admin`
+`sub-admin`
+`user`
 
 ---
 
@@ -355,9 +375,38 @@ POST
 `/tournament/create`
 data to send
 
-`{ title: string, thumbnails: [ files ], description: string, entryFee: number, date: Date (date and time both), tournamentType: string ("solo", "duo", "team"), kills: number, streak: number, damage: number, prize: number, roomId: string, roomPassword: string, stream: string, slots: number }`
+`{ title: string, thumbnails: [ files ], description: string, entryFee: number, date: Date (date and time both), tournamentType: string ("solo", "duo", "team"), kills: number, streak: number, damage: number, prize: number, roomId: string, roomPassword: string, stream: string, slots: number, game: string}`
+
+- value of `game` will be '\_id' of game. Every game contains a unique '\_id' property.
 
 successful response will return created tournament back
+
+---
+
+Route to get details of tournament to fill in fields to edit
+
+GET
+`/tournament/:id/edit`
+
+- replace :id with tournament's "\_id" in url
+
+- all tournaments have a unique id with property name "\_id"
+
+---
+
+Admin route to create tournament
+
+POST
+`/tournament/:id/edit`
+data to send
+
+`{ title: string, thumbnails: [ files ], description: string, entryFee: number, date: Date (date and time both), tournamentType: string ("solo", "duo", "team"), kills: number, streak: number, damage: number, prize: number, roomId: string, roomPassword: string, stream: string, slots: number, game: string}`
+
+- replace :id with tournament's "\_id" in url
+
+- all tournaments have a unique id with property name "\_id"
+
+- value of `game` will be '\_id' of game. Every game contains a unique '\_id' property.
 
 ---
 
@@ -421,21 +470,28 @@ the result will consist of
 Route declare winners / add stats of match of all users who joined the tournament.
 
 POST
-`/tournament/leaderboard/:match/edit`
+`/tournament/leaderboard/declare`
 
 data to send
-`{ prizeWon, kills, streak, damage }`
+`userStats: [{ prizeWon: number, kills: number, streak: number, damage: number, matchId: string }]`
 
-- every object received from GET `tournament/leaderboard/:id/edit` will have a unique "\_id" put that in url instead of ":match"
+- every object received from GET `tournament/leaderboard/:id/edit` will have a unique "\_id" put that as matchId in userStats.
 
 ---
 
-Route to change tournament status to complete
-.i.e when clicking declare winners
+Route to get all games
 
 GET
-`/tournament/:id/finish`
+`/games`
 
-- replace :id with tournament's "\_id" in url
+---
 
-- all tournaments have a unique id with property name "\_id"
+Route to add new game.
+
+POST
+`"/new-game"`
+data to send `title: string ,gameCover: file(image)`
+
+it will create a new game which can used to link to tournaments.
+
+---

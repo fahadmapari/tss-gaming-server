@@ -2,7 +2,7 @@ import { Agenda } from "agenda/es.js";
 import Match from "../models/matchModel.js";
 import Tournament from "../models/tournamentModel.js";
 
-const agenda = new Agenda({
+export const agenda = new Agenda({
   db: {
     address: process.env.MONGO_URI,
     options: {

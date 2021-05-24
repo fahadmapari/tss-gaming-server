@@ -56,9 +56,7 @@ export const getMyTournaments = async (req, res, next) => {
     let profile = await Match.paginate(query, {
       page: page ? page : 1,
       limit: limit ? limit : 10,
-      populate: {
-        path: "tournament",
-      },
+      populate: "tournament game",
       sort: { createdAt: -1 },
     });
 

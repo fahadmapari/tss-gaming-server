@@ -2,7 +2,9 @@ import express from "express";
 import {
   addNewGame,
   blockUser,
+  createNewSubAdmin,
   getAllBlockedUsers,
+  getAllGames,
   getAllRegisteredUsers,
   rewardUserForReferral,
   searchUsers,
@@ -13,6 +15,7 @@ import {
   validateNewUserToken,
   validateToken,
 } from "../middlewares/authMiddleware.js";
+import { uploadGameCover } from "../utils/fileUpload.js";
 const router = express.Router();
 
 router.get("/", (req, res) => {
@@ -31,6 +34,19 @@ router.get("/users/blocked", validateAdminToken, getAllBlockedUsers);
 
 router.get("/users/:id/unblock", validateAdminToken, unBlockUser);
 
-router.post("/newgame", validateAdminToken, addNewGame);
+router.get("/games", getAllGames);
+router.post(
+  "/new-game",
+  validateAdminToken,
+  uploadGameCover.single("gameCover"),
+  addNewGame
+);
+
+router.post(
+  "/sub-admin",
+  validateAdminToken,
+  uploadGameCover.single("profilePic"),
+  createNewSubAdmin
+);
 
 export default router;

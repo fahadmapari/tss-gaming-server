@@ -8,7 +8,8 @@ import {
   addToLeaderboard,
   getLeaderboardToEdit,
   getJoinedUsers,
-  finishTournament,
+  getTournamentToEdit,
+  editTournament,
 } from "../controllers/tournamentController.js";
 import {
   validateAdminToken,
@@ -19,7 +20,7 @@ const router = express.Router();
 
 router.get("/list", listAllTournaments);
 
-router.get("/:id/finish", validateAdminToken, finishTournament);
+// router.get("/:id/finish", validateAdminToken, finishTournament);
 
 router.get("/:id/users", getJoinedUsers);
 
@@ -27,14 +28,24 @@ router.get("/leaderboard/:id", getLeaderboard);
 
 router.get("/leaderboard/:id/edit", validateAdminToken, getLeaderboardToEdit);
 
-router.post("/leaderboard/:match/edit", validateAdminToken, addToLeaderboard);
+router.get("/:id/edit", validateAdminToken, getTournamentToEdit);
+
+router.post("/leaderboard/declare", validateAdminToken, addToLeaderboard);
 
 router.post("/join", validateToken, joinTournament);
 
 router.post(
   "/create",
+  validateAdminToken,
   uploadGameThumbnails.array("thumbnails"),
   createNewTournament
+);
+
+router.post(
+  "/:id/edit",
+  validateAdminToken,
+  uploadGameThumbnails.array("thumbnails"),
+  editTournament
 );
 
 export default router;

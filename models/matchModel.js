@@ -21,6 +21,10 @@ const matchScehma = new mongoose.Schema(
     team: {
       type: [String],
     },
+    teamName: {
+      type: String,
+      default: "Unnamed team.",
+    },
     leaderboard: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Leaderboard",

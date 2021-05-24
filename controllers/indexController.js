@@ -48,16 +48,17 @@ export const rewardUserForReferral = async (req, res, next) => {
 
 export const getAllRegisteredUsers = async (req, res, next) => {
   try {
-    const { page, limit } = req.query;
+    const { page, limit, role } = req.query;
 
-    const users = await User.paginate(
-      {},
-      {
-        page: page ? page : 1,
-        limit: limit ? limit : 10,
-        select: "-password",
-      }
-    );
+    const query = {};
+
+    if (role) query.role = role;
+
+    const users = await User.paginate(query, {
+      page: page ? page : 1,
+      limit: limit ? limit : 10,
+      select: "-password",
+    });
 
     res.json({
       users,
@@ -100,11 +101,15 @@ export const searchUsers = async (req, res, next) => {
 
 export const blockUser = async (req, res, next) => {
   try {
+    const { role: adminRole } = req.user;
     const { id } = req.params;
 
     const user = await User.findOne({ _id: id });
 
     if (!user) return next("invalid user id.", 400);
+
+    if (adminRole === "sub-admin" && user.role === "admin")
+      return next("Action not allowed.", 403);
 
     await Blocklist.create({
       user: user._id,
@@ -120,17 +125,18 @@ export const blockUser = async (req, res, next) => {
 
 export const getAllBlockedUsers = async (req, res, next) => {
   try {
-    const { page, limit } = req.query;
+    const { page, limit, role } = req.query;
 
-    await Blocklist.paginate(
-      {},
-      {
-        populate: "user",
-        select: "-password",
-        page: page ? page : 1,
-        limit: limit ? limit : 10,
-      }
-    );
+    const query = {};
+
+    if (role) query.role = role;
+
+    await Blocklist.paginate(query, {
+      populate: "user",
+      select: "-password",
+      page: page ? page : 1,
+      limit: limit ? limit : 10,
+    });
   } catch (err) {
     next(new AppError(err.message, 503));
   }
@@ -156,6 +162,18 @@ export const unBlockUser = async (req, res, next) => {
   }
 };
 
+export const getAllGames = async (req, res, next) => {
+  try {
+    const games = Game.find({});
+
+    res.json({
+      games,
+    });
+  } catch (err) {
+    next(new AppError(err.message, 503));
+  }
+};
+
 export const addNewGame = async (req, res, next) => {
   try {
     const { title } = req.body;
@@ -173,6 +191,61 @@ export const addNewGame = async (req, res, next) => {
     res.json({
       message: "New Game created",
       game,
+    });
+  } catch (err) {
+    next(new AppError(err.message, 503));
+  }
+};
+
+export const createNewSubAdmin = async (req, res, next) => {
+  let profilePic = "/profile-pictures/default.png";
+  let referredBy;
+  if (req.file) {
+    profilePic =
+      process.env.DOMAIN_NAME + "/profile-pictures/" + req.file.filename;
+  }
+
+  if (!req.body.email || req.body.email === "")
+    return next(new AppError("Email is required", 400));
+
+  if (!req.body.mobile || req.body.mobile === "")
+    return next(new AppError("Mobile number is required", 400));
+
+  if (!validateEmail(req.body.email))
+    return next(new AppError("Invalid email", 400));
+
+  if (req.body.mobile.length < 10)
+    return next(new AppError("Invalid mobile number", 400));
+
+  if (!req.body.password || req.body.password === "")
+    return next(new AppError("password is required", 400));
+
+  if (!req.body.name || req.body.name === "")
+    return next(new AppError("name is required", 400));
+
+  const user = new User({
+    email: req.body.email.toLowerCase(),
+    mobile: req.body.mobile,
+    password: req.body.password,
+    name: req.body.name,
+    profilePic: profilePic,
+    role: "sub-admin",
+  });
+
+  try {
+    const newUser = await user.save();
+
+    res.status(201).json({
+      userInfo: {
+        name: newUser.name,
+        mobile: newUser.mobile,
+        mobileVerified: newUser.newUser,
+        role: newUser.role,
+        email: newUser.email,
+        emailVerified: newUser.emailVerified,
+        profilePic: newUser.profilePic,
+      },
+      token,
     });
   } catch (err) {
     next(new AppError(err.message, 503));

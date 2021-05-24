@@ -2,8 +2,12 @@ import Tournament from "../models/tournamentModel.js";
 import Match from "../models/matchModel.js";
 import User from "../models/userModel.js";
 import Leaderboard from "../models/LeaderboardModel.js";
-import { updateTournamentStatus } from "../cron-jobs/updateTournaments.js";
+import {
+  agenda,
+  updateTournamentStatus,
+} from "../cron-jobs/updateTournaments.js";
 import { AppError } from "../utils/AppError.js";
+import { tournamentUpdateFields } from "../utils/tournamentUpdateFields.js";
 
 export const listAllTournaments = async (req, res, next) => {
   const { page, limit, status } = req.query;
@@ -14,6 +18,7 @@ export const listAllTournaments = async (req, res, next) => {
       limit: limit ? limit : 10,
       sort: { createdAt: -1 },
       select: "-credentials",
+      populate: "game",
     };
 
     const query = {};
@@ -38,6 +43,7 @@ export const createNewTournament = async (req, res, next) => {
     description,
     entryFee,
     date,
+    game,
     tournamentType,
     kills,
     streak,
@@ -55,6 +61,7 @@ export const createNewTournament = async (req, res, next) => {
       description,
       entryFee,
       date: new Date(date),
+      game,
       tournamentType,
       prize,
       prizeDistribution: {
@@ -72,7 +79,7 @@ export const createNewTournament = async (req, res, next) => {
     });
 
     if (!req.files)
-      return next(new AppError("Please upload atleast one thumbnail"));
+      return next(new AppError("Please upload atleast one thumbnail", 400));
 
     if (req.files.length) {
       req.files.forEach((file) => {
@@ -98,10 +105,66 @@ export const createNewTournament = async (req, res, next) => {
   }
 };
 
+export const getTournamentToEdit = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const tournament = await Tournament.findOne({ _id: id })
+      .populate("game")
+      .exec();
+
+    if (!tournament) return next(new AppError("Invalid tournament id.", 400));
+
+    res.json({
+      tournament,
+    });
+  } catch (err) {
+    next(new AppError(err.message, 503));
+  }
+};
+
+export const editTournament = async (req, res, next) => {
+  const { id } = req.params;
+
+  try {
+    const tournament = await Tournament.findOne({ _id: id });
+
+    if (!tournament) return next(new AppError("Invalid tournament id.", 400));
+
+    const dataToUpdate = tournamentUpdateFields(req.body, tournament);
+
+    if (req.files) {
+      if (req.files.length) {
+        req.files.forEach((file) => {
+          dataToUpdate.thumbnails.push(
+            process.env.DOMAIN_NAME + "/thumbnails/" + file.filename
+          );
+        });
+      }
+    }
+
+    const updatedTournament = await Tournament.findOneAndUpdate(
+      { _id: tournament._id },
+      dataToUpdate
+    );
+
+    await agenda.cancel({ "data.tournamentID": tournament._id });
+
+    await updateTournamentStatus(updatedTournament._id, updatedTournament.date);
+
+    res.status(201).json({
+      message: "Tournament edited",
+      data: updatedTournament,
+    });
+  } catch (err) {
+    next(new AppError(err.message, 503));
+  }
+};
+
 export const joinTournament = async (req, res, next) => {
   const { id: userId, coins: userCoins } = req.user;
   const { tournamentId } = req.body;
-  let { teamMembers } = req.body;
+  let { teamMembers, teamName } = req.body;
 
   try {
     const tournament = await Tournament.findOne({ _id: tournamentId });
@@ -185,6 +248,7 @@ export const joinTournament = async (req, res, next) => {
       leaderboard: leaderboard._id,
       teamMembers,
       player: userId,
+      teamName: teamName,
     });
 
     await User.findOneAndUpdate(
@@ -274,64 +338,117 @@ export const getLeaderboardToEdit = async (req, res, next) => {
 };
 
 export const addToLeaderboard = async (req, res, next) => {
-  const { match: matchId } = req.params;
-  const { prizeWon, kills, streak, damage } = req.body.userStats;
+  // const { match: matchId } = req.params;
+  // const { prizeWon, kills, streak, damage, matchId } = req.body.userStats;
+
+  const userStats = req.body.userStats;
 
   try {
-    const match = await Match.findOneAndUpdate(
-      {
-        _id: matchId,
-      },
-      {
-        prize: prizeWon,
-        kills: kills,
-        streak: streak,
-        damage: damage,
+    for (let i = 0; i < userStats.length - 1; i++) {
+      for (let j = 1; j < userStats.length; j++) {
+        if (userStats[i].prizeWon < userStats[j].prizeWon) {
+          let temp = userStats[i];
+          userStats[i] = userStats[j];
+          userStats[j] = temp;
+        }
       }
-    );
+    }
 
-    await Leaderboard.findOneAndUpdate(
-      { _id: matchId },
+    const assignedPositions = userStats.map((user, index) => {
+      return {
+        ...user,
+        prizeWon:
+          user.teamMembers.length > 0
+            ? user.prizeWon / (user.teamMembers.length + 1)
+            : user.prizeWon,
+        position: index + 1,
+      };
+    });
+
+    assignedPositions.forEach(async (assignedPosition) => {
+      await Match.findOneAndUpdate(
+        {
+          _id: assignedPosition.matchId,
+        },
+        {
+          prize: assignedPosition.prizeWon,
+          kills: assignedPosition.kills,
+          streak: assignedPosition.streak,
+          damage: assignedPosition.damage,
+        }
+      );
+    });
+
+    await User.findOneAndUpdate(
+      { _id: req.user.id },
       {
-        $push: {
-          list: match._id,
+        $inc: {
+          coins: Number(assignedPosition.prizeWon),
         },
       }
     );
 
-    await Tournament.findOneAndUpdate({ _id: match.tournament });
+    const foundMatch = await Match.findOne({ _id: matchId });
+
+    foundMatch.teamMembers.forEach(async (member) => {
+      await User.findOneAndUpdate(
+        { name: member },
+        {
+          $inc: {
+            coins: Number(assignedPosition.prizeWon),
+          },
+        }
+      );
+    });
+
+    await Leaderboard.findOneAndUpdate(
+      { tournament: foundMatch.tournament },
+      {
+        $push: {
+          list: foundMatch._id,
+        },
+      }
+    );
+
+    await Tournament.findOneAndUpdate(
+      { _id: foundMatch.tournament },
+      {
+        status: "completed",
+      }
+    );
 
     res.status(200).json({
-      data: match,
+      message: "Winners declared.",
     });
   } catch (error) {
     next(new AppError(error.message, 503));
   }
 };
 
-export const finishTournament = async (req, res, next) => {
-  try {
-    const { id } = req.params;
+// depracated
+// export const finishTournament = async (req, res, next) => {
+//   try {
+//     const { id } = req.params;
 
-    const tournament = await Tournament.findOneAndUpdate(
-      { _id: id },
-      {
-        status: "completed",
-      }
-    );
+//     const tournament = await Tournament.findOneAndUpdate(
+//       { _id: id },
+//       {
+//         status: "completed",
+//       }
+//     );
 
-    await Match.updateMany(
-      { tournament: id },
-      {
-        tournamentStatus: "completed",
-      }
-    );
+//     await Match.updateMany(
+//       { tournament: id },
+//       {
+//         tournamentStatus: "completed",
+//       }
+//     );
 
-    res.json({
-      message: "Tournament finished",
-      tournament,
-    });
-  } catch (err) {
-    next(new AppError(err.message, 503));
-  }
-};
+//     res.json({
+//       message: "Tournament finished",
+//       tournament,
+//     });
+//   } catch (err) {
+//     next(new AppError(err.message, 503));
+//   }
+// };
