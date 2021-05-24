@@ -3,6 +3,24 @@ import Blocklist from "../models/blocklistModel.js";
 import { AppError } from "../utils/AppError.js";
 import Referral from "../models/referralModel.js";
 import Game from "../models/gameModel.js";
+import FCMToken from "../models/FCMTokens.js";
+import { subscribeForNotification } from "../utils/firebase-notification.js";
+
+export const saveFcmTokens = async (req, res, next) => {
+  try {
+    const { fcmToken } = req.body;
+
+    if (!FCMToken) return next(new AppError("FCM token is required.", 400));
+
+    await subscribeForNotification(fcmToken);
+
+    res.json({
+      message: "succesfully registered for notifications.",
+    });
+  } catch (err) {
+    next(new AppError(err.message, 503));
+  }
+};
 
 export const rewardUserForReferral = async (req, res, next) => {
   try {

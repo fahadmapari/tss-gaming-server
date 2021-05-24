@@ -7,6 +7,7 @@ import {
   getAllGames,
   getAllRegisteredUsers,
   rewardUserForReferral,
+  saveFcmTokens,
   searchUsers,
   unBlockUser,
 } from "../controllers/indexController.js";
@@ -21,6 +22,8 @@ const router = express.Router();
 router.get("/", (req, res) => {
   res.json({ message: "API Running" });
 });
+
+router.get("/notification-registeration", saveFcmTokens);
 
 router.post("/refer", validateToken, rewardUserForReferral);
 

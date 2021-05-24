@@ -93,6 +93,15 @@ User have to be registered / logged in to hit this route
 
 http cookie or Bearer token required
 
+## Notification routes
+
+Route to send/register fcm token
+
+POST
+`/notification-registeration`
+
+data to send `{fcmToken: string}`
+
 ## Profile routes
 
 Route to get details of logged in user
