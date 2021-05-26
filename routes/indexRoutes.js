@@ -9,6 +9,7 @@ import {
   rewardUserForReferral,
   saveFcmTokens,
   searchUsers,
+  sendCustomPushNotification,
   unBlockUser,
 } from "../controllers/indexController.js";
 import {
@@ -38,6 +39,9 @@ router.get("/users/blocked", validateAdminToken, getAllBlockedUsers);
 router.get("/users/:id/unblock", validateAdminToken, unBlockUser);
 
 router.get("/games", getAllGames);
+
+router.post("/send-push-notification", sendCustomPushNotification);
+
 router.post(
   "/new-game",
   validateAdminToken,
