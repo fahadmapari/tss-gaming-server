@@ -28,7 +28,7 @@ it will generate and return google auth url which you can put in a button/a tag
 Route for mobile app google login/signup
 
 POST
-`/google/mobile`
+`/auth/google/mobile`
 
 data to send `{ token: string }`
 

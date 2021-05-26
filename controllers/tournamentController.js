@@ -248,7 +248,7 @@ export const joinTournament = async (req, res, next) => {
       tournament: tournamentId,
       tournamentStatus: tournament.status,
       leaderboard: leaderboard._id,
-      teamMembers,
+      team: teamMembers,
       player: userId,
       teamName: teamName,
     });
