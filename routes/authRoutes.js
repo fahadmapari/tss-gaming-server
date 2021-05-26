@@ -12,6 +12,7 @@ import {
   facebookLogin,
   discordLogin,
   generateDiscordUrl,
+  googleLoginMobile,
 } from "../controllers/authController.js";
 import {
   checkGuest,
@@ -22,6 +23,7 @@ import {
 const router = express.Router();
 
 router.get("/google", googleLogin);
+router.post("/google/mobile", googleLoginMobile);
 router.get("/google/url", generateGoogleURL);
 
 router.get("/facebook", facebookLogin);

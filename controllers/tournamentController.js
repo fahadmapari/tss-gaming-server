@@ -4,6 +4,7 @@ import User from "../models/userModel.js";
 import Leaderboard from "../models/LeaderboardModel.js";
 import {
   agenda,
+  schedulePushNotification,
   updateTournamentStatus,
 } from "../cron-jobs/updateTournaments.js";
 import { AppError } from "../utils/AppError.js";
@@ -95,6 +96,7 @@ export const createNewTournament = async (req, res, next) => {
     });
 
     await updateTournamentStatus(savedTournament._id, savedTournament.date);
+    await schedulePushNotification(savedTournament.title, savedTournament.date);
 
     res.status(201).json({
       message: "New Tournament created",

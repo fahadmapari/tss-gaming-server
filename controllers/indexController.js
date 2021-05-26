@@ -4,7 +4,10 @@ import { AppError } from "../utils/AppError.js";
 import Referral from "../models/referralModel.js";
 import Game from "../models/gameModel.js";
 import FCMToken from "../models/FCMTokens.js";
-import { subscribeForNotification } from "../utils/firebase-notification.js";
+import {
+  sendPushNotification,
+  subscribeForNotification,
+} from "../utils/firebase-notification.js";
 
 export const saveFcmTokens = async (req, res, next) => {
   try {
@@ -17,6 +20,16 @@ export const saveFcmTokens = async (req, res, next) => {
     res.json({
       message: "succesfully registered for notifications.",
     });
+  } catch (err) {
+    next(new AppError(err.message, 503));
+  }
+};
+
+export const sendCustomPushNotification = async (req, res, next) => {
+  try {
+    const { title, body } = req.body;
+
+    sendPushNotification({ title, body });
   } catch (err) {
     next(new AppError(err.message, 503));
   }

@@ -428,6 +428,101 @@ export const googleLogin = async (req, res, next) => {
   }
 };
 
+export const googleLoginMobile = async (req, res, next) => {
+  try {
+    const { token } = req.body;
+    // const data = await getGoogleAccountFromCode(req.query.code);
+    const googleProfile = await axios.get(
+      `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${token}`
+    );
+    const { email, name, picture } = googleProfile.data;
+
+    const existingUser = await User.findOne({ email: email }).select(
+      "-password"
+    );
+
+    if (existingUser) {
+      const token = generateToken(existingUser._id);
+      let date = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+
+      await Session.create({
+        user: existingUser._id,
+        token,
+        expireAt: date,
+      });
+
+      res
+        .status(201)
+        .cookie("access_token", token, {
+          expires: date,
+          httpOnly: true,
+        })
+        .set({
+          "api-key": token,
+        })
+        .json({
+          userInfo: {
+            name: existingUser.name,
+            mobile: existingUser.mobile,
+            mobileVerified: existingUser.mobileVerified,
+            email: existingUser.email,
+            emailVerified: existingUser.emailVerified,
+            role: existingUser.role,
+            coins: existingUser.coins,
+            profilePic: existingUser.profilePic,
+            referralId: existingUser.referralId,
+          },
+          token,
+        });
+    }
+
+    if (!existingUser) {
+      const user = await User.create({
+        name: name,
+        email: email,
+        emailVerified: true,
+        password: "",
+        profilePic: picture,
+      });
+
+      const token = generateToken(user._id);
+      let date = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+
+      await Session.create({
+        user: user._id,
+        token,
+        expireAt: date,
+      });
+
+      res
+        .status(200)
+        .cookie("access_token", token, {
+          expires: date,
+          httpOnly: true,
+        })
+        .set({
+          "api-key": token,
+        })
+        .json({
+          userInfo: {
+            name: user.name,
+            mobile: user.mobile,
+            mobileVerified: user.mobileVerified,
+            email: user.email,
+            emailVerified: user.emailVerified,
+            role: user.role,
+            coins: user.coins,
+            profilePic: user.profilePic,
+            referralId: user.referralId,
+          },
+          token,
+        });
+    }
+  } catch (error) {
+    next(new AppError(error.message, 503));
+  }
+};
+
 // facebook auth
 
 export const generateFacebookUrl = async (req, res, next) => {
