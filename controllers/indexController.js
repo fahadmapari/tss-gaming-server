@@ -29,8 +29,20 @@ export const sendCustomPushNotification = async (req, res, next) => {
   try {
     const { title, body } = req.body;
 
-    sendPushNotification({ title, body });
+    await sendPushNotification({ title, body });
+
+    res.json({
+      message: "Notification sent",
+    });
   } catch (err) {
+    next(new AppError(err.message, 503));
+  }
+};
+
+export const sendWhatsappMessage = async (req, res, next) => {
+  try {
+    const { message } = req.body;
+  } catch (er) {
     next(new AppError(err.message, 503));
   }
 };

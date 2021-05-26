@@ -9,8 +9,10 @@ import fs from "fs";
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
 import Referral from "../models/referralModel.js";
+import sgMail from "@sendgrid/mail";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
+sgMail.setApiKey(process.env.SEND_GRID_KEY);
 
 export const getProfileDetails = async (req, res, next) => {
   const { id } = req.params;
@@ -180,6 +182,20 @@ export const updateUserProfile = async (req, res, next) => {
             }`
           )
         );
+
+        if (mobile || email || password) {
+          const msg = {
+            to: email,
+            from: process.env.SEND_GRID_EMAIL, // Use the email address or domain you verified above
+            subject: "TSS_GAMING Account update",
+            text: `${mobile && `Your mobile numer: ${mobile} was changed`}
+                  ${email && `Your email: ${email} was changed, `}
+                  ${password && `Your account password was changed.`}
+                  `,
+          };
+
+          await sgMail.send(msg);
+        }
       } catch (err) {
         console.log(err);
       }

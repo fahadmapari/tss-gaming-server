@@ -46,7 +46,7 @@ agenda.define(
     try {
       const { title } = job.attrs.data;
 
-      sendPushNotification({
+      await sendPushNotification({
         title: `${title} starting in 1 hour.`,
         body: "Get ready to play or watch the live stream!",
       });

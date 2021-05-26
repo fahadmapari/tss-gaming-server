@@ -61,7 +61,7 @@ it will generate and return discord auth url which you can put in a button/a tag
 Route to get discord auth url for mobile auth.
 
 GET
-`/auth/discord/mobile`
+`/discord/url/mobile`
 
 it will generate and return discord auth url which you can put in a button/a tag or webview
 
@@ -131,6 +131,12 @@ POST
 `/notification-registeration`
 
 data to send `{fcmToken: string}`
+
+---
+
+Route to send custom push notifications to users
+
+`mentioned in admin routes`
 
 ## Profile routes
 
@@ -437,8 +443,8 @@ Admin route to create tournament
 
 POST
 `/tournament/:id/edit`
-data to send
 
+data to send/can be edited
 `{ title: string, thumbnails: [ files ], description: string, entryFee: number, date: Date (date and time both), tournamentType: string ("solo", "duo", "team"), kills: number, streak: number, damage: number, prize: number, roomId: string, roomPassword: string, stream: string, slots: number, game: string}`
 
 - replace :id with tournament's "\_id" in url
@@ -534,3 +540,10 @@ data to send `title: string ,gameCover: file(image)`
 it will create a new game which can used to link to tournaments.
 
 ---
+
+Route to send custom push notifications to users
+
+POST
+`/send-push-notification`
+
+data to send `{ title: string, body: string }`

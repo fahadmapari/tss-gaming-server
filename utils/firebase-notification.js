@@ -1,6 +1,6 @@
 import admin from "firebase-admin";
 import fs from "fs";
-import path, { dirname } from "path";
+import path, { dirname, resolve } from "path";
 import { fileURLToPath } from "url";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -30,23 +30,28 @@ export const subscribeForNotification = async (token) => {
 };
 
 export const sendPushNotification = async (message) => {
-  try {
-    const payload = {
-      notification: {
-        title: message.title,
-        body: message.body,
-        icon: DOMAIN_NAME + "/logo.png",
-      },
-    };
+  return new Promise(async (resolve, reject) => {
+    try {
+      const payload = {
+        notification: {
+          title: message.title,
+          body: message.body,
+          icon: DOMAIN_NAME + "/logo.png",
+        },
+      };
 
-    const options = {
-      priority: "high",
-    };
+      const options = {
+        priority: "high",
+      };
 
-    await admin
-      .messaging()
-      .sendToTopic("tournament_reminder", payload, options);
-  } catch (error) {
-    console.log(error);
-  }
+      await admin
+        .messaging()
+        .sendToTopic("tournament_reminder", payload, options);
+
+      resolve();
+    } catch (error) {
+      console.log(error);
+      reject(error);
+    }
+  });
 };

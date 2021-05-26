@@ -10,6 +10,7 @@ import {
   saveFcmTokens,
   searchUsers,
   sendCustomPushNotification,
+  sendWhatsappMessage,
   unBlockUser,
 } from "../controllers/indexController.js";
 import {
@@ -40,7 +41,11 @@ router.get("/users/:id/unblock", validateAdminToken, unBlockUser);
 
 router.get("/games", getAllGames);
 
-router.post("/send-push-notification", sendCustomPushNotification);
+router.post(
+  "/send-push-notification",
+  validateAdminToken,
+  sendCustomPushNotification
+);
 
 router.post(
   "/new-game",
