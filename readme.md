@@ -38,7 +38,7 @@ data to send `{ token: string }`
 
 `Facebook auth`
 
-Route to get google auth url
+Route to get facebook auth url
 
 GET
 `/auth/facebook/url`
@@ -49,12 +49,31 @@ it will generate and return facebook auth url which you can put in a button/a ta
 
 `Discord auth`
 
-Route to get google auth url
+Route to get discord auth url
 
 GET
 `/auth/discord/url`
 
 it will generate and return discord auth url which you can put in a button/a tag
+
+---
+
+Route to get discord auth url for mobile auth.
+
+GET
+`/auth/discord/mobile`
+
+it will generate and return discord auth url which you can put in a button/a tag or webview
+
+---
+
+Route to login/signup for mobile app.
+
+POST
+`/auth/discord/mobile-auth`
+data to send`{ code: string }`
+
+- code will be available in url as a paramenter after authrorizing discord through auth url. Extract the code from url and send it.
 
 ---
 

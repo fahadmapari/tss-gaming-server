@@ -13,6 +13,8 @@ import {
   discordLogin,
   generateDiscordUrl,
   googleLoginMobile,
+  generateDiscordMobileUrl,
+  discordLoginMobile,
 } from "../controllers/authController.js";
 import {
   checkGuest,
@@ -30,7 +32,11 @@ router.get("/facebook", facebookLogin);
 router.get("/facebook/url", generateFacebookUrl);
 
 router.get("/discord", discordLogin);
+router.get("/discord/mobile", (req, res, next) => res.send("OK"));
+router.post("/discord/mobile-auth", discordLoginMobile);
+
 router.get("/discord/url", generateDiscordUrl);
+router.get("/discord/url/mobile", generateDiscordMobileUrl);
 
 router.get("/otp/:method", validateNewUserToken, generateOtp);
 router.get("/logout", validateToken, logoutUser);

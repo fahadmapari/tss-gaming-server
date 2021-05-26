@@ -648,6 +648,16 @@ export const generateDiscordUrl = async (req, res, next) => {
   }
 };
 
+export const generateDiscordMobileUrl = async (req, res, next) => {
+  try {
+    res.json({
+      url: process.env.DISCORD_OAUTH_MOBILE_URL,
+    });
+  } catch (err) {
+    next(new AppError(err.message, 503));
+  }
+};
+
 export const discordLogin = async (req, res, next) => {
   try {
     const code = req.query.code;
@@ -712,6 +722,103 @@ export const discordLogin = async (req, res, next) => {
           "api-key": token,
         })
         .redirect("/");
+    }
+  } catch (err) {
+    console.log(err);
+    next(new AppError(err.message, 503));
+  }
+};
+
+export const discordLoginMobile = async (req, res, next) => {
+  try {
+    const { code } = req.body;
+
+    const access_token = await discordClient.getAccess(code);
+
+    const user = await discordClient.getUser(access_token);
+    console.log(user);
+    res.json({ user });
+
+    const existingUser = await User.findOne({ email: user.emailId }).select(
+      "-password"
+    );
+
+    if (existingUser) {
+      const token = generateToken(existingUser._id);
+      let date = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+
+      await Session.create({
+        user: existingUser._id,
+        token,
+        expireAt: date,
+      });
+
+      res
+        .status(201)
+        .cookie("access_token", token, {
+          expires: date,
+          httpOnly: true,
+        })
+        .set({
+          "api-key": token,
+        })
+        .json({
+          userInfo: {
+            name: existingUser.name,
+            mobile: existingUser.mobile,
+            mobileVerified: existingUser.mobileVerified,
+            email: existingUser.email,
+            emailVerified: existingUser.emailVerified,
+            role: existingUser.role,
+            coins: existingUser.coins,
+            profilePic: existingUser.profilePic,
+            referralId: existingUser.referralId,
+          },
+          token,
+        });
+    }
+
+    if (!existingUser) {
+      const user = await User.create({
+        name: user.username,
+        email: user.emailId,
+        emailVerified: true,
+        password: "",
+        profilePic: user.avatarUrl,
+      });
+
+      const token = generateToken(user._id);
+      let date = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+
+      await Session.create({
+        user: user._id,
+        token,
+        expireAt: date,
+      });
+
+      res
+        .status(200)
+        .cookie("access_token", token, {
+          expires: date,
+          httpOnly: true,
+        })
+        .set({
+          "api-key": token,
+        })
+        .json({
+          userInfo: {
+            name: user.name,
+            mobile: user.mobile,
+            mobileVerified: user.mobileVerified,
+            email: user.email,
+            emailVerified: user.emailVerified,
+            role: user.role,
+            coins: user.coins,
+            profilePic: user.profilePic,
+            referralId: user.referralId,
+          },
+          token,
+        });
     }
   } catch (err) {
     console.log(err);
