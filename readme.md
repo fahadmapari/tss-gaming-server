@@ -168,6 +168,12 @@ GET
 
 - like this `/profile/tournaments?page=1&limit=10&status=upcoming (optional)`
 
+- tournaments can also be filtered between dates two dates using `dateFrom` and `dateTo` parameters
+
+`/profile/tournaments?dateFrom=Thu May 27 2021 02:15:59 GMT+0530 (India Standard Time)&dateTo=Thu May 30 2021 02:15:59 GMT+0530 (India Standard Time)`
+
+if `dateTo` is not provided only 1 day tournaments will be returned.
+
 http cookie or Bearer token required
 
 ---
@@ -257,6 +263,12 @@ GET
 - you can also get specific tournaments from it. upcoming, completed, ongoing like this
 
 `/tournament/list?status=upcoming`
+
+- tournaments can also be filtered between dates two dates using `dateFrom` and `dateTo` parameters
+
+`/tournament/list?dateFrom=Thu May 27 2021 02:15:59 GMT+0530 (India Standard Time)&dateTo=Thu May 30 2021 02:15:59 GMT+0530 (India Standard Time)`
+
+if `dateTo` is not provided only 1 day tournaments will be returned.
 
 all query parameters are optional
 

@@ -45,7 +45,7 @@ export const getMyProfileDetails = async (req, res, next) => {
 
 export const getMyTournaments = async (req, res, next) => {
   const { id } = req.user;
-  const { page, limit, status } = req.query;
+  const { page, limit, status, dateFrom, dateTo } = req.query;
   try {
     if (!id) return next(new AppError("Profile not found.", 404));
 
@@ -54,6 +54,20 @@ export const getMyTournaments = async (req, res, next) => {
     };
 
     if (status && status !== "") query.tournamentStatus = status;
+
+    if (dateFrom && dateFrom !== "") {
+      if (!dateTo || dateTo === "") {
+        query.createdAt = {
+          $gte: startOfDay(new Date(dateFrom)),
+          $lte: endOfDay(new Date(dateFrom)),
+        };
+      } else {
+        query.createdAt = {
+          $gte: startOfDay(new Date(dateFrom)),
+          $lte: endOfDay(new Date(dateTo)),
+        };
+      }
+    }
 
     let profile = await Match.paginate(query, {
       page: page ? page : 1,

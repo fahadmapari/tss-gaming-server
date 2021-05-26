@@ -9,12 +9,13 @@ import {
 } from "../cron-jobs/updateTournaments.js";
 import { AppError } from "../utils/AppError.js";
 import { tournamentUpdateFields } from "../utils/tournamentUpdateFields.js";
+import { endOfDay, startOfDay } from "date-fns";
 import sgMail from "@sendgrid/mail";
 
 sgMail.setApiKey(process.env.SEND_GRID_KEY);
 
 export const listAllTournaments = async (req, res, next) => {
-  const { page, limit, status } = req.query;
+  const { page, limit, status, dateFrom, dateTo } = req.query;
 
   try {
     const opts = {
@@ -29,6 +30,20 @@ export const listAllTournaments = async (req, res, next) => {
 
     if (status && status !== "") {
       query.status = status;
+    }
+
+    if (dateFrom && dateFrom !== "") {
+      if (!dateTo || dateTo === "") {
+        query.createdAt = {
+          $gte: startOfDay(new Date(dateFrom)),
+          $lte: endOfDay(new Date(dateFrom)),
+        };
+      } else {
+        query.createdAt = {
+          $gte: startOfDay(new Date(dateFrom)),
+          $lte: endOfDay(new Date(dateTo)),
+        };
+      }
     }
 
     const tournaments = await Tournament.paginate(query, opts);
