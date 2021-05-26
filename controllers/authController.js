@@ -433,7 +433,7 @@ export const googleLoginMobile = async (req, res, next) => {
     const { token } = req.body;
     // const data = await getGoogleAccountFromCode(req.query.code);
     const googleProfile = await axios.get(
-      `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${token}`
+      `https://oauth2.googleapis.com/tokeninfo?id_token${token}`
     );
     const { email, name, picture } = googleProfile.data;
 
