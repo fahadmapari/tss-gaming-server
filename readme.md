@@ -125,6 +125,8 @@ http cookie or Bearer token required
 
 ## Notification routes
 
+`use firebase to get token and setup service worker`
+
 Route to send/register fcm token
 
 POST

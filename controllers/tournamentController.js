@@ -9,6 +9,9 @@ import {
 } from "../cron-jobs/updateTournaments.js";
 import { AppError } from "../utils/AppError.js";
 import { tournamentUpdateFields } from "../utils/tournamentUpdateFields.js";
+import sgMail from "@sendgrid/mail";
+
+sgMail.setApiKey(process.env.SEND_GRID_KEY);
 
 export const listAllTournaments = async (req, res, next) => {
   const { page, limit, status } = req.query;
@@ -268,6 +271,13 @@ export const joinTournament = async (req, res, next) => {
         slotsAvailable: tournament.slotsAvailable - 1,
       }
     );
+
+    const msg = {
+      to: email,
+      from: process.env.SEND_GRID_EMAIL, // Use the email address or domain you verified above
+      subject: "Tournament credentials - TSS_GAMING",
+      html: `<h3>You just joined ${tournament.title} tournament.<h3> <h4>credentials<h4> <p>Room ID: ${tournament.credentials.roomId}</p> <p>Room Password: ${tournament.credentials.roomPassword}</p>`,
+    };
 
     res.status(200).send({
       message: "Joined Tournament",

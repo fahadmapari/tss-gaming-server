@@ -431,10 +431,14 @@ export const googleLogin = async (req, res, next) => {
 export const googleLoginMobile = async (req, res, next) => {
   try {
     const { token } = req.body;
+
+    if (!token) return next(new AppError("token is required.", 400));
+
     // const data = await getGoogleAccountFromCode(req.query.code);
     const googleProfile = await axios.get(
-      `https://oauth2.googleapis.com/tokeninfo?id_token${token}`
+      `https://oauth2.googleapis.com/tokeninfo?id_token=${token}`
     );
+
     const { email, name, picture } = googleProfile.data;
 
     const existingUser = await User.findOne({ email: email }).select(
@@ -519,7 +523,6 @@ export const googleLoginMobile = async (req, res, next) => {
         });
     }
   } catch (error) {
-    console.log(error);
     next(new AppError(error.message, 503));
   }
 };
