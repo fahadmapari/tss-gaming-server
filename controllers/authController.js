@@ -669,8 +669,6 @@ export const discordLogin = async (req, res, next) => {
     const access_token = await discordClient.getAccess(code);
 
     const user = await discordClient.getUser(access_token);
-    console.log(user);
-    res.json({ user });
 
     const existingUser = await User.findOne({ email: user.emailId }).select(
       "-password"
@@ -737,11 +735,11 @@ export const discordLoginMobile = async (req, res, next) => {
   try {
     const { code } = req.body;
 
+    if (!code) return next(new AppError("code is required.", 400));
+
     const access_token = await discordClient.getAccess(code);
 
     const user = await discordClient.getUser(access_token);
-    console.log(user);
-    res.json({ user });
 
     const existingUser = await User.findOne({ email: user.emailId }).select(
       "-password"
