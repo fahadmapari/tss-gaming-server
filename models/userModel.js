@@ -19,6 +19,7 @@ const userScehma = new mongoose.Schema({
     type: Number,
     unique: true,
     index: true,
+    sparse: true,
   },
   mobileVerified: {
     type: Boolean,
