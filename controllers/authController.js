@@ -238,10 +238,12 @@ export const registerUser = async (req, res, next) => {
 
     const newUser = await user.save();
 
-    await Referral.create({
-      referredBy: referredBy._id,
-      referredUser: newUser._id,
-    });
+    if (req.body.referCode) {
+      await Referral.create({
+        referredBy: referredBy._id,
+        referredUser: newUser._id,
+      });
+    }
 
     const token = generateToken(newUser._id);
     let date = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);

@@ -10,6 +10,7 @@ const userScehma = new mongoose.Schema({
     type: String,
     unique: true,
     index: true,
+    trim: true,
   },
   emailVerified: {
     type: Boolean,
@@ -18,6 +19,7 @@ const userScehma = new mongoose.Schema({
   mobile: {
     type: Number,
     unique: true,
+    trim: true,
     index: true,
     sparse: true,
   },
@@ -30,6 +32,7 @@ const userScehma = new mongoose.Schema({
     required: [true, "name is required."],
     index: true,
     unique: true,
+    trim: true,
   },
   password: {
     type: String,
