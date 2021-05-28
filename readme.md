@@ -61,7 +61,7 @@ it will generate and return discord auth url which you can put in a button/a tag
 Route to get discord auth url for mobile auth.
 
 GET
-`/discord/url/mobile`
+`/auth/discord/url/mobile`
 
 it will generate and return discord auth url which you can put in a button/a tag or webview
 
@@ -139,6 +139,15 @@ data to send `{fcmToken: string}`
 Route to send custom push notifications to users
 
 `mentioned in admin routes`
+
+## Contact routes
+
+Route to send contact mail.
+
+POST
+`/contact`
+
+data to send `{ name, email, phone, message, subject, category }`
 
 ## Profile routes
 

@@ -8,6 +8,43 @@ import {
   sendPushNotification,
   subscribeForNotification,
 } from "../utils/firebase-notification.js";
+import sgMail from "@sendgrid/mail";
+sgMail.setApiKey(process.env.SEND_GRID_KEY);
+
+export const contactUs = async (req, res, next) => {
+  try {
+    const { name, email, phone, message, subject, category } = req.body;
+
+    if (!name || name === "")
+      return next(new AppError("name is required.", 400));
+    if (!email || email === "")
+      return next(new AppError("email is required.", 400));
+    if (!phone || phone === "")
+      return next(new AppError("phone is required.", 400));
+    if (!message || message === "")
+      return next(new AppError("name is required.", 400));
+    if (!subject || subject === "")
+      return next(new AppError("name is required.", 400));
+    if (!category || category === "")
+      return next(new AppError("name is required.", 400));
+
+    const msg = {
+      to: process.env.SEND_GRID_EMAIL,
+      from: process.env.SEND_GRID_EMAIL, // Use the email address or domain you verified above
+      subject: subject + " - TSS_GAMING",
+      replyTo: email,
+      html: `<h3>Name: ${name}</h3> <h3>Email: ${email}</h3> <h3>Phone: ${phone}</h3> <h3>Subject: ${subject}</h3> <h3>Category: ${category}</h3> <h3>Message:</h3> <p>${message}</p>`,
+    };
+
+    await sgMail.send(msg);
+
+    res.json({
+      message: "Mail sent",
+    });
+  } catch (err) {
+    next(new AppError(err.message, 503));
+  }
+};
 
 export const saveFcmTokens = async (req, res, next) => {
   try {

@@ -2,6 +2,7 @@ import express from "express";
 import {
   addNewGame,
   blockUser,
+  contactUs,
   createNewSubAdmin,
   getAllBlockedUsers,
   getAllGames,
@@ -24,6 +25,8 @@ const router = express.Router();
 router.get("/", (req, res) => {
   res.json({ message: "API Running" });
 });
+
+router.post("/contact", contactUs);
 
 router.get("/notification-registeration", saveFcmTokens);
 

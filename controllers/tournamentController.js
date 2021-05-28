@@ -294,6 +294,8 @@ export const joinTournament = async (req, res, next) => {
       html: `<h3>You just joined ${tournament.title} tournament.<h3> <h4>credentials<h4> <p>Room ID: ${tournament.credentials.roomId}</p> <p>Room Password: ${tournament.credentials.roomPassword}</p>`,
     };
 
+    await sgMail.send(msg);
+
     res.status(200).send({
       message: "Joined Tournament",
       data: match,
