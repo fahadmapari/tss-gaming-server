@@ -51,7 +51,7 @@ router.post(
 );
 router.post("/login", checkGuest, loginUser);
 
-router.get("/reset-password", resetPasswordOTP);
+router.get("/reset-password/:email", resetPasswordOTP);
 router.post("/reset-password", resetPassword);
 
 router.post("/otp/:method", validateNewUserToken, verifyOtp);

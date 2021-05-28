@@ -30,7 +30,7 @@ discordClient
 
 export const resetPasswordOTP = async (req, res, next) => {
   try {
-    const { email } = req.body;
+    const { email } = req.params;
 
     if (!email || email === "")
       return next(new AppError("email is required.", 400));

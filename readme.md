@@ -14,6 +14,24 @@ after successful login/register server will respond with user data and access to
 
 ---
 
+Route to generate otp to reset password/forgot password
+
+GET
+`/auth/reset-password/:email`
+
+- replace ':email' in url with user's email
+- otp will be sent to user's email.
+
+---
+
+Route to reset password/forgot password.
+
+POST
+`/auth/reset-password/`
+data to send `{ email, otp, newPassword }`
+
+---
+
 `Google auth`
 
 Route to get google auth url
