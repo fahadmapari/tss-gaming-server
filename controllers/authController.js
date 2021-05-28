@@ -16,6 +16,7 @@ import { facebookLoginUrl } from "../utils/facebookAuth.js";
 import OAuthClient from "disco-oauth";
 import axios from "axios";
 import Referral from "../models/referralModel.js";
+import { hashPassword } from "../utils/hashPassword.js";
 
 const client = twilio(process.env.TWLO_SID, process.env.TWLO_TOKEN);
 const discordClient = new OAuthClient(
@@ -26,6 +27,102 @@ const discordClient = new OAuthClient(
 discordClient
   .setScopes(["identify", "email"])
   .setRedirect("https://tss-gaming.herokuapp.com/api/auth/discord");
+
+export const resetPasswordOTP = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+
+    if (!email || email === "")
+      return next(new AppError("email is required.", 400));
+
+    if (!validateEmail(email)) return next(new AppError("Invalid email", 400));
+
+    const user = await User.findOne({ email: email });
+
+    if (!user) return next(new AppError("user not found.", 400));
+
+    client.verify
+      .services(process.env.TWLO_SERVICE_ID)
+      .verifications.create({ to: `${email}`, channel: "email" })
+      .then((verification) => {
+        res.status(200).json({
+          message: "OTP SENT TO EMAIL",
+          data: {
+            to: verification.to,
+            channel: verification.channel,
+            status: verification.status,
+            lookup: verification.lookup,
+            dates: {
+              created: verification.date_created,
+              update: verification.date_updated,
+            },
+          },
+        });
+      })
+      .catch((err) => {
+        next(new AppError(err.message, 503));
+      });
+  } catch (err) {
+    next(new AppError(err.message, 503));
+  }
+};
+
+export const resetPassword = async (req, res, next) => {
+  try {
+    const { email, otp, newPassword } = req.body;
+
+    if (!email || email === "")
+      return next(new AppError("email is required.", 400));
+
+    if (!validateEmail(email)) return next(new AppError("Invalid email", 400));
+
+    if (!otp || otp === "") return next(new AppError("otp is required.", 400));
+
+    if (!newPassword || newPassword === "")
+      return next(new AppError("new password is required.", 400));
+
+    client.verify
+      .services(process.env.TWLO_SERVICE_ID)
+      .verificationChecks.create({ to: `${email}`, code: otp })
+      .then(async (verification) => {
+        if (verification.status === "approved") {
+          const hashedPassword = await hashPassword(newPassword);
+
+          await User.findOneAndUpdate(
+            { email: email },
+            { password: hashedPassword }
+          );
+
+          res.status(200).json({
+            message: "password changed",
+            to: verification.to,
+            channel: verification.channel,
+            status: verification.status,
+            dates: {
+              created: verification.date_created,
+              update: verification.date_updated,
+            },
+          });
+        } else {
+          res.status(200).json({
+            message: "invalid otp",
+            to: verification.to,
+            channel: verification.channel,
+            status: verification.status,
+            dates: {
+              created: verification.date_created,
+              update: verification.date_updated,
+            },
+          });
+        }
+      })
+      .catch((err) => {
+        next(new AppError("INVALID OTP", 503));
+      });
+  } catch (err) {
+    next(new AppError(err.message, 503));
+  }
+};
 
 export const generateOtp = async (req, res, next) => {
   try {

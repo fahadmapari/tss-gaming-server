@@ -15,6 +15,8 @@ import {
   googleLoginMobile,
   generateDiscordMobileUrl,
   discordLoginMobile,
+  resetPasswordOTP,
+  resetPassword,
 } from "../controllers/authController.js";
 import {
   checkGuest,
@@ -48,6 +50,10 @@ router.post(
   registerUser
 );
 router.post("/login", checkGuest, loginUser);
+
+router.get("/reset-password", resetPasswordOTP);
+router.post("/reset-password", resetPassword);
+
 router.post("/otp/:method", validateNewUserToken, verifyOtp);
 
 export default router;
