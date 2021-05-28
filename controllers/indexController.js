@@ -211,11 +211,15 @@ export const getAllBlockedUsers = async (req, res, next) => {
 
     if (role) query.role = role;
 
-    await Blocklist.paginate(query, {
+    const blocklist = await Blocklist.paginate(query, {
       populate: "user",
       select: "-password",
       page: page ? page : 1,
       limit: limit ? limit : 10,
+    });
+
+    res.json({
+      blocklist,
     });
   } catch (err) {
     next(new AppError(err.message, 503));
