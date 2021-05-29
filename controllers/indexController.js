@@ -189,7 +189,7 @@ export const blockUser = async (req, res, next) => {
 
     if (!user) return next("invalid user id.", 400);
 
-    const alreadyBlocked = new Blocklist.findOne({ user: user._id });
+    const alreadyBlocked = await Blocklist.findOne({ user: user._id });
 
     if (alreadyBlocked) return next("user already blocked.", 400);
 
