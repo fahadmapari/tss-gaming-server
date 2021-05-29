@@ -329,7 +329,6 @@ export const createNewSubAdmin = async (req, res, next) => {
         emailVerified: newUser.emailVerified,
         profilePic: newUser.profilePic,
       },
-      token,
     });
   } catch (err) {
     next(new AppError(err.message, 503));
