@@ -28,7 +28,14 @@ app.use(
     origin: true,
     exposedHeaders: ["api-key", "Authorization"],
     credentials: true,
-    allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "Cookie",
+      "Origin",
+      "X-Requested-With",
+      "Accept",
+    ],
   })
 );
 
