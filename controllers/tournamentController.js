@@ -301,6 +301,7 @@ export const joinTournament = async (req, res, next) => {
       data: match,
     });
   } catch (err) {
+    console.log(err);
     next(new AppError(err.message, 503));
   }
 };

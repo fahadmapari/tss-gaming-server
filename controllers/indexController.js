@@ -327,6 +327,7 @@ export const createNewSubAdmin = async (req, res, next) => {
         role: newUser.role,
         email: newUser.email,
         emailVerified: newUser.emailVerified,
+        mobileVerified: newUser.mobileVerified,
         profilePic: newUser.profilePic,
       },
     });
