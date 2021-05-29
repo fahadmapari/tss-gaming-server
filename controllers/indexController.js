@@ -237,7 +237,7 @@ export const unBlockUser = async (req, res, next) => {
 
     const user = await User.findOne({ _id: id });
 
-    if (!user) return next("invalid user id.", 400);
+    if (!user) return next(new AppError("invalid user id.", 400));
 
     await Blocklist.findOneAndRemove({
       user: user._id,
