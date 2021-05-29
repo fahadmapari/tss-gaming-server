@@ -60,9 +60,7 @@ app.use("*", (req, res) => {
 app.use((err, req, res, next) => {
   console.log(err);
   const { message, status } = err;
-  res
-    .status(status)
-    .json({ message: message.toLowerCase(), status, error: err });
+  res.status(status).json({ message: message, status, error: err });
 });
 
 const PORT = process.env.PORT || 3000;
