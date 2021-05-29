@@ -4,6 +4,7 @@ import { AppError } from "../utils/AppError.js";
 import Referral from "../models/referralModel.js";
 import Game from "../models/gameModel.js";
 import FCMToken from "../models/FCMTokens.js";
+import { validateEmail } from "../utils/validations.js";
 import {
   sendPushNotification,
   subscribeForNotification,
@@ -283,7 +284,6 @@ export const addNewGame = async (req, res, next) => {
 
 export const createNewSubAdmin = async (req, res, next) => {
   let profilePic = "/profile-pictures/default.png";
-  let referredBy;
   if (req.file) {
     profilePic =
       process.env.DOMAIN_NAME + "/profile-pictures/" + req.file.filename;

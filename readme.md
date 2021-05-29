@@ -582,6 +582,16 @@ it will create a new game which can used to link to tournaments.
 
 ---
 
+Route to create a new sub-admin
+
+POST
+`/sub-admin`
+data to send `{ name: string, email: string, password: string, mobile: number , profilePic: file (optional)`
+
+note: only admin can create sub-admins
+
+---
+
 Route to send custom push notifications to users
 
 POST

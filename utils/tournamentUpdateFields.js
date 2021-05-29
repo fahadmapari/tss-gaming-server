@@ -28,8 +28,14 @@ export const tournamentUpdateFields = (data, tournament) => {
   if (streak) fieldsToUpdate.prizeDistribution.streak = streak;
   if (damage) fieldsToUpdate.prizeDistribution.damage = damage;
   if (prize) fieldsToUpdate.prize = prize;
-  if (roomId) fieldsToUpdate.credentials.roomId = roomId;
-  if (roomPassword) fieldsToUpdate.credentials.roomPassword = roomPassword;
+  if (roomId) {
+    fieldsToUpdate.credentials = {};
+    fieldsToUpdate.credentials.roomId = roomId;
+  }
+  if (roomPassword) {
+    fieldsToUpdate.credentials = {};
+    fieldsToUpdate.credentials.roomPassword = roomPassword;
+  }
   if (slots) fieldsToUpdate.slots = slots;
   if (slots) {
     const newAvailableSlots =
