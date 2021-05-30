@@ -278,7 +278,7 @@ export const addNewGame = async (req, res, next) => {
     });
 
     res.json({
-      message: "New Game created",
+      message: "New game created",
       game,
     });
   } catch (err) {

@@ -34,7 +34,57 @@ router.get("/facebook", facebookLogin);
 router.get("/facebook/url", generateFacebookUrl);
 
 router.get("/discord", discordLogin);
-router.get("/discord/mobile", (req, res, next) => res.send("OK"));
+router.get("/discord/mobile", (req, res, next) =>
+  res.send(`<div class="container">
+<style scoped>
+  *{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  .container{
+    min-height: 100vh;
+    background: white;
+    position: relative;
+  }
+    
+  .loader{
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .load-bar{
+    height: 35px;
+    width: 10px;
+    background: #ff4336;
+    margin: 0.3rem;
+    transform-origin: bottom;
+    animation: loadAnim 1s ease-out infinite alternate;
+  }
+  .load-bar.two{
+    animation: loadAnim 1s ease-out infinite alternate 1s;
+  }
+  
+  @keyframes loadAnim{
+    from{
+      transform: ScaleY(0.3);  
+    }
+    to{
+      transform: ScaleY(1); 
+    }
+  }
+</style>
+
+<div class="loader">
+  <div class="load-bar"></div>
+  <div class="load-bar two"></div>
+  <div class="load-bar"></div>
+</div>
+
+</div>`)
+);
 router.post("/discord/mobile-auth", discordLoginMobile);
 
 router.get("/discord/url", generateDiscordUrl);
