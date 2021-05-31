@@ -116,7 +116,7 @@ $("#admin_login-btn").click(() => {
           localStorage.setItem("user_role", result.userInfo.role);
           localStorage.setItem("logged_in", "true");
           window.location.href =
-            "http://tss-gaming.herokuapp.com/client/admin/profile.html";
+            "https://tss-gaming.herokuapp.com/client/admin/profile.html";
         });
       }
     })
