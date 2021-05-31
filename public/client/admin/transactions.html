@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Transactions</title>
+    <!-- Required meta tags always come first -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <link rel="shortcut icon" type="image/png" href="./images/favicon.png">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Fonts -->
+    
+    <!-- Custom CSS -->
+    <link rel = "stylesheet" href="styles.css">
+  </head>
+  <body id="other-page">
+    <div id="general_bg" class="vw-100 vh-100"></div>
+    <div id="loader" class="center">
+    </div>
+    <nav class="navbar navbar-dark navbar-expand-sm fixed-top product" id = "navigation_bar_home">
+      <div class="container">
+        <a class="navbar-brand mr-auto" href="./index.html">
+          <img src="./images/logo_nav.png" alt="" class="navbar_logo">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#Navbar">
+          <span class="navbar-toggler-icon text-white"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="Navbar">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item mr-3"><a class="nav-link" href="./index.html"><strong>Home</strong></a></li>
+            <li class="nav-item mr-3"><a class="nav-link" href="./admin_dashboard.html"><strong>Dashboard</strong></a></li>
+            <li class="nav-item mr-3"><a class="nav-link" href="./users.html"><strong>Users</strong></a></li>
+            <li class="nav-item mr-3 active"><a class="nav-link" href="#"><strong>Transactions</strong></a></li>
+            <li class="nav-item mr-3"><a class="nav-link" href="./sub_admins.html"><strong>Sub Admins</strong></a></li>
+          <li class="nav-item mr-3"><a class="nav-link" href="./profile.html"><strong>Profile</strong></a></li>
+            <li class="nav-item"><a href="./admin_login.html" class="btn primary_btn float-right d-inline">Login</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    
+  <div id="panel">
+    <div class="container-fluid text-white mb-5 product">
+      <div class="row mx-0 mb-5">
+        <div class="col-12 col-lg-10 offset-lg-1">
+          <div class="row mx-0 mb-5">
+            <div class="col-12 col-lg-8 offset-lg-2">
+              <h1 class="text-center bahnschrift mb-3">All Withdraw Request</h1>
+            </div>
+          </div>
+          <div class="row mx-0">
+            <div class="col-12 col-lg-12 " id="withdraw_request">
+            </div>
+          </div>
+          <div class="card-footer py-4">
+            <div class="pagination justify-content-center mb-0 withdraw_request-page-buttons"></div>
+          </div>
+        </div> 
+      </div>
+    </div>
+
+    <div class="py-5"></div>
+
+    <footer class="mt-5 py-3 py-lg-5 product">
+      <div class="container-fluid">
+        <div class="row mx-0">
+          <div class="col-12 col-lg-10 offset-lg-1">
+            <img src="./images/footer_logo.png" alt="" id="footer_logo">
+            <div class="row mx-0">
+              <div class="col-6 mb-3 pl-0">
+                <a href="#" class="nav-link px-0 d-inline mr-3"><b>Home</b></a>
+                <br class="d-lg-none">
+                <a href="./admin_dashboard.html" class="nav-link px-0 d-inline mr-3"><b>Dashboard</b></a>
+                <br class="d-lg-none">
+                <a href="./profile.html" class="nav-link px-0 d-inline mr-3"><b>Profile</b></a>
+              </div>
+              <div class="col-6 col-lg-3 offset-lg-1 text-right mb-3 pr-0">
+                <a href="./about.html#contact_section" class="nav-link px-0 d-inline ml-3"><b>Contact</b></a>
+                <br class="d-lg-none">
+                <a href="./about.html" class="nav-link px-0 d-inline ml-3"><b>About</b></a>
+              </div>
+              <div class="col-6 col-lg-2 text-center d-flex justify-content-start">
+                <p class="text-white ml-5 ml-lg-0"><strong>Follow Us
+                    <a href="#" class="ml-1 nav-link py-0 px-1 d-inline"><i class="fa fa-facebook-square "></i></a>
+                    <a href="#" class="nav-link py-0 px-1 d-inline"><i class="fa fa-instagram "></i></a>
+                  </strong></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    
+    <script src="../js/env_Var.js"></script>
+    <script src="../js/otp.js"></script>
+    <script src="../js/loader.js"></script>
+    <script src="../js/admin_transection.js"></script>
+    <script>
+      $(document).ready(function () {
+        $(window).scroll(function () {
+          $('.navbar').toggleClass("navbar_scrolled", ($(window).scrollTop() > 100));
+          $('.navbar_logo').toggleClass("navbar_logo_scrolled", ($(window).scrollTop() > 100));
+        });
+      });
+    </script>
+    <script>
+      $(document).ready(function(){
+        $(".navbar-toggler").click(function(){
+          $(".navbar").toggleClass("navbar_open");
+        });
+      });
+    </script>
+    <script>
+      function deleteSubAdmin(curr_el) {
+        var subAdmin = $(curr_el).parent().prev().prev().children().text();
+        $('#sub_admin_name').text(subAdmin);
+        $('#deleteSubAdminModal').modal();
+      }
+    </script>
+  </body>
+</html>

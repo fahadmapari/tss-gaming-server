@@ -3,6 +3,8 @@ import "dotenv/config.js";
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import path, { dirname } from "path";
+import { fileURLToPath } from "url";
 // import morgan from "morgan";
 // import { runLocalTunnel } from "./utils/localTunnel.js";
 
@@ -19,6 +21,7 @@ import coinsRoutes from "./routes/coinsRoutes.js";
 import tournamentRoutes from "./routes/tournamentRoutes.js";
 import profileRoutes from "./routes/profileRoutes.js";
 
+const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
 
 //express config
@@ -50,6 +53,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 // if (process.env.ENV === "development") app.use(morgan("tiny"));
+
+//client
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "/public/client/user/index.html"));
+});
 
 //routes
 app.use("/api", indexRoutes);
