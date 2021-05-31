@@ -36,7 +36,7 @@ export const sendPushNotification = async (message) => {
         notification: {
           title: message.title,
           body: message.body,
-          icon: DOMAIN_NAME + "/logo.png",
+          icon: process.env.DOMAIN_NAME + "/logo.png",
         },
       };
 
