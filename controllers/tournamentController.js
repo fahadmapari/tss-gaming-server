@@ -57,6 +57,7 @@ export const listAllTournaments = async (req, res, next) => {
 };
 
 export const createNewTournament = async (req, res, next) => {
+  console.log("request received");
   const {
     title,
     description,
@@ -121,6 +122,7 @@ export const createNewTournament = async (req, res, next) => {
       data: savedTournament,
     });
   } catch (err) {
+    console.log(err);
     next(new AppError(err.message, 503));
   }
 };

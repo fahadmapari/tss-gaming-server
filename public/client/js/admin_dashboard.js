@@ -1,36 +1,40 @@
-if (localStorage.getItem("logged_in") == "true" && (localStorage.getItem("user_role") == "admin" || localStorage.getItem("user_role") == "sub-admin") ) {
+if (
+  localStorage.getItem("logged_in") == "true" &&
+  (localStorage.getItem("user_role") == "admin" ||
+    localStorage.getItem("user_role") == "sub-admin")
+) {
   let reqData = {
     completed_currentPageNumber: 1,
     ongoing_currentPageNumber: 1,
-    upcoming_currentPageNumber: 1
+    upcoming_currentPageNumber: 1,
   };
-  showLoader()
-  const Form = document.getElementById('create_tournament');
+  showLoader();
+  const Form = document.getElementById("create_tournament");
 
-  Form.addEventListener('submit', function (e) {
-    e.preventDefault()
-    console.log(e)
-    showLoader()
-    var img1 = document.querySelector('input[type="file"]')
-    var title = $("#title").val()
-    var description = $("#Description").val()
-    var game_date = $("#game_date").val()
-    var game = $("#game").val()
-    var game_time = $("#game_time").val()
-    var game_type = $("#game_type").val()
-    var entry_fee = $("#entry_fee").val()
-    var total_prize = $("#total_prize").val()
-    var room_id = $("#room_id").val()
-    var room_password = $("#room_password").val()
-    var kill_prize = $("#kill_prize").val()
-    var streak_prize = $("#streak_prize").val()
-    var stream_link = $("#stream_link").val()
-    var damage_prize = $("#damage_prize").val()
-    var total_slots = $("#total_slots").val()
-
+  Form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    console.log(e);
+    showLoader();
+    var img1 = document.querySelector('input[type="file"]');
+    var title = $("#title").val();
+    var description = $("#Description").val();
+    var game_date = $("#game_date").val();
+    var game = $("#game").val();
+    var game_time = $("#game_time").val();
+    var game_type = $("#game_type").val();
+    var entry_fee = $("#entry_fee").val();
+    var total_prize = $("#total_prize").val();
+    var room_id = $("#room_id").val();
+    var room_password = $("#room_password").val();
+    var kill_prize = $("#kill_prize").val();
+    var streak_prize = $("#streak_prize").val();
+    var stream_link = $("#stream_link").val();
+    var damage_prize = $("#damage_prize").val();
+    var total_slots = $("#total_slots").val();
 
     var myHeaders = new Headers();
     myHeaders.append("Authorization", localStorage.getItem("token"));
+    myHeaders.append("Content-Type", "multipart/form-data");
 
     var formdata = new FormData();
     formdata.append("title", title);
@@ -49,78 +53,74 @@ if (localStorage.getItem("logged_in") == "true" && (localStorage.getItem("user_r
     formdata.append("slots", total_slots);
     formdata.append("game", game);
 
-    console.log("form data --",formdata)
+    console.log("form data --", formdata);
     var requestOptions = {
-      method: 'POST',
+      method: "POST",
       headers: myHeaders,
       body: formdata,
-      redirect: 'follow'
+      redirect: "follow",
     };
 
     fetch(`${base_url}/tournament/create`, requestOptions)
       .then((responce) => responce.json())
       .then((result) => {
-        console.log(result)
+        console.log(result);
         if (result.status != undefined) {
           swal({
             text: `${result.message}`,
             type: "error",
-            icon: "error"
+            icon: "error",
           }).then(function () {
-            hideLoader()
-          })
+            hideLoader();
+          });
         } else {
           swal({
             text: `Tournament Created Successfully`,
             type: "success",
-            icon: "success"
+            icon: "success",
           }).then(function () {
-
-            window.location.href = "./admin_dashboard.html"
-          })
+            window.location.href = "./admin_dashboard.html";
+          });
         }
-      }).catch((error) => {
-        console.log('error', error)
+      })
+      .catch((error) => {
+        console.log("error", error);
         swal({
           text: `${error}`,
           type: "error",
-          icon: "error"
+          icon: "error",
         }).then(function () {
-          hideLoader()
-        })
-      })
-  })
-
+          hideLoader();
+        });
+      });
+  });
 
   function completed_tournaments() {
     fetch(`${base_url}/tournament/list?status=completed`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + localStorage.getItem("token"),
-        }
-      }).then((responce) => responce.json())
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    })
+      .then((responce) => responce.json())
       .then((result) => {
-        console.log("completed result--", result)
-        completed_tournament_list(result.tournaments)
-      })
+        console.log("completed result--", result);
+        completed_tournament_list(result.tournaments);
+      });
   }
 
   function completed_tournament_list(tournaments) {
-    const {
-      docs,
-      totalPages
-    } = tournaments;
+    const { docs, totalPages } = tournaments;
     if (docs.length == 0) {
       var html = `<h1 class="text-center mb-4 mt-5 bahnschrift">Completed Tournaments</h1>
       <div class="w-100 black_bg bordered mb-5">
       <h1 class="text-center mb-4 mt-5 bahnschrift">No Tournaments Schedualed Before</h1>
-      </div>`
-      document.getElementById("user_played_tournament").innerHTML = html
-
+      </div>`;
+      document.getElementById("user_played_tournament").innerHTML = html;
     } else {
-      var html = ""
-      html += `<h1 class="text-center mb-4 mt-5 bahnschrift">Completed Tournaments</h1>`
+      var html = "";
+      html += `<h1 class="text-center mb-4 mt-5 bahnschrift">Completed Tournaments</h1>`;
       docs.forEach((element, count) => {
         html += `
         <div class="w-100 black_bg bordered mb-5">
@@ -133,10 +133,12 @@ if (localStorage.getItem("logged_in") == "true" && (localStorage.getItem("user_r
           </div>
         </div>
         <div class="col-9 col-lg-3 text-lg-center mb-3">
-          <h5 class="mb-2 font-weight-bold"><span class="mr-2">COD</span><span class="ml-2">${element.tournamentType}</span></h5>
+          <h5 class="mb-2 font-weight-bold"><span class="mr-2">COD</span><span class="ml-2">${
+            element.tournamentType
+          }</span></h5>
           <p class="mb-0">
-            <i class="fa fa-calendar text_red"></i> ${element.date.slice(0,10)}
-            <i class="fa fa-clock-o text_red"></i> ${element.date.slice(12,16)}
+            <i class="fa fa-calendar text_red"></i> ${element.date.slice(0, 10)}
+            <i class="fa fa-clock-o text_red"></i> ${element.date.slice(12, 16)}
           </p>
         </div>
         <div class="col-12 col-lg-3 mb-2">
@@ -151,36 +153,47 @@ if (localStorage.getItem("logged_in") == "true" && (localStorage.getItem("user_r
             <p class="mb-0">Room Password : ${element.roomPassword}</p>
           </div>
           <div class="col-12 col-lg-3 collapse played_${count}">
-            <p class="mb-1"><i class="fa fa-calendar text_red mx-1"></i>${element.date.slice(0,10)}</p>
-            <p class="mb-0"><i class="fa fa-clock-o text_red mx-1"></i> ${element.date.slice(11,16)}</p>
+            <p class="mb-1"><i class="fa fa-calendar text_red mx-1"></i>${element.date.slice(
+              0,
+              10
+            )}</p>
+            <p class="mb-0"><i class="fa fa-clock-o text_red mx-1"></i> ${element.date.slice(
+              11,
+              16
+            )}</p>
           </div>
           <div class="col-12 col-lg-3  collapse played_${count} mt-2 text-center">
-            <button class="btn btn-sm mt-2 secondary_btn" data-toggle="modal" data-target="#registeredUsersModal" onclick="registeredUsers('${element._id}')">View Registered Players</button>
+            <button class="btn btn-sm mt-2 secondary_btn" data-toggle="modal" data-target="#registeredUsersModal" onclick="registeredUsers('${
+              element._id
+            }')">View Registered Players</button>
           </div>
           <div class="col-12 col-lg-3  text-center collapse played_${count} mt-2">
             <button class="btn btn-sm mt-2 primary_btn" data-toggle="modal" data-target="#winnerModal">View Winners</button>
           </div>
       </div>
-      </div>`
+      </div>`;
       });
-      document.getElementById("user_played_tournament").innerHTML = html
-      completed_turnament_getPageButtons(totalPages)
+      document.getElementById("user_played_tournament").innerHTML = html;
+      completed_turnament_getPageButtons(totalPages);
     }
   }
 
   function completed_turnament_page_list() {
-    fetch(`${base_url}/tournament/list?page=${reqData.completed_currentPageNumber}&status=completed`, {
+    fetch(
+      `${base_url}/tournament/list?page=${reqData.completed_currentPageNumber}&status=completed`,
+      {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + localStorage.getItem("token"),
-        }
-      }).then((responce) => responce.json())
+        },
+      }
+    )
+      .then((responce) => responce.json())
       .then((result) => {
-        console.log("completed result--", result)
-        completed_tournament_list(result.tournaments)
-      })
-
+        console.log("completed result--", result);
+        completed_tournament_list(result.tournaments);
+      });
   }
 
   function completed_turnament_getPageButtons(pageCount) {
@@ -240,61 +253,58 @@ if (localStorage.getItem("logged_in") == "true" && (localStorage.getItem("user_r
       completed_turnament_page_list(reqData);
     });
 
-
     $(".completed-previous-page-btn").on("click", () => {
       if (reqData.completed_currentPageNumber == 1) {
         $(".completed-previous-page-btn").attr("disabled", true);
       }
       reqData.completed_currentPageNumber++;
-      completed_turnament_page_list(reqData);;
+      completed_turnament_page_list(reqData);
     });
   }
 
-
-
-
-
-
-
   function upcoming_tournaments() {
     fetch(`${base_url}/tournament/list?status=upcoming`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + localStorage.getItem("token"),
-        }
-      }).then((responce) => responce.json())
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    })
+      .then((responce) => responce.json())
       .then((result) => {
-        console.log("upcoming result--", result)
-        upcoming_tournament_list(result.tournaments)
-      })
+        console.log("upcoming result--", result);
+        upcoming_tournament_list(result.tournaments);
+      });
   }
 
   function upcoming_tournament_list(tournaments) {
-    const {
-      docs,
-      totalPages
-    } = tournaments;
+    const { docs, totalPages } = tournaments;
     if (docs.length == 0) {
       var html = `<h1 class="text-center mb-4 mt-5 bahnschrift">Upcoming Tournaments</h1>
       <div class="w-100 black_bg bordered mb-5">
       <h1 class="text-center mb-4 mt-5 bahnschrift">No Upcoming Tournaments</h1>
-      </div>`
-      document.getElementById("upcoming_tournaments").innerHTML = html
+      </div>`;
+      document.getElementById("upcoming_tournaments").innerHTML = html;
     } else {
-      var html = ""
-      html += `<h1 class="text-center mb-4 mt-5 bahnschrift">Upcoming Tournaments</h1>`
+      var html = "";
+      html += `<h1 class="text-center mb-4 mt-5 bahnschrift">Upcoming Tournaments</h1>`;
       docs.forEach((element, count) => {
         html += `<div class="w-100 black_bg bordered mb-5">
         <div class="row mx-0 py-4">
         <div class="col-12 col-lg-3 mb-2 mb-lg-0 text-center text-lg-left">
-            <h5 class="mb-0 font-weight-bold tournament_name">${element.title}</h5>
+            <h5 class="mb-0 font-weight-bold tournament_name">${
+              element.title
+            }</h5>
           </div>
           <div class="col-12 col-lg-3 mb-2 mb-lg-0 text-center text-lg-left">
-            <h5 class="mb-0"><span class="ml-2">${element.tournamentType}</span></h5>
+            <h5 class="mb-0"><span class="ml-2">${
+              element.tournamentType
+            }</span></h5>
           </div>
           <div class="col-12 col-lg-3 mb-2 mb-lg-0">
-            <h5 class="text-center mb-0">Prize <span>${element.prize}</span> Coins</h5>
+            <h5 class="text-center mb-0">Prize <span>${
+              element.prize
+            }</span> Coins</h5>
           </div>
           <div class="col-12 col-lg-3 text-center">
             <button class="btn secondary_btn btn-sm" onclick="upcoming(${count})">View Details</button>
@@ -304,35 +314,48 @@ if (localStorage.getItem("logged_in") == "true" && (localStorage.getItem("user_r
             <p class="mb-0">Room Password : ${element.roomPassword}</p>
           </div>
           <div class="col-12 col-lg-3 collapse upcoming_${count}">
-            <p class="mb-1"><i class="fa fa-calendar text_red mx-1"></i>${element.date.slice(0,10)}</p>
-            <p class="mb-0"><i class="fa fa-clock-o text_red mx-1"></i> ${element.date.slice(11,16)}</p>
+            <p class="mb-1"><i class="fa fa-calendar text_red mx-1"></i>${element.date.slice(
+              0,
+              10
+            )}</p>
+            <p class="mb-0"><i class="fa fa-clock-o text_red mx-1"></i> ${element.date.slice(
+              11,
+              16
+            )}</p>
           </div>
           <div class="col-12 col-lg-3  collapse upcoming_${count} mt-2 text-center">
-            <button class="btn btn-sm mt-2 secondary_btn" data-toggle="modal" data-target="#registeredUsersModal" onclick="registeredUsers('${element._id}')">View Registered Players</button>
+            <button class="btn btn-sm mt-2 secondary_btn" data-toggle="modal" data-target="#registeredUsersModal" onclick="registeredUsers('${
+              element._id
+            }')">View Registered Players</button>
           </div>
           <div class="col-12 col-lg-3  text-center collapse upcoming_${count} mt-2">
-            <button class="btn btn-sm mt-2 primary_btn" data-toggle="modal" data-target="#editTournamentModal" onclick="append_tournamentId('${element._id}')">Edit Details</button>
+            <button class="btn btn-sm mt-2 primary_btn" data-toggle="modal" data-target="#editTournamentModal" onclick="append_tournamentId('${
+              element._id
+            }')">Edit Details</button>
           </div>
-      </div></div>`
+      </div></div>`;
       });
-      document.getElementById("upcoming_tournaments").innerHTML = html
-      upcoming_turnament_getPageButtons(totalPages)
+      document.getElementById("upcoming_tournaments").innerHTML = html;
+      upcoming_turnament_getPageButtons(totalPages);
     }
   }
 
   function upcoming_turnament_page_list() {
-    fetch(`${base_url}/tournament/list?page=${reqData.upcoming_currentPageNumber}&status=upcoming`, {
+    fetch(
+      `${base_url}/tournament/list?page=${reqData.upcoming_currentPageNumber}&status=upcoming`,
+      {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + localStorage.getItem("token"),
-        }
-      }).then((responce) => responce.json())
+        },
+      }
+    )
+      .then((responce) => responce.json())
       .then((result) => {
-        console.log("completed result--", result)
-        upcoming_tournament_list(result.tournaments)
-      })
-
+        console.log("completed result--", result);
+        upcoming_tournament_list(result.tournaments);
+      });
   }
 
   function upcoming_turnament_getPageButtons(pageCount) {
@@ -392,36 +415,31 @@ if (localStorage.getItem("logged_in") == "true" && (localStorage.getItem("user_r
       upcoming_turnament_page_list(reqData);
     });
 
-
     $(".upcoming-previous-page-btn").on("click", () => {
       if (reqData.upcoming_currentPageNumber == 1) {
         $(".upcoming-previous-page-btn").attr("disabled", true);
       }
       reqData.upcoming_currentPageNumber++;
-      upcoming_turnament_page_list(reqData);;
+      upcoming_turnament_page_list(reqData);
     });
   }
-  upcoming_tournaments()
-  completed_tournaments()
-
-
-
-  
+  upcoming_tournaments();
+  completed_tournaments();
 
   function registeredUsers(tournament_id) {
-    var html = ""
+    var html = "";
     fetch(`${base_url}/tournament/${tournament_id}/users`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + localStorage.getItem("token"),
-        }
-      })
-      .then(response => response.json())
-      .then(result => {
-        console.log('result--', result)
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        console.log("result--", result);
         if (result.users.length != 0) {
-          result.users.forEach(element => {
+          result.users.forEach((element) => {
             html += `
                   <div class="row mx-0 my-2 px-lg-3 align-items-center" id="tournament_users">
                     <div class="col-3 col-lg-3 text-center">
@@ -437,146 +455,146 @@ if (localStorage.getItem("logged_in") == "true" && (localStorage.getItem("user_r
                       <p class="mb-0">${element.player.referralId}</p>
                     </div>
                   </div>      
-            `
+            `;
           });
-          document.getElementById("append_tournament_users").innerHTML = html
+          document.getElementById("append_tournament_users").innerHTML = html;
         } else {
-          html += `<h3 class="my-5 text-center">Users Not Registered</h3>`
-          document.getElementById("append_tournament_users").innerHTML = html
-
+          html += `<h3 class="my-5 text-center">Users Not Registered</h3>`;
+          document.getElementById("append_tournament_users").innerHTML = html;
         }
-      }).
-    catch((error) => {
-      console.log('error', error)
-      swal({
-        text: `${error}`,
-        type: "error",
-        icon: "error"
       })
-    })
+      .catch((error) => {
+        console.log("error", error);
+        swal({
+          text: `${error}`,
+          type: "error",
+          icon: "error",
+        });
+      });
   }
 
   function append_tournamentId(tournament_id) {
     fetch(`${base_url}/tournament/${tournament_id}/edit`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + localStorage.getItem("token"),
-        }
-      })
-      .then(response => response.json())
-      .then(result => {
-        console.log('edit tournament result--', result)
-        document.getElementById("edit_tournament_id").value = tournament_id
-        document.getElementById("edit_room_id").value = result.tournament.credentials.roomId
-        document.getElementById("edit_room_pass").value = result.tournament.credentials.roomPassword
-        document.getElementById("edit_stream").value = result.tournament.stream
-      })
-
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        console.log("edit tournament result--", result);
+        document.getElementById("edit_tournament_id").value = tournament_id;
+        document.getElementById("edit_room_id").value =
+          result.tournament.credentials.roomId;
+        document.getElementById("edit_room_pass").value =
+          result.tournament.credentials.roomPassword;
+        document.getElementById("edit_stream").value = result.tournament.stream;
+      });
   }
 
   function edit_tournament() {
-    showLoader()
-    var tournament_id = document.getElementById("edit_tournament_id").value
-    var room_id = document.getElementById("edit_room_id").value
-    var room_pass = document.getElementById("edit_room_pass").value
-    var stream = document.getElementById("edit_stream").value
+    showLoader();
+    var tournament_id = document.getElementById("edit_tournament_id").value;
+    var room_id = document.getElementById("edit_room_id").value;
+    var room_pass = document.getElementById("edit_room_pass").value;
+    var stream = document.getElementById("edit_stream").value;
     var data = JSON.stringify({
       roomId: room_id,
       roomPassword: room_pass,
-      stream: stream
-    })
+      stream: stream,
+    });
     fetch(`${base_url}/tournament/${tournament_id}/edit`, {
-        method: "POST",
-        body: data,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + localStorage.getItem("token"),
-        }
-      })
-      .then(response => response.json())
-      .then(result => {
-        console.log('result--', result)
+      method: "POST",
+      body: data,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        console.log("result--", result);
         if (result.status != undefined) {
           swal({
             text: `${result.message}`,
             type: "error",
-            icon: "error"
+            icon: "error",
           }).then(function () {
-            hideLoader()
-          })
+            hideLoader();
+          });
         } else {
           swal({
             text: `Tournament Edited Successfully`,
             type: "success",
-            icon: "success"
+            icon: "success",
           }).then(function () {
-            window.location.href = "./admin_dashboard.html"
-          })
+            window.location.href = "./admin_dashboard.html";
+          });
         }
-      }).
-    catch((error) => {
-      console.log('error', error)
-      swal({
-        text: `${error}`,
-        type: "error",
-        icon: "error"
-      }).then(function () {
-        hideLoader()
       })
-    })
+      .catch((error) => {
+        console.log("error", error);
+        swal({
+          text: `${error}`,
+          type: "error",
+          icon: "error",
+        }).then(function () {
+          hideLoader();
+        });
+      });
   }
 
   function send_notification() {
-    showLoader()
-    var notif_title = document.getElementById("notif_title").value
-    var notif_body = document.getElementById("notif_body").value
-    
+    showLoader();
+    var notif_title = document.getElementById("notif_title").value;
+    var notif_body = document.getElementById("notif_body").value;
+
     var data = JSON.stringify({
       title: notif_title,
       body: notif_body,
-    })
+    });
     fetch(`${base_url}/send-push-notification`, {
-        method: "POST",
-        body: data,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + localStorage.getItem("token"),
-        }
-      })
-      .then(response => response.json())
-      .then(result => {
-        console.log('result--', result)
+      method: "POST",
+      body: data,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        console.log("result--", result);
         if (result.status != undefined) {
           swal({
             text: `${result.message}`,
             type: "error",
-            icon: "error"
+            icon: "error",
           }).then(function () {
-            hideLoader()
-          })
+            hideLoader();
+          });
         } else {
           swal({
             text: `Notification Sended Successfully`,
             type: "success",
-            icon: "success"
+            icon: "success",
           }).then(function () {
-            hideLoader()
-          })
+            hideLoader();
+          });
         }
-      }).
-    catch((error) => {
-      console.log('error', error)
-      swal({
-        text: `${error}`,
-        type: "error",
-        icon: "error"
-      }).then(function () {
-        hideLoader()
       })
-    })
+      .catch((error) => {
+        console.log("error", error);
+        swal({
+          text: `${error}`,
+          type: "error",
+          icon: "error",
+        }).then(function () {
+          hideLoader();
+        });
+      });
   }
-  hideLoader()
+  hideLoader();
 } else {
-  window.location.href = "./admin_login.html"
+  window.location.href = "./admin_login.html";
 }
