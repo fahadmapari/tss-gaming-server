@@ -325,7 +325,7 @@ export const registerUser = async (req, res, next) => {
         referredBy = await User.findOneAndUpdate(
           { referralId: req.body.referCode },
           {
-            $inc: { coins: Number(process.env.referCode) },
+            $inc: { coins: Number(process.env.referAmount) },
           }
         );
       } catch (err) {
