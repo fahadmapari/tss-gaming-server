@@ -61,7 +61,7 @@ if (
       redirect: "follow",
     };
 
-    fetch(`http://localhost:3000/tournament/create`, requestOptions)
+    fetch(`${base_url}/tournament/create`, requestOptions)
       .then((responce) => responce.json())
       .then((result) => {
         console.log(result);
