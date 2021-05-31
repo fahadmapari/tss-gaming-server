@@ -32,9 +32,9 @@ if (
     var damage_prize = $("#damage_prize").val();
     var total_slots = $("#total_slots").val();
 
-    var myHeaders = new Headers();
-    myHeaders.append("Authorization", localStorage.getItem("token"));
-    myHeaders.append("Content-Type", "multipart/form-data");
+    // var myHeaders = new Headers();
+    // myHeaders.append("Authorization", localStorage.getItem("token"));
+    // myHeaders.append("Content-Type", "");
 
     var formdata = new FormData();
     formdata.append("title", title);
@@ -56,7 +56,9 @@ if (
     console.log("form data --", formdata);
     var requestOptions = {
       method: "POST",
-      headers: myHeaders,
+      headers: {
+        Authorization: localStorage.getItem("token"),
+      },
       body: formdata,
       redirect: "follow",
     };
