@@ -36,7 +36,7 @@ router.post("/join", validateToken, joinTournament);
 
 router.post(
   "/create",
-  // validateAdminToken,
+  validateAdminToken,
   uploadGameThumbnails.array("thumbnails"),
   createNewTournament
 );
