@@ -290,7 +290,7 @@ export const joinTournament = async (req, res, next) => {
     );
 
     const msg = {
-      to: email,
+      to: req.user.email,
       from: process.env.SEND_GRID_EMAIL, // Use the email address or domain you verified above
       subject: "Tournament credentials - TSS_GAMING",
       html: `<h3>You just joined ${tournament.title} tournament.<h3> <h4>credentials<h4> <p>Room ID: ${tournament.credentials.roomId}</p> <p>Room Password: ${tournament.credentials.roomPassword}</p>`,
