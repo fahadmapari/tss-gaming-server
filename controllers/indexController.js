@@ -253,7 +253,7 @@ export const unBlockUser = async (req, res, next) => {
 
 export const getAllGames = async (req, res, next) => {
   try {
-    const games = Game.find({});
+    const games = await Game.find({});
 
     res.json({
       games,
