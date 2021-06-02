@@ -559,9 +559,9 @@ POST
 `/tournament/leaderboard/declare`
 
 data to send
-`userStats: [{ prizeWon: number, kills: number, streak: number, damage: number, matchId: string }]`
+`userStats: [{ prizeWon: number, kills: number, streak: number, damage: number, match: object }]`
 
-- every object received from GET `tournament/leaderboard/:id/edit` will have a unique "\_id" put that as matchId in userStats.
+- `match` would be the whole individual object received from GET `tournament/leaderboard/:id/edit`
 
 ---
 

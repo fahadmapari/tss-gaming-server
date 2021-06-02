@@ -368,11 +368,14 @@ export const getLeaderboardToEdit = async (req, res, next) => {
 
 export const addToLeaderboard = async (req, res, next) => {
   // const { match: matchId } = req.params;
-  // const { prizeWon, kills, streak, damage, matchId } = req.body.userStats;
+  // const { prizeWon, kills, streak, damage, match } = req.body.userStats;
 
   const userStats = req.body.userStats;
 
   if (!userStats) return new AppError("userStats array is required.", 401);
+
+  if (userStats.length <= 0)
+    return new AppError("declare atleast 1 winner.", 401);
 
   if (userStats.length > 3)
     return new AppError("declare only top 3 winners.", 401);
@@ -393,59 +396,58 @@ export const addToLeaderboard = async (req, res, next) => {
         ...user,
         prizeWon:
           user.teamMembers.length > 0
-            ? user.prizeWon / (user.teamMembers.length + 1)
+            ? user.prizeWon / (user.match.teamMembers.length + 1)
             : user.prizeWon,
         position: index + 1,
       };
     });
 
     assignedPositions.forEach(async (assignedPosition) => {
-      await Match.findOneAndUpdate(
+      const updatedMatch = await Match.findOneAndUpdate(
         {
-          _id: assignedPosition.matchId,
+          _id: assignedPosition.match._id,
         },
         {
           prize: assignedPosition.prizeWon,
           kills: assignedPosition.kills,
           streak: assignedPosition.streak,
           damage: assignedPosition.damage,
+          position: assignedPosition.position,
         }
       );
-    });
 
-    await User.findOneAndUpdate(
-      { _id: req.user.id },
-      {
-        $inc: {
-          coins: Number(assignedPosition.prizeWon),
-        },
-      }
-    );
-
-    const foundMatch = await Match.findOne({ _id: matchId });
-
-    foundMatch.teamMembers.forEach(async (member) => {
-      await User.findOneAndUpdate(
-        { name: member },
+      await Leaderboard.findOneAndUpdate(
+        { tournament: updatedMatch.tournament },
         {
-          $inc: {
-            coins: Number(assignedPosition.prizeWon),
+          $push: {
+            list: updatedMatch._id,
           },
         }
       );
+
+      await User.findOneAndUpdate(
+        { _id: updatedMatch.player._id },
+        {
+          $inc: {
+            coins: Number(updatedMatch.prizeWon),
+          },
+        }
+      );
+
+      updatedMatch.teamMembers.forEach(async (member) => {
+        await User.findOneAndUpdate(
+          { name: member },
+          {
+            $inc: {
+              coins: Number(updatedMatch.prizeWon),
+            },
+          }
+        );
+      });
     });
 
-    await Leaderboard.findOneAndUpdate(
-      { tournament: foundMatch.tournament },
-      {
-        $push: {
-          list: foundMatch._id,
-        },
-      }
-    );
-
     await Tournament.findOneAndUpdate(
-      { _id: foundMatch.tournament },
+      { _id: userStats[0].match.tournament },
       {
         status: "completed",
       }
