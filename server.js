@@ -20,6 +20,7 @@ import authRoutes from "./routes/authRoutes.js";
 import coinsRoutes from "./routes/coinsRoutes.js";
 import tournamentRoutes from "./routes/tournamentRoutes.js";
 import profileRoutes from "./routes/profileRoutes.js";
+import blogRoutes from "./routes/blogRoutes.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -65,6 +66,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/coins", coinsRoutes);
 app.use("/api/tournament", tournamentRoutes);
 app.use("/api/profile", profileRoutes);
+app.use("/blog", blogRoutes);
 
 //express error handling
 app.use("*", (req, res) => {

@@ -320,8 +320,6 @@ export const getJoinedUsers = async (req, res, next) => {
       .populate("player", "-password")
       .exec();
 
-    console.log(users);
-
     res.json({
       users,
     });
@@ -373,6 +371,11 @@ export const addToLeaderboard = async (req, res, next) => {
   // const { prizeWon, kills, streak, damage, matchId } = req.body.userStats;
 
   const userStats = req.body.userStats;
+
+  if (!userStats) return new AppError("userStats array is required.", 401);
+
+  if (userStats.length > 3)
+    return new AppError("declare only top 3 winners.", 401);
 
   try {
     for (let i = 0; i < userStats.length - 1; i++) {
@@ -452,6 +455,7 @@ export const addToLeaderboard = async (req, res, next) => {
       message: "Winners declared.",
     });
   } catch (error) {
+    console.log(error);
     next(new AppError(error.message, 503));
   }
 };
