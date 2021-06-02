@@ -66,7 +66,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/coins", coinsRoutes);
 app.use("/api/tournament", tournamentRoutes);
 app.use("/api/profile", profileRoutes);
-app.use("/blog", blogRoutes);
+app.use("/api/blog", blogRoutes);
 
 //express error handling
 app.use("*", (req, res) => {

@@ -367,9 +367,6 @@ export const getLeaderboardToEdit = async (req, res, next) => {
 };
 
 export const addToLeaderboard = async (req, res, next) => {
-  // const { match: matchId } = req.params;
-  // const { prizeWon, kills, streak, damage, match } = req.body.userStats;
-
   const userStats = req.body.userStats;
 
   if (!userStats) return new AppError("userStats array is required.", 401);
@@ -461,31 +458,3 @@ export const addToLeaderboard = async (req, res, next) => {
     next(new AppError(error.message, 503));
   }
 };
-
-// depracated
-// export const finishTournament = async (req, res, next) => {
-//   try {
-//     const { id } = req.params;
-
-//     const tournament = await Tournament.findOneAndUpdate(
-//       { _id: id },
-//       {
-//         status: "completed",
-//       }
-//     );
-
-//     await Match.updateMany(
-//       { tournament: id },
-//       {
-//         tournamentStatus: "completed",
-//       }
-//     );
-
-//     res.json({
-//       message: "Tournament finished",
-//       tournament,
-//     });
-//   } catch (err) {
-//     next(new AppError(err.message, 503));
-//   }
-// };

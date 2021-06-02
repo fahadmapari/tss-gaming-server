@@ -376,6 +376,51 @@ Successful response will give withdrawal details back
 
 ---
 
+## Blog routes
+
+Route to get all the blogs
+
+GET
+`/api/blogs`
+
+- results can be paginated too like this
+
+`/api/blogs?page=1&limit=10 (optional)`
+
+---
+
+Route to get all blog categories
+
+GET
+`/api/blogs/categories`
+
+---
+
+Route to get all the blogs by category
+
+GET
+`/api/blogs/category/:category`
+
+- replace `:category` in url to specific category. e.g. `/api/blogs/category/:announcements`
+
+- results can be paginated too like this
+
+`/api/blogs/category/:category?page=1&limit=10 (optional)`
+
+---
+
+Route to get view a single blog
+
+GET
+`/blog/:id/view`
+
+- replace `:id` with blog's `_id`. every blog contains a unique `_id`.
+
+response
+`{ title, blogContent, category, featuredImage, videoLink, keywords, metaDescription }`
+
+---
+
 - Admin routes will require an admin account.
 
 ## Admin routes
@@ -598,3 +643,36 @@ POST
 `/send-push-notification`
 
 data to send `{ title: string, body: string }`
+
+---
+
+Route to create a new blog
+
+POST
+`/blog/create`
+
+data to send
+`{ title: string, blogContent: string, category: string (optional), featuredImage: file (optional), videoLink: string (optional), keywords: [array of string] (optional), metaDescription: string (optional) }`
+
+---
+
+Route to edit a blog
+
+POST
+`/blog/:id/edit`
+
+data to send / edit
+`{ title: string, blogContent: string, category: string , featuredImage: file , videoLink: string , keywords: [array of string] , metaDescription: string }`
+
+- replace `:id` with blog's `_id`. every blog contains a unique `_id`.
+
+- pre fill the data in front-end using `GET /blog/:id/view` route.
+
+---
+
+Route to delete a blog
+
+GET
+`/blog/:id/delete`
+
+- replace `:id` with blog's `_id`. every blog contains a unique `_id`.
