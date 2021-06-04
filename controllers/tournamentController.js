@@ -392,8 +392,8 @@ export const addToLeaderboard = async (req, res, next) => {
       return {
         ...user,
         prizeWon:
-          user.match.teamMembers.length > 0
-            ? user.prizeWon / (user.match.teamMembers.length + 1)
+          user.match.team.length > 0
+            ? user.prizeWon / (user.match.team.length + 1)
             : user.prizeWon,
         position: index + 1,
       };
@@ -431,7 +431,7 @@ export const addToLeaderboard = async (req, res, next) => {
         }
       );
 
-      updatedMatch.teamMembers.forEach(async (member) => {
+      updatedMatch.team.forEach(async (member) => {
         await User.findOneAndUpdate(
           { name: member },
           {
