@@ -50,7 +50,7 @@ export const getMyTournaments = async (req, res, next) => {
     if (!id) return next(new AppError("Profile not found.", 404));
 
     const query = {
-      player: id,
+      $or: [{ player: id }, { team: req.user.name }],
     };
 
     if (status && status !== "") query.tournamentStatus = status;
