@@ -34,6 +34,10 @@ const blogScehma = new mongoose.Schema(
     summary: {
       type: String,
     },
+    author: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
   },
   { timestamps: true }
 );

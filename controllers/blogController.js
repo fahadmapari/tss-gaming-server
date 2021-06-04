@@ -29,6 +29,7 @@ export const createNewBlog = async (req, res, next) => {
       conclusion,
       summary,
       featuredImage: req.body.featuredImage,
+      author: req.user.id,
     });
 
     res.json({
@@ -93,6 +94,7 @@ export const getAllBlogs = async (req, res, next) => {
         page: page ? page : 1,
         limit: limit ? limit : 10,
         sort: { createdAt: -1 },
+        populate: { path: "author", select: "-password -coins" },
       }
     );
 
@@ -117,6 +119,7 @@ export const getBlogsByCategory = async (req, res, next) => {
         page: page ? page : 1,
         limit: limit ? limit : 10,
         sort: { createdAt: -1 },
+        populate: { path: "author", select: "-password -coins" },
       }
     );
 
@@ -134,7 +137,9 @@ export const getBlogById = async (req, res, next) => {
 
     const blog = await Blog.findOne({
       _id: id,
-    });
+    })
+      .populate("author", "-password -coins")
+      .exec();
 
     if (!blog) return next(new AppError("Blog not found.", 404));
 
