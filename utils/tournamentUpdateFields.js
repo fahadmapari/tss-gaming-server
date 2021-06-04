@@ -43,6 +43,7 @@ export const tournamentUpdateFields = (data, tournament) => {
     fieldsToUpdate.slotsAvailable = newAvailableSlots;
   }
   if (stream) fieldsToUpdate.stream = stream;
+  if (status) fieldsToUpdate.status = status;
 
   return fieldsToUpdate;
 };

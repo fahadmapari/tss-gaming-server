@@ -2,6 +2,8 @@ import "dotenv/config.js";
 
 import express from "express";
 import cookieParser from "cookie-parser";
+import mongoSanitize from "express-mongo-sanitize";
+import { xss } from "express-xss-sanitizer";
 import cors from "cors";
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
@@ -53,6 +55,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
+
+//basic injection security
+app.use(mongoSanitize());
+app.use(
+  xss({
+    allowedKeys: ["password"],
+  })
+);
 // if (process.env.ENV === "development") app.use(morgan("tiny"));
 
 //client

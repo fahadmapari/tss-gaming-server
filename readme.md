@@ -531,7 +531,7 @@ POST
 `/tournament/:id/edit`
 
 data to send/can be edited
-`{ title: string, thumbnails: [ files ], description: string, entryFee: number, date: Date (date and time both), tournamentType: string ("solo", "duo", "team"), kills: number, streak: number, damage: number, prize: number, roomId: string, roomPassword: string, stream: string, slots: number, game: string}`
+`{ title: string, thumbnails: [ files ], description: string, entryFee: number, date: Date (date and time both), tournamentType: string ("solo", "duo", "team"), kills: number, streak: number, damage: number, prize: number, roomId: string, roomPassword: string, stream: string, slots: number, game: string, status: string (upcoming, ongoing, completed)}`
 
 - replace :id with tournament's "\_id" in url
 
