@@ -1,10 +1,13 @@
 import multer from "multer";
-import path from "path";
+import path, { dirname } from "path";
+import { fileURLToPath } from "url";
 import { AppError } from "./AppError.js";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const profilePictureStorage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "public/profile-pictures/");
+    cb(null, path.resolve(__dirname, "../public/profile-pictures/"));
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + path.extname(file.originalname)); //Appending extension
@@ -13,7 +16,7 @@ const profilePictureStorage = multer.diskStorage({
 
 const thumbnailsStorage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "public/thumbnails/");
+    cb(null, path.resolve(__dirname, "../public/thumbnails/"));
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + path.extname(file.originalname)); //Appending extension
@@ -22,7 +25,7 @@ const thumbnailsStorage = multer.diskStorage({
 
 const gameCoverStorage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "public/game-covers/");
+    cb(null, path.resolve(__dirname, "../public/game-covers/"));
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + path.extname(file.originalname)); //Appending extension
@@ -31,7 +34,7 @@ const gameCoverStorage = multer.diskStorage({
 
 const blogImageStorage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "public/blog-images/");
+    cb(null, path.resolve(__dirname, "../public/blog-images/"));
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + path.extname(file.originalname)); //Appending extension
