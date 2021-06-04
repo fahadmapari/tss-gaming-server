@@ -99,10 +99,10 @@ export const uploadGameCover = multer({
 });
 
 export const uploadBlogImage = multer({
-  onError: (err, next) => {
-    console.log(err);
-    next(new AppError(err.message, 503));
-  },
+  // onError: (err, next) => {
+  //   console.log(err);
+  //   next(new AppError(err.message, 503));
+  // },
   storage: blogImageStorage,
   fileFilter: (req, file, cb) => {
     if (
