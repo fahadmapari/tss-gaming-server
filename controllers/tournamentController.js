@@ -392,7 +392,7 @@ export const addToLeaderboard = async (req, res, next) => {
       return {
         ...user,
         prizeWon:
-          user.teamMembers.length > 0
+          user.match.teamMembers.length > 0
             ? user.prizeWon / (user.match.teamMembers.length + 1)
             : user.prizeWon,
         position: index + 1,
