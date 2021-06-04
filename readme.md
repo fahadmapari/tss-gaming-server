@@ -652,7 +652,7 @@ POST
 `/blog/create`
 
 data to send
-`{ title: string, blogContent: string, category: string (optional), featuredImage: file (optional), videoLink: string (optional), keywords: [array of string] (optional), metaDescription: string (optional) }`
+`{ heading: string, subHeading: string (optional), blogContent: string, category: string (optional), featuredImage: file (optional), videoLink: string (optional), keywords: [array of string] (optional), summary: string (optional), conclusion: string (optional) }`
 
 ---
 
@@ -662,7 +662,7 @@ POST
 `/blog/:id/edit`
 
 data to send / edit
-`{ title: string, blogContent: string, category: string , featuredImage: file , videoLink: string , keywords: [array of string] , metaDescription: string }`
+`{ heading: string, subHeading: string ,blogContent: string, category: string , featuredImage: file , videoLink: string , keywords: [array of string] , metaDescription: string ,summary: string, conclusion: string }`
 
 - replace `:id` with blog's `_id`. every blog contains a unique `_id`.
 

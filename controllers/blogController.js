@@ -4,12 +4,14 @@ import { AppError } from "../utils/AppError.js";
 export const createNewBlog = async (req, res, next) => {
   try {
     const {
-      title,
+      heading,
+      subHeading,
       blogContent,
       category,
       videoLink,
       keywords,
-      metaDescription,
+      conclusion,
+      summary,
     } = req.body;
 
     if (req.file) {
@@ -18,12 +20,14 @@ export const createNewBlog = async (req, res, next) => {
     }
 
     const blog = await Blog.create({
-      title,
+      heading,
+      subHeading,
       blogContent,
       category,
       videoLink: videoLink,
       keywords: keywords,
-      metaDescription: metaDescription,
+      conclusion,
+      summary,
       featuredImage: req.body.featuredImage,
     });
 

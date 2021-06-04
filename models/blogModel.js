@@ -3,9 +3,12 @@ import mongoosePaginate from "mongoose-paginate-v2";
 
 const blogScehma = new mongoose.Schema(
   {
-    title: {
+    heading: {
       type: String,
       required: [true, "title is required"],
+    },
+    subHeading: {
+      type: String,
     },
     blogContent: {
       type: String,
@@ -25,7 +28,10 @@ const blogScehma = new mongoose.Schema(
     keywords: {
       type: [String],
     },
-    metaDescription: {
+    conclusion: {
+      type: String,
+    },
+    summary: {
       type: String,
     },
   },
