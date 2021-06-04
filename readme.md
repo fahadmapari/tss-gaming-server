@@ -381,31 +381,31 @@ Successful response will give withdrawal details back
 Route to get all the blogs
 
 GET
-`/api/blogs`
+`/api/blog`
 
 - results can be paginated too like this
 
-`/api/blogs?page=1&limit=10 (optional)`
+`/api/blog?page=1&limit=10 (optional)`
 
 ---
 
 Route to get all blog categories
 
 GET
-`/api/blogs/categories`
+`/api/blog/categories`
 
 ---
 
 Route to get all the blogs by category
 
 GET
-`/api/blogs/category/:category`
+`/api/blog/category/:category`
 
 - replace `:category` in url to specific category. e.g. `/api/blogs/category/:announcements`
 
 - results can be paginated too like this
 
-`/api/blogs/category/:category?page=1&limit=10 (optional)`
+`/api/blog/category/:category?page=1&limit=10 (optional)`
 
 ---
 
