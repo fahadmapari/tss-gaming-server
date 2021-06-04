@@ -3,32 +3,15 @@ import { AppError } from "../utils/AppError.js";
 
 export const createNewBlog = async (req, res, next) => {
   try {
-    const {
-      heading,
-      subHeading,
-      blogContent,
-      category,
-      videoLink,
-      keywords,
-      conclusion,
-      summary,
-    } = req.body;
+    const blogData = req.body;
 
     if (req.file) {
-      req.body.featuredImage =
+      blogData.featuredImage =
         process.env.DOMAIN_NAME + "/blog/" + req.file.filename;
     }
 
     const blog = await Blog.create({
-      heading,
-      subHeading,
-      blogContent,
-      category,
-      videoLink: videoLink,
-      keywords: keywords,
-      conclusion,
-      summary,
-      featuredImage: req.body.featuredImage,
+      ...blogData,
       author: req.user.id,
     });
 
