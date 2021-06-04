@@ -34,7 +34,7 @@ const gameCoverStorage = multer.diskStorage({
 
 const blogImageStorage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, path.resolve(__dirname, "../public/blog-images/"));
+    cb(null, path.resolve(__dirname, "../public/blog/"));
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + path.extname(file.originalname)); //Appending extension
