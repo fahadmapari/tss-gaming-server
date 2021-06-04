@@ -16,7 +16,7 @@ export const createNewBlog = async (req, res, next) => {
 
     if (req.file) {
       req.body.featuredImage =
-        process.env.DOMAIN_NAME + "/blog-images/" + req.file.filename;
+        process.env.DOMAIN_NAME + "/blog/" + req.file.filename;
     }
 
     const blog = await Blog.create({
@@ -51,7 +51,7 @@ export const editBlog = async (req, res, next) => {
 
     if (req.file) {
       dataToUpdate.featuredImage =
-        process.env.DOMAIN_NAME + "/blog-images/" + req.file.filename;
+        process.env.DOMAIN_NAME + "/blog/" + req.file.filename;
     }
 
     const blog = await Blog.findOneAndUpdate(
