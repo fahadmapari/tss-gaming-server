@@ -426,7 +426,7 @@ export const addToLeaderboard = async (req, res, next) => {
         { _id: updatedMatch.player._id },
         {
           $inc: {
-            coins: Number(updatedMatch.prizeWon),
+            coins: Number(updatedMatch.prize),
           },
         }
       );
@@ -436,7 +436,7 @@ export const addToLeaderboard = async (req, res, next) => {
           { name: member },
           {
             $inc: {
-              coins: Number(updatedMatch.prizeWon),
+              coins: Number(updatedMatch.prize),
             },
           }
         );
