@@ -40,6 +40,7 @@ const blogImageStorage = multer.diskStorage({
 
 export const uploadProfilePicture = multer({
   onError: (err, next) => {
+    console.log(err);
     next(new AppError(err.message, 503));
   },
   storage: profilePictureStorage,
@@ -59,6 +60,7 @@ export const uploadProfilePicture = multer({
 
 export const uploadGameThumbnails = multer({
   onError: (err, next) => {
+    console.log(err);
     next(new AppError(err.message, 503));
   },
   storage: thumbnailsStorage,
@@ -78,6 +80,7 @@ export const uploadGameThumbnails = multer({
 
 export const uploadGameCover = multer({
   onError: (err, next) => {
+    console.log(err);
     next(new AppError(err.message, 503));
   },
   storage: gameCoverStorage,
@@ -97,6 +100,7 @@ export const uploadGameCover = multer({
 
 export const uploadBlogImage = multer({
   onError: (err, next) => {
+    console.log(err);
     next(new AppError(err.message, 503));
   },
   storage: blogImageStorage,
