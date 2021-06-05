@@ -389,8 +389,9 @@ export const loginUser = async (req, res, next) => {
     if (!req.body.password || req.body.password === "")
       return next(new AppError("password is required", 400));
 
-    if (!validateEmail(req.body.email))
+    if (!validateEmail(req.body.email)) {
       return next(new AppError("Invalid email", 400));
+    }
 
     const foundUser = await User.findOne({
       email: req.body.email.toLowerCase(),
@@ -441,7 +442,7 @@ export const loginUser = async (req, res, next) => {
       return next(new AppError("Incorrect password.", 401));
     }
   } catch (err) {
-    next(new AppError(error.message, 503));
+    next(new AppError(err.message, 503));
   }
 };
 

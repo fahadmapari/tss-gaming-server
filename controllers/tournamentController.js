@@ -410,6 +410,7 @@ export const addToLeaderboard = async (req, res, next) => {
           streak: assignedPosition.streak,
           damage: assignedPosition.damage,
           position: assignedPosition.position,
+          tournamentStatus: "completed",
         }
       );
 
