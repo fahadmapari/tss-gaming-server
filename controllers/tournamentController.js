@@ -11,11 +11,12 @@ import { AppError } from "../utils/AppError.js";
 import { tournamentUpdateFields } from "../utils/tournamentUpdateFields.js";
 import { endOfDay, startOfDay } from "date-fns";
 import sgMail from "@sendgrid/mail";
+import mongoose from "mongoose";
 
 sgMail.setApiKey(process.env.SEND_GRID_KEY);
 
 export const listAllTournaments = async (req, res, next) => {
-  const { page, limit, status, dateFrom, dateTo } = req.query;
+  const { page, limit, status, game, dateFrom, dateTo } = req.query;
 
   try {
     const opts = {
@@ -30,6 +31,12 @@ export const listAllTournaments = async (req, res, next) => {
 
     if (status && status !== "") {
       query.status = status;
+    }
+
+    if (game && game !== "") {
+      if (!mongoose.isValidObjectId(game))
+        return next(new AppError("Invalid game id", 401));
+      query.game = game;
     }
 
     if (dateFrom && dateFrom !== "") {

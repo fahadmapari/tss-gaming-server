@@ -297,6 +297,10 @@ GET
 
 if `dateTo` is not provided only 1 day tournaments will be returned.
 
+- tournaments can also be filtered by game by using `game` query parameter. value of game will be game's `_id`. Every game contains a unique property of `_id`
+
+`/tournament/list?game=60b1ff2af3e7470015c51119`
+
 all query parameters are optional
 
 No auth required
