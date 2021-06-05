@@ -23,7 +23,7 @@ router.get("/referrals", validateToken, getMyReferrals);
 
 router.get("/tournaments", validateToken, getMyTournaments);
 
-router.get("/:id", getProfileDetails);
+router.get("/:id/view", getProfileDetails);
 
 router.post(
   "/update",
