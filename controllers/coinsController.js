@@ -62,7 +62,7 @@ export const verifyPayment = async (req, res, next) => {
       try {
         await Order.findOneAndUpdate(
           { order_id: req.body.payload.payment.entity.order_id },
-          { orderDetails: req.body }
+          { orderDetails: req.body.payload.payment.entity }
         );
       } catch (err) {
         console.log(err);

@@ -338,7 +338,7 @@ http cookie or Bearer token required
 Route to view leaderboard of a tournament
 
 GET
-`/leaderboard/:id`
+`/tournament/leaderboard/:id`
 
 - replace :id with tournament's "\_id" in url
 
