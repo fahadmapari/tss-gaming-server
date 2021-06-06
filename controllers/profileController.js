@@ -197,14 +197,14 @@ export const updateUserProfile = async (req, res, next) => {
           )
         );
 
-        if (mobile || email || password) {
+        if (mobile || email || newPassword) {
           const msg = {
             to: email,
             from: process.env.SEND_GRID_EMAIL, // Use the email address or domain you verified above
             subject: "TSS_GAMING Account update",
             text: `${mobile && `Your mobile numer: ${mobile} was changed`}
                   ${email && `Your email: ${email} was changed, `}
-                  ${password && `Your account password was changed.`}
+                  ${newPassword && `Your account password was changed.`}
                   `,
           };
 
