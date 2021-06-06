@@ -224,3 +224,23 @@ export const updateUserProfile = async (req, res, next) => {
     next(new AppError(error.message, 503));
   }
 };
+
+export const updateProfilePic = async (req, res, next) => {
+  try {
+    if (!req.file) return next(new AppError("Profile pic required.", 401));
+
+    await User.findOneAndUpdate(
+      { _id: req.user.id },
+      {
+        profilePic:
+          process.env.DOMAIN_NAME + "/profile-pictures/" + req.file.filename,
+      }
+    );
+
+    res.json({
+      message: "Profile updated",
+    });
+  } catch (err) {
+    next(new AppError(err.message, 503));
+  }
+};

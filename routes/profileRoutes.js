@@ -7,6 +7,7 @@ import {
   getMyTransactions,
   getMyWithdrawals,
   getMyReferrals,
+  updateProfilePic,
 } from "../controllers/profileController.js";
 import { checkGuest, validateToken } from "../middlewares/authMiddleware.js";
 import { uploadProfilePicture } from "../utils/fileUpload.js";
@@ -30,6 +31,13 @@ router.post(
   validateToken,
   uploadProfilePicture.single("profilePic"),
   updateUserProfile
+);
+
+router.post(
+  "/profile-pic",
+  validateToken,
+  uploadProfilePicture.single("profilePic"),
+  updateProfilePic
 );
 
 export default router;
