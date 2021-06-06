@@ -131,22 +131,26 @@ export const getMyWithdrawals = async (req, res, next) => {
 };
 
 export const getMyReferrals = async (req, res, next) => {
-  const { id } = req.user;
-  const { page, limit } = req.query;
+  try {
+    const { id } = req.user;
+    const { page, limit } = req.query;
 
-  const referrals = await Referral.paginate(
-    { referredBy: id },
-    {
-      page: page ? page : 1,
-      limit: limit ? limit : 10,
-      sort: { createdAt: -1 },
-      populate: { path: "referredUser", select: "-password -coins" },
-    }
-  );
+    const referrals = await Referral.paginate(
+      { referredBy: id },
+      {
+        page: page ? page : 1,
+        limit: limit ? limit : 10,
+        sort: { createdAt: -1 },
+        populate: { path: "referredUser", select: "-password -coins" },
+      }
+    );
 
-  res.json({
-    referrals,
-  });
+    res.json({
+      referrals,
+    });
+  } catch (err) {
+    next(new AppError(err.message, 503));
+  }
 };
 
 export const updateUserProfile = async (req, res, next) => {

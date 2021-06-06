@@ -3,7 +3,10 @@ import Session from "../models/sessionModel.js";
 import twilio from "twilio";
 import { AppError } from "../utils/AppError.js";
 import { generateToken } from "../utils/generateToken.js";
-import { validateEmail } from "../utils/validations.js";
+import {
+  changeNameForSocialLogin,
+  validateEmail,
+} from "../utils/validations.js";
 import {
   getGoogleAccountFromCode,
   googleConfig,
@@ -496,7 +499,7 @@ export const googleLogin = async (req, res, next) => {
 
     if (!existingUser) {
       const user = await User.create({
-        name: name,
+        name: changeNameForSocialLogin(name),
         email: email,
         emailVerified: true,
         password: "",
@@ -582,7 +585,7 @@ export const googleLoginMobile = async (req, res, next) => {
 
     if (!existingUser) {
       const user = await User.create({
-        name: name,
+        name: changeNameForSocialLogin(name),
         email: email,
         emailVerified: true,
         password: "",
@@ -654,8 +657,6 @@ export const facebookLogin = async (req, res, next) => {
       },
     });
 
-    console.log(data);
-
     const { data: profile } = await axios({
       url: "https://graph.facebook.com/me",
       method: "get",
@@ -707,7 +708,7 @@ export const facebookLogin = async (req, res, next) => {
 
     if (!existingUser) {
       const user = await User.create({
-        name: name,
+        name: changeNameForSocialLogin(name),
         email: email,
         emailVerified: true,
         password: "",
@@ -798,7 +799,7 @@ export const discordLogin = async (req, res, next) => {
 
     if (!existingUser) {
       const user = await User.create({
-        name: user.username,
+        name: changeNameForSocialLogin(user.username),
         email: user.emailId,
         emailVerified: true,
         password: "",
@@ -882,7 +883,7 @@ export const discordLoginMobile = async (req, res, next) => {
 
     if (!existingUser) {
       const user = await User.create({
-        name: user.username,
+        name: changeNameForSocialLogin(user.username),
         email: user.emailId,
         emailVerified: true,
         password: "",
