@@ -68,7 +68,8 @@ app.use(
 
 //client
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "/client/user/index.html"));
+  // res.sendFile(path.join(__dirname, "/client/user/index.html"));
+  res.send("Website under development.");
 });
 
 //routes
