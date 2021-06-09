@@ -4,6 +4,7 @@ import {
   blockUser,
   contactUs,
   createNewSubAdmin,
+  editUserProfile,
   getAllBlockedUsers,
   getAllGames,
   getAllRegisteredUsers,
@@ -62,6 +63,13 @@ router.post(
   validateAdminToken,
   uploadGameCover.single("profilePic"),
   createNewSubAdmin
+);
+
+router.post(
+  "/user/:id/edit",
+  validateAdminToken,
+  uploadGameCover.single("profilePic"),
+  editUserProfile
 );
 
 export default router;

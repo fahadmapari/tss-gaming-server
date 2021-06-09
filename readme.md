@@ -152,6 +152,22 @@ POST
 
 data to send `{fcmToken: string}`
 
+- users can also be registered to receive notifications for specific game or tournament by using query parameter in url.
+
+`query parameter for tournament`
+
+- tournamentId
+
+`query parameter for game`
+
+- gameId
+
+examples
+`/notification-registeration?gameId=60b1ff2af3e7470015c51119`
+`/notification-registeration?tournamentId=60b1ff3af3e7470015c5111a`
+
+- every game and tournament contains a unique '\_id' property.
+
 ---
 
 Route to send custom push notifications to users
@@ -325,9 +341,11 @@ Route for user to join a tournament
 POST
 `/tournament/join`
 
-data to send `{ tournamentId: string, teamMembers: [string, string, string]//array, teamName: string }`
+data to send `{ tournamentId: string, teamMembers: [string, string, string]//array, teamName: string, fcmToken (optional) }`
 
 - all tournaments have a unique id with property name "\_id" you have pass that as tournamentId in this id
+
+- if `fcmToken` is provided in request while joining tournament user will registered to receive notification for that tournament and game.
 
 successful response will return joined match/tournament details
 
@@ -646,7 +664,13 @@ Route to send custom push notifications to users
 POST
 `/send-push-notification`
 
-data to send `{ title: string, body: string }`
+data to send `{ title: string, body: string, id: string }`
+
+- id can be either any game's `_id` or tournament's `_id`.
+
+- when game or tournament id is provided notifications will only be sent to users who have registered to receive notifications for that game or tournament.
+
+- when it's needed to send notification to all users who have registered to receive notifications `do not send id in request`.
 
 ---
 
@@ -680,3 +704,15 @@ GET
 `/blog/:id/delete`
 
 - replace `:id` with blog's `_id`. every blog contains a unique `_id`.
+
+---
+
+Route for admin to edit user's profile
+
+POST
+`/user/:id/edit`
+
+data to send / can be edited
+`{ name: string, mobile: number, email: string, role: string (admin, sub-admin, user), profilePic: file }`
+
+---

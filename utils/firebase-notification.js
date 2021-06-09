@@ -18,10 +18,13 @@ admin.initializeApp({
   databaseURL: "https://test-app-41c64.firebaseio.com",
 });
 
-export const subscribeForNotification = async (token) => {
+export const subscribeForNotification = async (
+  token,
+  topic = "tournament_reminder"
+) => {
   return new Promise(async (resolve, reject) => {
     try {
-      await admin.messaging().subscribeToTopic(token, "tournament_reminder");
+      await admin.messaging().subscribeToTopic(token, topic);
       resolve();
     } catch (err) {
       reject(err);
@@ -29,7 +32,10 @@ export const subscribeForNotification = async (token) => {
   });
 };
 
-export const sendPushNotification = async (message) => {
+export const sendPushNotification = async (
+  message,
+  topic = "tournament_reminder"
+) => {
   return new Promise(async (resolve, reject) => {
     try {
       const payload = {
@@ -44,9 +50,7 @@ export const sendPushNotification = async (message) => {
         priority: "high",
       };
 
-      await admin
-        .messaging()
-        .sendToTopic("tournament_reminder", payload, options);
+      await admin.messaging().sendToTopic(topic, payload, options);
 
       resolve();
     } catch (error) {

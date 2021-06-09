@@ -174,6 +174,8 @@ export const updateUserProfile = async (req, res, next) => {
 
     const foundUser = await User.findOne({ _id: req.user.id });
 
+    if (!foundUser) return next(new AppError("User not found.", 401));
+
     let authCheck = foundUser.checkPassword(
       currentPassword,
       foundUser.password
@@ -203,9 +205,9 @@ export const updateUserProfile = async (req, res, next) => {
 
         if (mobile || email || newPassword) {
           const msg = {
-            to: email,
+            to: foundUser.email,
             from: process.env.SEND_GRID_EMAIL, // Use the email address or domain you verified above
-            subject: "TSS_GAMING Account update",
+            subject: "TSS-GAMING Account update",
             text: `${mobile && `Your mobile numer: ${mobile} was changed`}
                   ${email && `Your email: ${email} was changed, `}
                   ${newPassword && `Your account password was changed.`}

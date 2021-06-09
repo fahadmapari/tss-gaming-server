@@ -55,6 +55,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
+app.use(express.static("client"));
 
 //basic injection security
 app.use(mongoSanitize());
@@ -67,7 +68,7 @@ app.use(
 
 //client
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "/public/client/user/index.html"));
+  res.sendFile(path.join(__dirname, "/client/user/index.html"));
 });
 
 //routes

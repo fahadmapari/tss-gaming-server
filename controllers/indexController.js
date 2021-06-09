@@ -10,6 +10,8 @@ import {
   subscribeForNotification,
 } from "../utils/firebase-notification.js";
 import sgMail from "@sendgrid/mail";
+import mongoose from "mongoose";
+
 sgMail.setApiKey(process.env.SEND_GRID_KEY);
 
 export const contactUs = async (req, res, next) => {
@@ -50,10 +52,23 @@ export const contactUs = async (req, res, next) => {
 export const saveFcmTokens = async (req, res, next) => {
   try {
     const { fcmToken } = req.body;
+    const { gameId, tournamentId } = req.query;
 
     if (!FCMToken) return next(new AppError("FCM token is required.", 400));
 
-    await subscribeForNotification(fcmToken);
+    if (gameId && gameId !== "") {
+      if (!mongoose.isValidObjectId(gameId))
+        return next(new AppError("Invalid game id", 401));
+      await subscribeForNotification(fcmToken, gameId);
+    }
+
+    if (tournamentId && tournamentId !== "") {
+      if (!mongoose.isValidObjectId(gameId))
+        return next(new AppError("Invalid tournament id", 401));
+      await subscribeForNotification(fcmToken, tournamentId);
+    }
+
+    if (!gameId && !tournamentId) await subscribeForNotification(fcmToken);
 
     res.json({
       message: "succesfully registered for notifications.",
@@ -65,9 +80,14 @@ export const saveFcmTokens = async (req, res, next) => {
 
 export const sendCustomPushNotification = async (req, res, next) => {
   try {
-    const { title, body } = req.body;
+    const { title, body, id } = req.body;
 
-    await sendPushNotification({ title, body });
+    if (id && id !== "") {
+      if (!mongoose.isValidObjectId(id))
+        return next(new AppError("Invalid id"));
+      await sendPushNotification({ title, body }, id);
+    }
+    if (!id) await sendPushNotification({ title, body });
 
     res.json({
       message: "Notification sent",
@@ -337,5 +357,73 @@ export const createNewSubAdmin = async (req, res, next) => {
     });
   } catch (err) {
     next(new AppError(err.message, 503));
+  }
+};
+
+export const editUserProfile = async (req, res, next) => {
+  try {
+    if (req.user.role !== "admin")
+      return next(new AppError("Only admin can perform this action."));
+
+    const { name, mobile, email, role } = req.body;
+    const { id } = req.params;
+
+    let updateDetails = {};
+
+    if (name && name !== "") updateDetails.name = name;
+    if (mobile && mobile !== "") updateDetails.mobile = mobile;
+    if (email && email !== "") updateDetails.email = email;
+    if (role && role !== "") updateDetails.role = role;
+
+    if (req.file)
+      updateDetails.profilePic =
+        process.env.DOMAIN_NAME + "/profile-pictures/" + req.file.filename;
+
+    const foundUser = await User.findOne({ _id: id });
+
+    if (!foundUser) return next(new AppError("User not found.", 401));
+
+    await User.findOneAndUpdate(
+      { _id: foundUser._id },
+      {
+        ...updateDetails,
+        mobileVerified: mobile ? false : foundUser.mobileVerified,
+        emailVerified: email ? false : foundUser.emailVerified,
+      },
+      { runValidators: true, context: "query" }
+    );
+
+    try {
+      const oldProfilePicLocation = foundUser.profilePic.split("/");
+      fs.unlinkSync(
+        path.resolve(
+          __dirname,
+          `../public/profile-pictures/${
+            oldProfilePicLocation[oldProfilePicLocation.length - 1]
+          }`
+        )
+      );
+
+      if (mobile || email) {
+        const msg = {
+          to: foundUser.email,
+          from: process.env.SEND_GRID_EMAIL, // Use the email address or domain you verified above
+          subject: "TSS-GAMING Account update",
+          text: `${mobile && `Your mobile numer: ${mobile} was changed`}
+                  ${email && `Your email: ${email} was changed, `}
+                  `,
+        };
+
+        await sgMail.send(msg);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+
+    res.json({
+      message: "User profile updated",
+    });
+  } catch (err) {
+    next(err.message, 503);
   }
 };

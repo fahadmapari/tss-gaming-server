@@ -12,6 +12,7 @@ import { tournamentUpdateFields } from "../utils/tournamentUpdateFields.js";
 import { endOfDay, startOfDay } from "date-fns";
 import sgMail from "@sendgrid/mail";
 import mongoose from "mongoose";
+import { subscribeForNotification } from "../utils/firebase-notification.js";
 
 sgMail.setApiKey(process.env.SEND_GRID_KEY);
 
@@ -192,7 +193,7 @@ export const editTournament = async (req, res, next) => {
 
 export const joinTournament = async (req, res, next) => {
   const { id: userId, coins: userCoins } = req.user;
-  const { tournamentId } = req.body;
+  const { tournamentId, fcmToken } = req.body;
   let { teamMembers, teamName } = req.body;
 
   try {
@@ -304,6 +305,11 @@ export const joinTournament = async (req, res, next) => {
     };
 
     await sgMail.send(msg);
+
+    if (FCMToken && FCMToken !== "") {
+      await subscribeForNotification(fcmToken, tournament._id);
+      await subscribeForNotification(fcmToken, tournament.game);
+    }
 
     res.status(200).send({
       message: "Joined Tournament",
