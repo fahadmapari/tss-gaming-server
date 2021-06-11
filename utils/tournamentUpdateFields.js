@@ -14,6 +14,7 @@ export const tournamentUpdateFields = (data, tournament) => {
     roomPassword,
     stream,
     slots,
+    status,
   } = data;
 
   const fieldsToUpdate = {};

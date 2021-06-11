@@ -61,7 +61,7 @@ app.use(express.static("client"));
 app.use(mongoSanitize());
 app.use(
   xss({
-    allowedKeys: ["password"],
+    allowedKeys: ["password", "blogContent", "description"],
   })
 );
 // if (process.env.ENV === "development") app.use(morgan("tiny"));
