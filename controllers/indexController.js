@@ -25,11 +25,11 @@ export const contactUs = async (req, res, next) => {
     if (!phone || phone === "")
       return next(new AppError("phone is required.", 400));
     if (!message || message === "")
-      return next(new AppError("name is required.", 400));
+      return next(new AppError("message is required.", 400));
     if (!subject || subject === "")
-      return next(new AppError("name is required.", 400));
+      return next(new AppError("subject is required.", 400));
     if (!category || category === "")
-      return next(new AppError("name is required.", 400));
+      return next(new AppError("category is required.", 400));
 
     const msg = {
       to: process.env.SEND_GRID_EMAIL,
