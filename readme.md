@@ -61,7 +61,7 @@ Route to get facebook auth url
 GET
 `/auth/facebook/url`
 
-it will generate and return facebook auth url which you can put in a button/a tag
+it will generate and return facebook auth url which you can put in a button/a tag or facebook sdk.
 
 ---
 

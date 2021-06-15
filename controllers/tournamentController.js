@@ -219,14 +219,14 @@ export const joinTournament = async (req, res, next) => {
 
     const leaderboard = await Leaderboard.findOne({ tournament: tournamentId });
 
+    if (tournament.tournamentType === "solo") {
+      teamMembers = [];
+    }
+
     if (teamMembers) {
       if (!Array.isArray(teamMembers)) {
         return next(new AppError("Team members should be an array.", 400));
       }
-    }
-
-    if (tournament.tournamentType === "solo") {
-      teamMembers = [];
     }
 
     if (tournament.tournamentType === "duo") {
