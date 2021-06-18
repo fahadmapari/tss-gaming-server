@@ -359,8 +359,7 @@ export const registerUser = async (req, res, next) => {
       .cookie("access_token", token, {
         expires: date,
         httpOnly: true,
-        secure: false,
-        sameSite: "None",
+        sameSite: true,
       })
       .set({
         "api-key": token,
@@ -421,8 +420,7 @@ export const loginUser = async (req, res, next) => {
         .cookie("access_token", token, {
           expires: date,
           httpOnly: true,
-          secure: false,
-          sameSite: "None",
+          sameSite: true,
         })
         .set({
           "api-key": token,
@@ -490,6 +488,7 @@ export const googleLogin = async (req, res, next) => {
         .cookie("access_token", token, {
           expires: date,
           httpOnly: true,
+          sameSite: true,
         })
         .set({
           "api-key": token,
@@ -520,6 +519,7 @@ export const googleLogin = async (req, res, next) => {
         .cookie("access_token", token, {
           expires: date,
           httpOnly: true,
+          sameSite: true,
         })
         .set({
           "api-key": token,
@@ -563,6 +563,7 @@ export const googleLoginMobile = async (req, res, next) => {
         .cookie("access_token", token, {
           expires: date,
           httpOnly: true,
+          sameSite: true,
         })
         .set({
           "api-key": token,
@@ -606,6 +607,7 @@ export const googleLoginMobile = async (req, res, next) => {
         .cookie("access_token", token, {
           expires: date,
           httpOnly: true,
+          sameSite: true,
         })
         .set({
           "api-key": token,
@@ -699,6 +701,7 @@ export const facebookLogin = async (req, res, next) => {
         .cookie("access_token", token, {
           expires: date,
           httpOnly: true,
+          sameSite: true,
         })
         .set({
           "api-key": token,
@@ -729,6 +732,7 @@ export const facebookLogin = async (req, res, next) => {
         .cookie("access_token", token, {
           expires: date,
           httpOnly: true,
+          sameSite: true,
         })
         .set({
           "api-key": token,
@@ -790,6 +794,7 @@ export const discordLogin = async (req, res, next) => {
         .cookie("access_token", token, {
           expires: date,
           httpOnly: true,
+          sameSite: true,
         })
         .set({
           "api-key": token,
@@ -820,6 +825,7 @@ export const discordLogin = async (req, res, next) => {
         .cookie("access_token", token, {
           expires: date,
           httpOnly: true,
+          sameSite: true,
         })
         .set({
           "api-key": token,
@@ -861,6 +867,7 @@ export const discordLoginMobile = async (req, res, next) => {
         .cookie("access_token", token, {
           expires: date,
           httpOnly: true,
+          sameSite: true,
         })
         .set({
           "api-key": token,
@@ -904,6 +911,7 @@ export const discordLoginMobile = async (req, res, next) => {
         .cookie("access_token", token, {
           expires: date,
           httpOnly: true,
+          sameSite: true,
         })
         .set({
           "api-key": token,
