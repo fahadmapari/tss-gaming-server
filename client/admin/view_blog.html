@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>TSS-Blog</title>
+    <!-- Required meta tags always come first -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <link rel="shortcut icon" type="image/png" href="/admin/images/favicon.png">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Fonts -->
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/admin/styles.css">
+
+</head>
+
+<body id="home-page">
+    <div id="loader" class="center">
+    </div>
+    <div id="general_bg" class="vw-100 vh-100"></div>
+
+    <nav class="navbar navbar-dark navbar-expand-sm fixed-top product" id="navigation_bar_home">
+        <div class="container">
+            <a class="navbar-brand mr-auto" href="#">
+                <img src="/admin/images/logo_nav.png" alt="" class="navbar_logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#Navbar">
+                <span class="navbar-toggler-icon text-white"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="Navbar">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item mr-3"><a class="nav-link" href="#"><strong>Home</strong></a></li>
+                    <li class="nav-item mr-3"><a class="nav-link"
+                            href="/admin/admin_dashboard.html"><strong>Dashboard</strong></a>
+                    </li>
+                    <li class="nav-item mr-3 active"><a class="nav-link" href="/admin/blog.html"><strong>Blog</strong></a>
+                    </li>
+                    <li class="nav-item mr-3"><a class="nav-link" href="/admin/users.html"><strong>Users</strong></a></li>
+                    <li class="nav-item mr-3"><a class="nav-link"
+                            href="/admin/transactions.html"><strong>Transactions</strong></a></li>
+                    <li class="nav-item mr-3"><a class="nav-link" href="/admin/sub_admins.html"><strong>Sub
+                                Admins</strong></a></li>
+                    <li class="nav-item mr-3"><a class="nav-link" href="/admin/profile.html"><strong>Profile</strong></a>
+                    </li>
+                    <li class="nav-item"><a href="/admin/admin_login.html" id="login_btn"
+                            class="btn primary_btn float-right d-inline">Login</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Modal -->
+
+    <div id="panel">
+
+        <div class="pb-5" id="random"></div>
+        <div class="container text-white my-5 product">
+
+            <div class="row mx-0 mb-5"> 
+                <div class="col-12 col-lg-12 d-flex justify-content-end">
+                    <a id="delete_btn" class="btn btn-sm primary_btn px-4 mx-1">Delete</a>
+                    <a id="edit_btn" class="btn btn-sm primary_btn px-4 mx-1">Edit</a>
+                </div>
+                <div class="col-12">
+                    <h1 class="mt-5 text-center bahnschrift" id="blog_title"></h1>
+                    <h4 class="mt-5 text-center bahnschrift" id="blog_subTitle"></h4>
+                </div>
+                <div class="col-12 col-lg-12 mt-4">
+                    <img alt="" class="blog_bordered blog_detail_match" id="blog_img">
+                </div>
+                <div class="col-12 col-lg-12 mt-2">
+                    <b class="ml-2 bahnschrift " style="color: #fa011e;" id="blog_author"></b>
+                    <p class="ml-2 bahnschrift " style="color: #fa011e;" id="blog_date"></p>
+                    <p style="font-size:1.5rem;" id="blog_content"></p>
+                    <h4 class="bahnschrift my-2 " style="color: #fa011e;">Summary</h4>
+                    <p style="font-size:1.5rem;" id="blog_summary"></p>
+                    <h4 class="my-2 " style="color: #fa011e;">Conclusion</h4>
+                    <p style="font-size:1.5rem;" id="blog_conclusion"></p>
+                </div>
+            </div>
+            <div class="col-12 d-flex justify-content-center">
+                <button class="btn btn-sm primary_btn px-4" onclick="back_page()">Go Back</button>
+            </div>
+        </div>
+        <footer class="mt-5 py-3 py-lg-5 product">
+            <div class="container-fluid">
+                <div class="row mx-0">
+                    <div class="col-12 col-lg-10 offset-lg-1">
+                        <img src="/admin/images/footer_logo.png" alt="" id="footer_logo">
+                        <div class="row mx-0">
+                            <div class="col-6 mb-3 pl-0">
+                                <a href="#" class="nav-link px-0 d-inline mr-3"><b>Home</b></a>
+                                <br class="d-lg-none">
+                                <a href="/admin/admin_dashboard.html"
+                                    class="nav-link px-0 d-inline mr-3"><b>Dashboard</b></a>
+                                <br class="d-lg-none">
+                                <a href="/admin/profile.html" class="nav-link px-0 d-inline mr-3"><b>Profile</b></a>
+                            </div>
+                            <div class="col-6 col-lg-3 offset-lg-1 text-right mb-3 pr-0">
+                                <a href="/admin/about.html#contact_section"
+                                    class="nav-link px-0 d-inline ml-3"><b>Contact</b></a>
+                                <br class="d-lg-none">
+                                <a href="/admin/about.html" class="nav-link px-0 d-inline ml-3"><b>About</b></a>
+                            </div>
+                            <div class="col-6 col-lg-2 text-center d-flex justify-content-start">
+                                <p class="text-white ml-5 ml-lg-0"><strong>Follow Us
+                                        <a href="#" class="ml-1 nav-link py-0 px-1 d-inline"><i
+                                                class="fa fa-facebook-square "></i></a>
+                                        <a href="#" class="nav-link py-0 px-1 d-inline"><i
+                                                class="fa fa-instagram "></i></a>
+                                    </strong></p>
+                            </div>
+                        </div>
+                        <a href="terms.html" class="text-white" style="font-size:.9rem;">Terms&Conditions</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous">
+    </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous">
+    </script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="/admin/js/env_Var.js"></script>
+    <script src="/admin/js/loader.js"></script>
+    <script src="/admin/js/view_blog.js"></script>
+    <script src="/admin/js/login_btn.js"></script>
+
+
+    <script>
+        $(document).ready(function () {
+            $(window).scroll(function () {
+                $('.navbar').toggleClass("navbar_scrolled", ($(window).scrollTop() > 100));
+                $('.navbar_logo').toggleClass("navbar_logo_scrolled", ($(window).scrollTop() > 100));
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $(".navbar-toggler").click(function () {
+                $(".navbar").toggleClass("navbar_open");
+            });
+        });
+    </script>
+</body>
+
+</html>

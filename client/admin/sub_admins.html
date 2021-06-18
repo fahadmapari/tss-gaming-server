@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Sub-Admins</title>
+  <!-- Required meta tags always come first -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <link rel="shortcut icon" type="image/png" href="/admin/images/favicon.png">
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <!-- Fonts -->
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/admin/styles.css">
+</head>
+
+<body id="other-page">
+  <div id="general_bg" class="vw-100 vh-100"></div>
+  <div id="loader" class="center">
+  </div>
+  <nav class="navbar navbar-dark navbar-expand-sm fixed-top product" id="navigation_bar_home">
+    <div class="container">
+      <a class="navbar-brand mr-auto" href="/admin/index.html">
+        <img src="/admin/images/logo_nav.png" alt="" class="navbar_logo">
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#Navbar">
+        <span class="navbar-toggler-icon text-white"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="Navbar">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item mr-3"><a class="nav-link" href="/admin/index.html"><strong>Home</strong></a></li>
+          <li class="nav-item mr-3"><a class="nav-link" href="/admin/admin_dashboard.html"><strong>Dashboard</strong></a>
+          </li>
+          <li class="nav-item mr-3"><a class="nav-link" href="/admin/blog.html"><strong>Blog</strong></a></li>
+
+          <li class="nav-item mr-3 "><a class="nav-link" href="/admin/users.html"><strong>Users</strong></a></li>
+          <li class="nav-item mr-3"><a class="nav-link" href="/admin/transactions.html"><strong>Transactions</strong></a>
+          </li>
+          <li class="nav-item mr-3 active"><a class="nav-link" href="#"><strong>Sub Admins</strong></a></li>
+          <li class="nav-item mr-3"><a class="nav-link" href="/admin/profile.html"><strong>Profile</strong></a></li>
+          <li class="nav-item"><a href="/admin/admin_login.html" id="login_btn" class="btn primary_btn float-right d-inline">Login</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div id="panel">
+  <!-- Add Sub Admin Modal -->
+    <div class="modal fade" id="addSubAdminModal" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="addSubAdminModalTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bordered text-white black_bg product px-3">
+          <div class="container-fluid py-5">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true" class="text-white">&times;</span>
+            </button>
+            <div class="row mx-0">
+              <div class="col-12">
+                <h2 class="bahnschrift mb-3">Add New Sub Admin</h2>
+                <form action="">
+                  <div class="form-group mb-3">
+                    <label for="">Sub Admin Name *</label>
+                    <input type="text" name="add_sub_admin_name" id="add_sub_admin_name" class="black_input w-100" required>
+                  </div>
+                  <div class="form-group mb-3">
+                    <label for="">Email Address *</label>
+                    <input type="email" name="sub_admin_email" id="sub_admin_email" class="black_input w-100" required>
+                  </div>
+                  <div class="form-group mb-3">
+                    <label for="">Sub Admin Mobile *</label>
+                    <input type="tel" name="add_sub_admin_mobile" id="add_sub_admin_mobile" class="black_input w-100" required>
+                  </div>
+                  <div class="form-group mb-3">
+                    <label for="">Password *</label>
+                    <input type="password" name="sub_admin_password" id="sub_admin_password" class="black_input w-100" required>
+                  </div>
+                  <div class="form-group mb-3">
+                    <label for="">Confirm Password *</label>
+                    <input type="password" name="sub_admin_conf_password" id="sub_admin_conf_password" class="black_input w-100" required>
+                  </div>
+                  
+                  <button type="button" class="btn btn-sm primary_btn" onclick="create_subAdmin()">Add Sub Admin</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Edit Sub Admin Modal -->
+    <div class="modal fade" id="editProfileModal" tabindex="-1" role="dialog" data-backdrop="static"
+      aria-labelledby="editProfileModalTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content bordered text-white black_bg product">
+          <div class="container-fluid">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true" class="text-white">&times;</span>
+            </button>
+            <div class="row mx-0 py-5">
+              <div class="col-12 col-lg-12 order-1">
+
+                <h5>Edit Profile</h5>
+                <div class="form-group row">
+                  <label class="col-3 col-form-label">Username</label>
+                  <div class="col-9 col-lg-9">
+                    <input type="text" class="form-control form-control-sm" id="edit_username">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-3 col-form-label">Email</label>
+                  <div class="col-9 col-lg-9">
+                    <input type="email" class="form-control form-control-sm" id="edit_email">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-3 col-form-label">Mobile</label>
+                  <div class="col-9 col-lg-9">
+                    <input type="tel" class="form-control form-control-sm" id="edit_mobile">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-3 col-form-label">User Role</label>
+                  <div class="col-9 col-lg-9">
+                    <select id="user_role" name="user_role" class="form-control form-control-sm">
+                    <option value="user">User</option>
+                    <option value="sub-admin">Sub-Admin</option>
+                    </select>
+                  </div>
+                </div>
+                <input type="text" class="form-control form-control-sm" id="user_id" hidden>
+                <button class="btn btn-block btn-md primary_btn text-white" onclick="update_profile()">Update
+                  Profile</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container-fluid text-white mb-5 product">
+      <div class="row mx-0 mb-5">
+        <div class="col-12 col-lg-12 d-flex justify-content-end">
+          <button class="btn btn-md mr-5 primary_btn"><span
+            class="d-none d-lg-inline ml-2" data-toggle="modal" data-target="#addSubAdminModal">Create Sub-admin</span></button>
+        </div>
+        <div class="col-12 col-lg-10 offset-lg-1 px-0">
+          <h1 class="text-center bahnschrift mb-5">All Subadmins</h1>
+          
+          <div class="row mx-0">
+            <div class="col-12 px-0">
+              <div class="glassy bordered px-2 px-lg-3">
+                <div class="row mx-0 my-2 my-lg-4">
+
+                  <div class="col-10 px-0">
+                    <input type="text" name="search_user" id="search_user"
+                      class="form-control form-control-sm w-100 text-dark" placeholder="Search User" required>
+                  </div>
+                  <div class="col-2 pr-0">
+                    <button class="btn btn-sm btn-block primary_btn"><i class="fa fa-search"></i><span
+                        class="d-none d-lg-inline ml-2" onclick="search_users()">Search User</span></button>
+                  </div>
+                </div>
+
+                <div id="all_user_list"></div>
+                <div class="pagination justify-content-center subAdmin-page-buttons mb-3"></div>
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-lg-10 offset-lg-1 px-0 mt-5">
+          <h1 class="text-center bahnschrift mb-5">All Blocked Users</h1>
+          <div class="row mx-0">
+            <div class="col-12 px-0">
+              <div class="glassy bordered px-2 px-lg-3">
+
+                <div class="mt-5" id="blocked_user"></div>
+                <div class="pagination justify-content-center blocked-page-buttons mb-3"></div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="mt-5 py-3 py-lg-5 product">
+      <div class="container-fluid">
+        <div class="row mx-0">
+          <div class="col-12 col-lg-10 offset-lg-1">
+            <img src="/admin/images/footer_logo.png" alt="" id="footer_logo">
+            <div class="row mx-0">
+              <div class="col-6 mb-3 pl-0">
+                <a href="#" class="nav-link px-0 d-inline mr-3"><b>Home</b></a>
+                <br class="d-lg-none">
+                <a href="/admin/admin_dashboard.html" class="nav-link px-0 d-inline mr-3"><b>Dashboard</b></a>
+                <br class="d-lg-none">
+                <a href="/admin/profile.html" class="nav-link px-0 d-inline mr-3"><b>Profile</b></a>
+              </div>
+              <div class="col-6 col-lg-3 offset-lg-1 text-right mb-3 pr-0">
+                <a href="/admin/about.html#contact_section" class="nav-link px-0 d-inline ml-3"><b>Contact</b></a>
+                <br class="d-lg-none">
+                <a href="/admin/about.html" class="nav-link px-0 d-inline ml-3"><b>About</b></a>
+              </div>
+              <div class="col-6 col-lg-2 text-center d-flex justify-content-start">
+                <p class="text-white ml-5 ml-lg-0"><strong>Follow Us
+                    <a href="#" class="ml-1 nav-link py-0 px-1 d-inline"><i class="fa fa-facebook-square "></i></a>
+                    <a href="#" class="nav-link py-0 px-1 d-inline"><i class="fa fa-instagram "></i></a>
+                  </strong></p>
+              </div>
+            </div>
+            <a href="terms.html" class="text-white" style="font-size:.9rem;">Terms&Conditions</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+    integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous">
+  </script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+    integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous">
+  </script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <script src="/admin/js/env_Var.js"></script>
+  <script src="/admin/js/loader.js"></script>
+  <script src="/admin/js/sub_admin.js"></script>
+  <script src="/admin/js/blocked_subadmin.js"></script>
+  <script src="/admin/js/login_btn.js"></script>
+
+
+  <script>
+    function onGoing(n) {
+      var ongoing_collapse = '.ongoing_' + n;
+      $(ongoing_collapse).collapse('toggle');
+      var arrow = '.down_arrow_' + n;
+      $(arrow).toggleClass("rotate_arrow");
+    }
+  </script>
+  <script>
+    $(document).ready(function () {
+      $(window).scroll(function () {
+        $('.navbar').toggleClass("navbar_scrolled", ($(window).scrollTop() > 100));
+        $('.navbar_logo').toggleClass("navbar_logo_scrolled", ($(window).scrollTop() > 100));
+      });
+    });
+  </script>
+  <script>
+    $(document).ready(function () {
+      $(".navbar-toggler").click(function () {
+        $(".navbar").toggleClass("navbar_open");
+      });
+    });
+  </script>
+  <script>
+    function deleteUser(curr_el) {
+      var user = $(curr_el).parent().prev().prev().children().children('.user_gamername').text();
+      $('#user_gamername').text(user);
+      $('#deleteUserModal').modal();
+    }
+  </script>
+  <script>
+    function userTransaction(curr_el) {
+      var trans = $(curr_el).parent().parent().parent().parent().prev().prev().prev().children().children(
+        '.user_gamername').text();
+      $('#trans_gamername').text(trans);
+      $('#userTransactionModal').modal();
+    }
+  </script>
+  <script>
+    function showUserDetails(curr_el) {
+      $(curr_el).parent().parent().next().next().next().children().collapse("toggle");
+      $(curr_el).children('.fa-chevron-right').toggleClass('rotate_right');
+    }
+  </script>
+  <script type="text/javascript">
+    $(document).ready(function () {
+      $("#search_user_btn").click(function () {
+        $("#search_user_form").submit();
+      });
+    });
+  </script>
+  <script type="text/javascript">
+    $("input[type='radio'][name='sort_option']").change(function () {
+      var selected = $("input[type='radio'][name='sort_option']:checked").val();
+      if (selected == "sort_joined") var opts = [{
+          name: "Oldest to newest",
+          val: "0"
+        },
+        {
+          name: "Newest to oldest",
+          val: "1"
+        }
+      ];
+      else var opts = [{
+          name: "Highest to lowest",
+          val: "0"
+        },
+        {
+          name: "Lowest to highest",
+          val: "1"
+        }
+      ];
+      $("#sort_order").empty();
+      $.each(opts, function (k, v) {
+        $("#sort_order").append("<option value='" + v.val + "'>" + v.name + "</option>");
+      });
+    });
+  </script>
+</body>
+
+</html>
