@@ -36,11 +36,12 @@ export const buyCoins = async (req, res, next) => {
 };
 
 export const verifyPayment = async (req, res, next) => {
+  res.status(200).send("ok");
+  console.log("hi");
   const shasum = crypto.createHmac("sha256", process.env.razor_secret);
   shasum.update(JSON.stringify(req.body));
   const digest = shasum.digest("hex");
 
-  console.log(req.body);
   if (digest === req.headers["x-razorpay-signature"]) {
     if (req.body.payload.payment.entity.status === "captured") {
       try {
@@ -49,12 +50,23 @@ export const verifyPayment = async (req, res, next) => {
           { orderDetails: req.body.payload.payment.entity }
         );
 
-        await User.findOneAndUpdate(
-          { _id: updatedOrder.user },
-          {
-            $inc: { coins: Number(updatedOrder.orderDetails.amount) / 100 },
-          }
-        );
+        if (updatedOrder.pd === false) {
+          const coinsPurchased = Number(updatedOrder.orderDetails.amount) / 100;
+
+          await User.findOneAndUpdate(
+            { _id: updatedOrder.user },
+            {
+              $inc: {
+                coins: coinsPurchased,
+              },
+            }
+          );
+
+          await Order.findOneAndUpdate(
+            { order_id: req.body.payload.payment.entity.order_id },
+            { pd: true }
+          );
+        }
       } catch (err) {
         console.log(err);
       }
@@ -69,7 +81,6 @@ export const verifyPayment = async (req, res, next) => {
       }
     }
   }
-  res.status(200).json({ status: "OK" });
 };
 
 export const withdrawRequestByUser = async (req, res, next) => {

@@ -29,7 +29,16 @@ const discordClient = new OAuthClient(
 
 discordClient
   .setScopes(["identify", "email"])
-  .setRedirect("https://tss-gaming.herokuapp.com/api/auth/discord");
+  .setRedirect("https://www.tssgaming.in/user/discord.html");
+
+const discordClientMobile = new OAuthClient(
+  process.env.DISCORD_ID,
+  process.env.DISCORD_SECRET
+);
+
+discordClientMobile
+  .setScopes(["identify", "email"])
+  .setRedirect("https://www.tssgaming.in/api/auth/discord/mobile");
 
 export const resetPasswordOTP = async (req, res, next) => {
   try {
@@ -289,7 +298,7 @@ export const verifyOtp = async (req, res, next) => {
 };
 
 export const registerUser = async (req, res, next) => {
-  let profilePic = "/profile-pictures/default.png";
+  let profilePic = process.env.DOMAIN_NAME + "/profile-pictures/default.png";
   let referredBy;
   if (req.file) {
     profilePic =
@@ -376,7 +385,6 @@ export const registerUser = async (req, res, next) => {
           profilePic: newUser.profilePic,
           referralId: newUser.referralId,
         },
-        token,
       });
   } catch (err) {
     next(new AppError(err.message, 503));
@@ -437,7 +445,6 @@ export const loginUser = async (req, res, next) => {
             profilePic: foundUser.profilePic,
             referralId: foundUser.referralId,
           },
-          token,
         });
     } else {
       return next(new AppError("Incorrect password.", 401));
@@ -493,7 +500,11 @@ export const googleLogin = async (req, res, next) => {
         .set({
           "api-key": token,
         })
-        .redirect("/");
+        .json({
+          userInfo: {
+            ...existingUser._doc,
+          },
+        });
     }
 
     if (!existingUser) {
@@ -524,7 +535,11 @@ export const googleLogin = async (req, res, next) => {
         .set({
           "api-key": token,
         })
-        .redirect("/");
+        .json({
+          userInfo: {
+            ...user._doc,
+          },
+        });
     }
   } catch (error) {
     next(new AppError(error.message, 503));
@@ -580,7 +595,6 @@ export const googleLoginMobile = async (req, res, next) => {
             profilePic: existingUser.profilePic,
             referralId: existingUser.referralId,
           },
-          token,
         });
     }
 
@@ -624,7 +638,6 @@ export const googleLoginMobile = async (req, res, next) => {
             profilePic: user.profilePic,
             referralId: user.referralId,
           },
-          token,
         });
     }
   } catch (error) {
@@ -706,7 +719,9 @@ export const facebookLogin = async (req, res, next) => {
         .set({
           "api-key": token,
         })
-        .redirect("/");
+        .json({
+          userInfo: { ...existingUser._doc },
+        });
     }
 
     if (!existingUser) {
@@ -737,7 +752,11 @@ export const facebookLogin = async (req, res, next) => {
         .set({
           "api-key": token,
         })
-        .redirect("/");
+        .json({
+          userInfo: {
+            ...user._doc,
+          },
+        });
     }
   } catch (err) {
     console.log(err);
@@ -799,11 +818,15 @@ export const discordLogin = async (req, res, next) => {
         .set({
           "api-key": token,
         })
-        .redirect("/");
+        .json({
+          userInfo: {
+            ...existingUser._doc,
+          },
+        });
     }
 
     if (!existingUser) {
-      const user = await User.create({
+      const newUser = await User.create({
         name: changeNameForSocialLogin(user.username),
         email: user.emailId,
         emailVerified: true,
@@ -811,11 +834,11 @@ export const discordLogin = async (req, res, next) => {
         profilePic: user.avatarUrl,
       });
 
-      const token = generateToken(user._id);
+      const token = generateToken(newUser._id);
       let date = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
 
       await Session.create({
-        user: user._id,
+        user: newUser._id,
         token,
         expireAt: date,
       });
@@ -830,7 +853,9 @@ export const discordLogin = async (req, res, next) => {
         .set({
           "api-key": token,
         })
-        .redirect("/");
+        .json({
+          userInfo: { ...newUser._doc },
+        });
     }
   } catch (err) {
     console.log(err);
@@ -844,9 +869,9 @@ export const discordLoginMobile = async (req, res, next) => {
 
     if (!code) return next(new AppError("code is required.", 400));
 
-    const access_token = await discordClient.getAccess(code);
+    const access_token = await discordClientMobile.getAccess(code);
 
-    const user = await discordClient.getUser(access_token);
+    const user = await discordClientMobile.getUser(access_token);
 
     const existingUser = await User.findOne({ email: user.emailId }).select(
       "-password"
@@ -884,12 +909,11 @@ export const discordLoginMobile = async (req, res, next) => {
             profilePic: existingUser.profilePic,
             referralId: existingUser.referralId,
           },
-          token,
         });
     }
 
     if (!existingUser) {
-      const user = await User.create({
+      const newUser = await User.create({
         name: changeNameForSocialLogin(user.username),
         email: user.emailId,
         emailVerified: true,
@@ -897,11 +921,11 @@ export const discordLoginMobile = async (req, res, next) => {
         profilePic: user.avatarUrl,
       });
 
-      const token = generateToken(user._id);
+      const token = generateToken(newUser._id);
       let date = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
 
       await Session.create({
-        user: user._id,
+        user: newUser._id,
         token,
         expireAt: date,
       });
@@ -918,17 +942,16 @@ export const discordLoginMobile = async (req, res, next) => {
         })
         .json({
           userInfo: {
-            name: user.name,
-            mobile: user.mobile,
-            mobileVerified: user.mobileVerified,
-            email: user.email,
-            emailVerified: user.emailVerified,
-            role: user.role,
-            coins: user.coins,
-            profilePic: user.profilePic,
-            referralId: user.referralId,
+            name: newUser.name,
+            mobile: newUser.mobile,
+            mobileVerified: newUser.mobileVerified,
+            email: newUser.email,
+            emailVerified: newUser.emailVerified,
+            role: newUser.role,
+            coins: newUser.coins,
+            profilePic: newUser.profilePic,
+            referralId: newUser.referralId,
           },
-          token,
         });
     }
   } catch (err) {
@@ -942,9 +965,16 @@ export const logoutUser = async (req, res, next) => {
   try {
     await Session.findOneAndDelete({ token: req.token });
 
-    res.status(200).clearCookie("access_token").json({
-      status: "log out",
-    });
+    res
+      .status(200)
+      .cookie("access_token", {
+        expires: Date.now(),
+        httpOnly: true,
+        sameSite: true,
+      })
+      .json({
+        status: "logged out",
+      });
   } catch (error) {
     next(new AppError(error.message, 503));
   }

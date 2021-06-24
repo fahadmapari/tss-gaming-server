@@ -13,6 +13,10 @@ const orderScehma = new mongoose.Schema(
       type: mongoose.Schema.Types.Mixed,
       required: true,
     },
+    pd: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

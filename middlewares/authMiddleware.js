@@ -48,10 +48,13 @@ export const validateToken = async (req, res, next) => {
         .exec();
 
       if (!session) {
-        return res.status(401).json({
-          status: "Unauthorized",
-          message: "User not logged in.",
-        });
+        return res
+          .status(401)
+          .clearCookie("access_token", { domain: ".tssgaming.in", path: "/" })
+          .json({
+            status: "Unauthorized",
+            message: "User not logged in.",
+          });
       }
 
       const user = session.user;
@@ -73,6 +76,8 @@ export const validateToken = async (req, res, next) => {
         mobileVerified: user.mobileVerified,
         role: user.role,
         coins: user.coins,
+        profilePic: user.profilePic,
+        referralId: user.referralId,
       };
 
       if (!user.emailVerified && !user.mobileVerified) {
@@ -87,11 +92,14 @@ export const validateToken = async (req, res, next) => {
 
       return next();
     } catch (err) {
-      return res.status(403).json({
-        status: "Error",
-        error: err.message,
-        message: "Something went wrong while validating token. Invalid token",
-      });
+      return res
+        .status(403)
+        .clearCookie("access_token", { domain: ".tssgaming.in", path: "/" })
+        .json({
+          status: "Error",
+          error: err.message,
+          message: "Something went wrong while validating token. Invalid token",
+        });
     }
   } else {
     return res.status(403).json({
@@ -122,10 +130,13 @@ export const validateNewUserToken = async (req, res, next) => {
         .exec();
 
       if (!session) {
-        return res.status(401).json({
-          status: "Unauthorized",
-          message: "User not logged in.",
-        });
+        return res
+          .status(401)
+          .clearCookie("access_token", { domain: ".tssgaming.in", path: "/" })
+          .json({
+            status: "Unauthorized",
+            message: "User not logged in.",
+          });
       }
 
       const user = session.user;
@@ -147,6 +158,8 @@ export const validateNewUserToken = async (req, res, next) => {
         mobileVerified: user.mobileVerified,
         role: user.role,
         coins: user.coins,
+        profilePic: user.profilePic,
+        referralId: user.referralId,
       };
 
       req.user = currentUser;
@@ -154,11 +167,14 @@ export const validateNewUserToken = async (req, res, next) => {
 
       return next();
     } catch (err) {
-      return res.status(403).json({
-        status: "Error",
-        error: err.message,
-        message: "Something went wrong while validating token. Invalid token",
-      });
+      return res
+        .status(403)
+        .clearCookie("access_token", { domain: ".tssgaming.in", path: "/" })
+        .json({
+          status: "Error",
+          error: err.message,
+          message: "Something went wrong while validating token. Invalid token",
+        });
     }
   } else {
     return res.status(403).json({
@@ -187,10 +203,13 @@ export const validateAdminToken = async (req, res, next) => {
         .exec();
 
       if (!session) {
-        return res.status(401).json({
-          status: "Unauthorized",
-          message: "User not logged in.",
-        });
+        return res
+          .status(401)
+          .clearCookie("access_token", { domain: ".tssgaming.in", path: "/" })
+          .json({
+            status: "Unauthorized",
+            message: "User not logged in.",
+          });
       }
 
       const user = session.user;
@@ -204,6 +223,8 @@ export const validateAdminToken = async (req, res, next) => {
         mobileVerified: user.mobileVerified,
         role: user.role,
         coins: user.coins,
+        profilePic: user.profilePic,
+        referralId: user.referralId,
       };
 
       req.user = currentUser;
@@ -218,11 +239,14 @@ export const validateAdminToken = async (req, res, next) => {
 
       return next();
     } catch (err) {
-      return res.status(403).json({
-        status: "Error",
-        error: err.message,
-        message: "Something went wrong while validating token. Invalid token",
-      });
+      return res
+        .status(403)
+        .clearCookie("access_token", { domain: ".tssgaming.in", path: "/" })
+        .json({
+          status: "Error",
+          error: err.message,
+          message: "Something went wrong while validating token. Invalid token",
+        });
     }
   } else {
     return res.status(403).json({

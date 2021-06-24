@@ -59,11 +59,14 @@ app.use(express.static("client"));
 
 //basic injection security
 app.use(mongoSanitize());
-app.use(
-  xss({
-    allowedKeys: ["password", "blogContent", "description"],
-  })
-);
+app.use((req, res, next) => {
+  if (req.path !== "/api/coins/verifypay") {
+    xss({
+      allowedKeys: ["password", "blogContent", "description"],
+    });
+    next();
+  }
+});
 // if (process.env.ENV === "development") app.use(morgan("tiny"));
 
 //client
@@ -81,16 +84,28 @@ app.use("/api/profile", profileRoutes);
 app.use("/api/blog", blogRoutes);
 
 //express error handling
-app.use("*", (req, res) => {
+app.use("/api/*", (req, res) => {
   res.status(404).json({
     message: "Route does not exist",
   });
 });
 
+app.use("*", (req, res) => {
+  res
+    .status(404)
+    .send(
+      `<h1> Error 404: page not found </h1> <a href="${process.env.DOMAIN_NAME}"> Go to homepage </a>`
+    );
+});
+
 app.use((err, req, res, next) => {
   console.log(err);
   const { message, status } = err;
-  res.status(status).json({ message: message, status, error: err });
+  res.status(status).json({
+    message: message || "something went wrong",
+    status: status || 503,
+    error: err,
+  });
 });
 
 const PORT = process.env.PORT || 3000;

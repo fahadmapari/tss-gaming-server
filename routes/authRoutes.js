@@ -26,14 +26,14 @@ import {
 
 const router = express.Router();
 
-router.get("/google", googleLogin);
-router.post("/google/mobile", googleLoginMobile);
+router.post("/google", checkGuest, googleLogin);
+router.post("/google/mobile", checkGuest, googleLoginMobile);
 router.get("/google/url", generateGoogleURL);
 
-router.get("/facebook", facebookLogin);
+router.post("/facebook", checkGuest, facebookLogin);
 router.get("/facebook/url", generateFacebookUrl);
 
-router.get("/discord", discordLogin);
+router.post("/discord", checkGuest, discordLogin);
 router.get("/discord/mobile", (req, res, next) =>
   res.send(`<div class="container">
 <style scoped>
@@ -85,7 +85,7 @@ router.get("/discord/mobile", (req, res, next) =>
 
 </div>`)
 );
-router.post("/discord/mobile-auth", discordLoginMobile);
+router.post("/discord/mobile", checkGuest, discordLoginMobile);
 
 router.get("/discord/url", generateDiscordUrl);
 router.get("/discord/url/mobile", generateDiscordMobileUrl);

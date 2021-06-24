@@ -7,7 +7,7 @@ import { google } from "googleapis";
 export const googleConfig = {
   clientId: process.env.GOOGLE_ID, // e.g. asdfghjkljhgfdsghjk.apps.googleusercontent.com
   clientSecret: process.env.GOOGLE_SECRET, // e.g. _ASDFA%DFASDFASDFASD#FAD-
-  redirect: "https://tss-gaming.herokuapp.com/api/auth/google", // this must match your google api settings
+  redirect: "https://tssgaming.in/user/google.html", // this must match your google api settings
 };
 
 export const defaultScope = [

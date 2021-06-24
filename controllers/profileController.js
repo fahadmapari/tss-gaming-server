@@ -158,11 +158,36 @@ export const updateUserProfile = async (req, res, next) => {
 
   try {
     let updateDetails = {};
+    const foundUser = await User.findOne({ _id: req.user.id });
 
-    if (currentPassword === "")
+    const joinedMatches = await Match.find({
+      $or: [
+        { player: foundUser._id, tournamentStatus: "upcoming" },
+        { player: foundUser._id, tournamentStatus: "ongoing" },
+      ],
+    })
+      .limit(1)
+      .exec();
+
+    if (joinedMatches.length > 0 && name && name !== foundUser.name) {
+      return next(
+        new AppError(
+          "You can't change your gamername while you have ongoing or upcoming tournaments.",
+          403
+        )
+      );
+    }
+
+    if (currentPassword === "" && foundUser.password !== "")
       return next(new AppError("Password is required to update profile", 403));
     if (name && name !== "") updateDetails.name = name;
-    if (mobile && mobile !== "") updateDetails.mobile = mobile;
+    if (
+      mobile &&
+      mobile !== "" &&
+      typeof mobile !== "undefined" &&
+      mobile !== "undefined"
+    )
+      updateDetails.mobile = mobile;
     if (email && email !== "") updateDetails.email = email;
     if (newPassword && newPassword !== "") {
       const updatedPassword = await hashPassword(newPassword);
@@ -172,8 +197,6 @@ export const updateUserProfile = async (req, res, next) => {
       updateDetails.profilePic =
         process.env.DOMAIN_NAME + "/profile-pictures/" + req.file.filename;
 
-    const foundUser = await User.findOne({ _id: req.user.id });
-
     if (!foundUser) return next(new AppError("User not found.", 401));
 
     let authCheck = foundUser.checkPassword(
@@ -181,27 +204,48 @@ export const updateUserProfile = async (req, res, next) => {
       foundUser.password
     );
 
-    if (authCheck) {
+    if (
+      foundUser.password === "" &&
+      email &&
+      email !== "" &&
+      email !== req.user.email &&
+      !newPassword &&
+      newPassword === ""
+    ) {
+      return next(
+        new AppError("Please set a password before changing your email.")
+      );
+    }
+
+    if (authCheck || foundUser.password === "") {
       await User.findOneAndUpdate(
         { _id: req.user.id },
         {
           ...updateDetails,
-          mobileVerified: mobile ? false : req.user.mobileVerified,
-          emailVerified: email ? false : req.user.emailVerified,
+          mobileVerified:
+            mobile && mobile !== req.user.mobile
+              ? false
+              : req.user.mobileVerified,
+          emailVerified:
+            email && email !== req.user.email ? false : req.user.emailVerified,
         },
         { runValidators: true, context: "query" }
       );
 
       try {
-        const oldProfilePicLocation = foundUser.profilePic.split("/");
-        fs.unlinkSync(
-          path.resolve(
-            __dirname,
-            `../public/profile-pictures/${
-              oldProfilePicLocation[oldProfilePicLocation.length - 1]
-            }`
-          )
-        );
+        try {
+          const oldProfilePicLocation = foundUser.profilePic.split("/");
+          fs.unlinkSync(
+            path.resolve(
+              __dirname,
+              `../public/profile-pictures/${
+                oldProfilePicLocation[oldProfilePicLocation.length - 1]
+              }`
+            )
+          );
+        } catch (err) {
+          console.log(err);
+        }
 
         if (mobile || email || newPassword) {
           const msg = {

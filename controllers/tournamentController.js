@@ -306,7 +306,7 @@ export const joinTournament = async (req, res, next) => {
 
     await sgMail.send(msg);
 
-    if (FCMToken && FCMToken !== "") {
+    if (fcmToken && fcmToken !== "") {
       await subscribeForNotification(fcmToken, tournament._id);
       await subscribeForNotification(fcmToken, tournament.game);
     }
