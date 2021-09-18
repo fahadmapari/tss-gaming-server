@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { agenda } from "./cron-jobs/updateTournaments.js";
 
 export const connectDB = async () => {
   try {
@@ -8,6 +9,8 @@ export const connectDB = async () => {
       useFindAndModify: false,
       useCreateIndex: true,
     });
+
+    await agenda.start();
   } catch (err) {
     console.log(err);
     throw new Error("Something went wrong while connecting to database.");

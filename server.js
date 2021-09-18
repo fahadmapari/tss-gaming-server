@@ -4,6 +4,7 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import mongoSanitize from "express-mongo-sanitize";
 import { xss } from "express-xss-sanitizer";
+import helmet from "helmet";
 import cors from "cors";
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
@@ -58,15 +59,19 @@ app.use(express.static("public"));
 app.use(express.static("client"));
 
 //basic injection security
+app.use(helmet());
 app.use(mongoSanitize());
-app.use((req, res, next) => {
-  if (req.path !== "/api/coins/verifypay") {
-    xss({
-      allowedKeys: ["password", "blogContent", "description"],
-    });
-    next();
-  }
-});
+// app.use((req, res, next) => {
+//   if (req.path !== "/api/coins/verifypay") {
+//     xss({
+//       allowedKeys: ["password", "blogContent", "description"],
+//     });
+//     console.log("i ran");
+//     next();
+//   } else {
+//     next();
+//   }
+// });
 // if (process.env.ENV === "development") app.use(morgan("tiny"));
 
 //client
